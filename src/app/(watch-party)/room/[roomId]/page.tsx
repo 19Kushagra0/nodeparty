@@ -1,0 +1,28 @@
+import { RoomProvider } from "@/contexts/RoomProvider";
+import { RoomHeader } from "@/components/watch-party/RoomHeader";
+import { VideoPlayer } from "@/components/watch-party/VideoPlayer";
+import { ParticipantSidebar } from "@/components/watch-party/ParticipantSidebar";
+
+interface RoomPageProps {
+  params: Promise<{
+    roomId: string;
+  }>;
+}
+
+export default async function RoomPage({ params }: RoomPageProps) {
+  const { roomId } = await params;
+
+  return (
+    <RoomProvider roomId={roomId}>
+      <div className="flex flex-col min-h-screen bg-slate-950 text-slate-100">
+        <RoomHeader />
+
+        {/* Main Grid Layout */}
+        <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6 p-6 max-w-[1700px] w-full mx-auto">
+          <VideoPlayer />
+          <ParticipantSidebar />
+        </div>
+      </div>
+    </RoomProvider>
+  );
+}
