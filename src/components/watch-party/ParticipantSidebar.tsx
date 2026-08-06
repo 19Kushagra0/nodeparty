@@ -6,66 +6,62 @@ import { useRoom, Role } from "@/contexts/RoomProvider";
 export function ParticipantSidebar() {
   const { participants, userRole, changeParticipantRole } = useRoom();
 
-  const renderRoleBadge = (role: Role) => {
+  const getRoleStyle = (role: Role) => {
     switch (role) {
       case "host":
-        return (
-          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-red-950 text-red-400 border border-red-500/30">
-            Host
-          </span>
-        );
+        return "bg-rose-950/80 text-rose-300 border-rose-800/60 hover:bg-rose-900/80";
       case "moderator":
-        return (
-          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-950 text-amber-400 border border-amber-500/30">
-            Mod
-          </span>
-        );
+        return "bg-amber-950/80 text-amber-300 border-amber-800/60 hover:bg-amber-900/80";
       case "participant":
       default:
-        return (
-          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">
-            Viewer
-          </span>
-        );
+        return "bg-zinc-800/90 text-zinc-300 border-zinc-700/70 hover:bg-zinc-700/80";
+    }
+  };
+
+  const getRoleLabel = (role: Role) => {
+    switch (role) {
+      case "host":
+        return "Host";
+      case "moderator":
+        return "Mod";
+      case "participant":
+      default:
+        return "Viewer";
     }
   };
 
   const renderAvatar = (role: Role, name: string) => {
     const initial = name.charAt(0).toUpperCase();
-    switch (role) {
-      case "host":
-        return (
-          <div className="w-7 h-7 rounded-full bg-red-600/20 border border-red-500/40 text-red-400 text-xs font-bold flex items-center justify-center">
-            {initial}
-          </div>
-        );
-      case "moderator":
-        return (
-          <div className="w-7 h-7 rounded-full bg-amber-600/20 border border-amber-500/40 text-amber-400 text-xs font-bold flex items-center justify-center">
-            {initial}
-          </div>
-        );
-      case "participant":
-      default:
-        return (
-          <div className="w-7 h-7 rounded-full bg-slate-700 text-slate-300 text-xs font-bold flex items-center justify-center">
-            {initial}
-          </div>
-        );
-    }
+    return (
+      <div className="relative">
+        <div
+          className={`w-8 h-8 rounded-full text-xs font-bold flex items-center justify-center border shadow-sm ${
+            role === "host"
+              ? "bg-rose-950/90 border-rose-700/80 text-rose-300"
+              : role === "moderator"
+              ? "bg-amber-950/90 border-amber-700/80 text-amber-300"
+              : "bg-zinc-800 border-zinc-700 text-zinc-200"
+          }`}
+        >
+          {initial}
+        </div>
+        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-zinc-900" />
+      </div>
+    );
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-5">
       {/* User List Panel */}
-      <div className="bg-slate-900/70 border border-slate-800/80 rounded-2xl p-4 flex flex-col gap-3 backdrop-blur-md">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-            <Users className="w-4 h-4 text-indigo-400" />
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex flex-col gap-3.5 shadow-sm">
+        <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-2">
+            <Users className="w-4 h-4 text-zinc-400" />
             Participants ({participants.length})
           </h3>
-          <span className="text-[10px] bg-indigo-950 text-indigo-400 border border-indigo-500/30 px-2 py-0.5 rounded-full font-mono">
-            Live
+          <span className="text-[10px] bg-emerald-950/60 text-emerald-400 border border-emerald-800/40 px-2.5 py-0.5 rounded-full font-mono font-medium flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            Live Sync
           </span>
         </div>
 
@@ -73,38 +69,71 @@ export function ParticipantSidebar() {
           {participants.map((p) => (
             <div
               key={p.id}
-              className={`flex items-center justify-between p-2 rounded-lg border ${
+              className={`flex items-center justify-between p-2.5 rounded-xl border transition-all ${
                 p.isMe
-                  ? "bg-slate-950/60 border-slate-700"
-                  : "bg-slate-950/40 border-slate-800/40"
+                  ? "bg-zinc-950 border-zinc-700/90 shadow-sm"
+                  : "bg-zinc-950/60 border-zinc-800/60 hover:border-zinc-700/60"
               }`}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 {renderAvatar(p.role, p.name)}
-                <div>
-                  <div className="text-xs font-medium text-slate-200">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-semibold text-zinc-100">
                     {p.name}
-                  </div>
-                  <div className="text-[10px] text-slate-500 capitalize">
-                    {p.role}
-                  </div>
+                  </span>
+                  {p.isMe && (
+                    <span className="text-[10px] text-zinc-400 font-normal">
+                      (You)
+                    </span>
+                  )}
                 </div>
               </div>
-              
-              <div className="flex items-center gap-2">
-                {renderRoleBadge(p.role)}
 
-                {/* Role Management Dropdown - Only Hosts can see it, and only for other users */}
-                {userRole === "host" && !p.isMe && (
-                  <select
-                    className="ml-2 bg-slate-800 text-slate-300 text-[10px] rounded px-1 py-0.5 border border-slate-700 outline-none cursor-pointer hover:bg-slate-700 transition-colors"
-                    value={p.role}
-                    onChange={(e) => changeParticipantRole(p.id, e.target.value as Role)}
+              <div className="flex items-center">
+                {userRole === "host" && !p.isMe ? (
+                  <div className="relative inline-flex items-center">
+                    <select
+                      className={`appearance-none text-[11px] font-semibold rounded-lg px-2.5 py-1 pr-6 border cursor-pointer outline-none transition-colors ${getRoleStyle(
+                        p.role
+                      )}`}
+                      value={p.role}
+                      onChange={(e) =>
+                        changeParticipantRole(p.id, e.target.value as Role)
+                      }
+                    >
+                      <option value="host" className="bg-zinc-900 text-rose-300">
+                        Host
+                      </option>
+                      <option value="moderator" className="bg-zinc-900 text-amber-300">
+                        Mod
+                      </option>
+                      <option value="participant" className="bg-zinc-900 text-zinc-300">
+                        Viewer
+                      </option>
+                    </select>
+                    {/* Chevron down overlay for custom select look */}
+                    <svg
+                      className="w-3 h-3 absolute right-2 pointer-events-none text-zinc-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                ) : (
+                  <span
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold border ${getRoleStyle(
+                      p.role
+                    )}`}
                   >
-                    <option value="host">Promote to Host</option>
-                    <option value="moderator">Make Mod</option>
-                    <option value="participant">Make Viewer</option>
-                  </select>
+                    {getRoleLabel(p.role)}
+                  </span>
                 )}
               </div>
             </div>
@@ -113,18 +142,18 @@ export function ParticipantSidebar() {
       </div>
 
       {/* Activity / Event Feed */}
-      <div className="flex-1 bg-slate-900/70 border border-slate-800/80 rounded-2xl p-4 flex flex-col gap-3 backdrop-blur-md min-h-[220px]">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 border-b border-slate-800 pb-3 flex items-center gap-2">
-          <Info className="w-4 h-4 text-emerald-400" />
+      <div className="flex-1 bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex flex-col gap-3 shadow-sm min-h-[220px]">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-300 border-b border-zinc-800 pb-3 flex items-center gap-2">
+          <Info className="w-4 h-4 text-zinc-400" />
           Room Activity
         </h3>
         <div className="flex-1 space-y-2 text-xs font-mono overflow-y-auto">
-          <div className="text-slate-500">
-            [System] Room created successfully.
+          <div className="text-zinc-500">
+            [System] Watch room created successfully.
           </div>
           <div className="text-emerald-400">[Join] Sarah joined the room.</div>
           <div className="text-emerald-400">[Join] John joined the room.</div>
-          <div className="text-slate-400">[Event] Alex paused playback.</div>
+          <div className="text-zinc-400">[Event] Alex paused playback.</div>
         </div>
       </div>
     </div>
