@@ -14,11 +14,14 @@ export default async function RoomPage({ params }: RoomPageProps) {
 
   return (
     <RoomProvider roomId={roomId}>
-      <div className="flex flex-col min-h-screen bg-slate-950 text-slate-100">
+      <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-100 relative">
+        {/* Subtle background texture */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
+        
         <RoomHeader />
 
         {/* Main Grid Layout */}
-        <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6 p-6 max-w-[1700px] w-full mx-auto">
+        <div className="relative z-10 flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6 p-6 max-w-[1700px] w-full mx-auto">
           <VideoPlayer />
           <ParticipantSidebar />
         </div>
