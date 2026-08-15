@@ -1,10 +1,10 @@
 "use client";
 
 import { Lock, Play } from "@/icons";
-import { useRoom } from "@/contexts/RoomProvider";
+import { useRoomStore } from "@/store/useRoomStore";
 
 export function VideoPlayer() {
-  const { userRole, videoUrl, setVideoUrl } = useRoom();
+  const { userRole, videoUrl, setVideoUrl } = useRoomStore();
 
   return (
     <div className="lg:col-span-3 flex flex-col gap-4">

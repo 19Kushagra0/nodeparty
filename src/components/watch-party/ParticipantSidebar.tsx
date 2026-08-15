@@ -1,10 +1,11 @@
 "use client";
 
 import { Users, Info } from "@/icons";
-import { useRoom, Role } from "@/contexts/RoomProvider";
+import { useRoomStore } from "@/store/useRoomStore";
+import type { Role } from "@/types";
 
 export function ParticipantSidebar() {
-  const { participants, userRole, changeParticipantRole } = useRoom();
+  const { participants, userRole, changeParticipantRole } = useRoomStore();
 
   const getRoleStyle = (role: Role) => {
     switch (role) {
