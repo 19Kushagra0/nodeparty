@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Check, Copy } from "@/icons";
-import { useRoom } from "@/contexts/RoomProvider";
+import { useParams } from "next/navigation";
 
 export function RoomHeader() {
-  const { roomId } = useRoom();
+  const { roomId } = useParams<{ roomId: string }>();
   const [copied, setCopied] = useState(false);
 
   const copyRoomLink = () => {
