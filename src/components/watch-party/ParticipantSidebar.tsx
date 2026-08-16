@@ -36,13 +36,12 @@ export function ParticipantSidebar() {
     return (
       <div className="relative">
         <div
-          className={`w-8 h-8 rounded-full text-xs font-bold flex items-center justify-center border shadow-sm ${
-            role === "host"
+          className={`w-8 h-8 rounded-full text-xs font-bold flex items-center justify-center border shadow-sm ${role === "host"
               ? "bg-rose-950/90 border-rose-700/80 text-rose-300"
               : role === "moderator"
-              ? "bg-amber-950/90 border-amber-700/80 text-amber-300"
-              : "bg-zinc-800 border-zinc-700 text-zinc-200"
-          }`}
+                ? "bg-amber-950/90 border-amber-700/80 text-amber-300"
+                : "bg-zinc-800 border-zinc-700 text-zinc-200"
+            }`}
         >
           {initial}
         </div>
@@ -70,11 +69,10 @@ export function ParticipantSidebar() {
           {participants.map((p) => (
             <div
               key={p.id}
-              className={`flex items-center justify-between p-2.5 rounded-xl border transition-all ${
-                p.isMe
+              className={`flex items-center justify-between p-2.5 rounded-xl border transition-all ${p.isMe
                   ? "bg-zinc-950 border-zinc-700/90 shadow-sm"
                   : "bg-zinc-950/60 border-zinc-800/60 hover:border-zinc-700/60"
-              }`}
+                }`}
             >
               <div className="flex items-center gap-3">
                 {renderAvatar(p.role, p.name)}
