@@ -18,15 +18,6 @@ export const useRoomStore = create<RoomState>((set) => ({
   userRole: initialParticipants.find((person) => {
     return person.isMe === true;
   })?.role || "participant",
-  
-
-
-
-
-
-
-
-
   // Functions
 
   setVideoUrl: (url) => {
@@ -34,14 +25,7 @@ export const useRoomStore = create<RoomState>((set) => ({
       { videoUrl: url }
     )
   },
-
- 
-
-
-
-
-
-
+  
   changeParticipantRole: (targetId, newRole) => {
     set(
       (state) => {
@@ -50,7 +34,7 @@ export const useRoomStore = create<RoomState>((set) => ({
       // If making someone else the host, current host becomes moderator
       if (newRole === "host") {
         nextParticipants = nextParticipants.map((p) => {
-          if (p.role === "host") {
+          if (p.role === "host") { 
             return { ...p, role: "moderator" };
           }
           return p;
@@ -58,13 +42,25 @@ export const useRoomStore = create<RoomState>((set) => ({
       }
 
       // Apply the new role to the target
-      nextParticipants = nextParticipants.map((p) =>
-        p.id === targetId ? { ...p, role: newRole } : p
-      );
+      nextParticipants = nextParticipants.map((p) => {
+        if (p.id === targetId) {
+          return { ...p, role: newRole };
+        }
+        return p;
+      });
        
+      const currentUser = nextParticipants.find((p) => {
+        return p.isMe === true;
+      });
+
+      let newUserRole: Role = "participant";
+      if (currentUser) {
+        newUserRole = currentUser.role;
+      }
+
       return { 
-        participants: nextParticipants,
-        userRole: nextParticipants.find((p) => p.isMe)?.role || "participant"
+        participants: nextParticipants, 
+        userRole: newUserRole
       };
     })
   },
