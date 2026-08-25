@@ -1,6 +1,5 @@
 import { RoomHeader } from "@/components/watch-party/RoomHeader";
-import { VideoPlayer } from "@/components/watch-party/VideoPlayer";
-import { ParticipantSidebar } from "@/components/watch-party/ParticipantSidebar";
+import { RoomClientView } from "@/components/watch-party/RoomClientView";
 
 interface RoomPageProps {
   params: Promise<{
@@ -9,20 +8,19 @@ interface RoomPageProps {
 }
 
 export default async function RoomPage({ params }: RoomPageProps) {
-  const { roomId } = await params;
+  await params;
 
   return (
-    <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-100 relative">
-      {/* Subtle background texture */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
+    <div className="flex flex-col min-h-screen bg-[#07080b] text-zinc-100 relative selection:bg-rose-500 selection:text-white">
+      {/* Background Structural Grid & Lighting */}
+      <div className="fixed inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
+      <div className="fixed inset-0 bg-mesh-pattern pointer-events-none" />
 
+      {/* Room Header */}
       <RoomHeader />
 
-      {/* Main Grid Layout */}
-      <div className="relative z-10 flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6 p-6 max-w-[1700px] w-full mx-auto">
-        <VideoPlayer />
-        <ParticipantSidebar />
-      </div>
+      {/* Client View with Co-Browsing Canvas, Sidebar, and Floating Control Dock */}
+      <RoomClientView />
     </div>
   );
 }

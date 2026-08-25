@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #09090b;
-  --foreground: #fafafa;
+  --background: #07080b;
+  --foreground: #f4f4f5;
+  --cinema-surface: #0e1117;
+  --cinema-card: #141722;
+  --cinema-border: rgba(255, 255, 255, 0.08);
 }
 
 @theme inline {
@@ -16,29 +19,119 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  overflow-x: hidden;
 }
 
-/* Subtle background grid pattern for depth without AI blur orbs */
+/* Subtle background grid pattern for depth without noisy blur orbs */
 .bg-grid-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
-/* Custom scrollbars */
+/* Subtle dot mesh */
+.bg-mesh-pattern {
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.06) 0px, transparent 50%);
+}
+
+/* Cinema ambient glow behind the video player */
+.cinema-glow {
+  position: absolute;
+  inset: -16px;
+  filter: blur(45px);
+  opacity: 0.45;
+  transition: opacity 0.5s ease, background 0.8s ease;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 2rem;
+}
+
+/* Floating Emoji Reaction Animation */
+@keyframes floatReactionUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.6) rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0px) scale(1.2) rotate(-5deg);
+  }
+  75% {
+    opacity: 0.9;
+    transform: translateY(-90px) scale(1) rotate(6deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-150px) scale(0.7) rotate(-10deg);
+  }
+}
+
+.animate-float-reaction {
+  animation: floatReactionUp 2.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Sound wave equalizer animation for NOW PLAYING badge */
+@keyframes equalizerBar1 {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
+
+@keyframes equalizerBar2 {
+  0%, 100% { height: 14px; }
+  50% { height: 6px; }
+}
+
+@keyframes equalizerBar3 {
+  0%, 100% { height: 8px; }
+  50% { height: 18px; }
+}
+
+.animate-equalizer-1 {
+  animation: equalizerBar1 1.2s ease-in-out infinite;
+}
+.animate-equalizer-2 {
+  animation: equalizerBar2 0.9s ease-in-out infinite;
+}
+.animate-equalizer-3 {
+  animation: equalizerBar3 1.1s ease-in-out infinite;
+}
+
+/* Pulse radar indicator */
+@keyframes radarPulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.radar-live {
+  animation: radarPulse 2s infinite;
+}
+
+/* Custom sleek scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #09090b;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: rgba(255, 255, 255, 0.12);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: rgba(255, 255, 255, 0.25);
 }
