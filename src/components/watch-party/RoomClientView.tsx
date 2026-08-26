@@ -20,7 +20,7 @@ export function RoomClientView() {
       )}
 
       {/* Main Room Layout Grid */}
-      <main className="relative z-10 flex-1 px-4 pt-4 sm:px-6 sm:pt-6 pb-[150px] max-w-[1800px] w-full mx-auto flex flex-col lg:flex-row gap-6 transition-all">
+      <main className="relative z-10 flex-1 px-4 pt-4 sm:px-6 sm:pt-6 pb-[100px] max-w-[1800px] w-full mx-auto flex flex-col lg:flex-row gap-6 transition-all">
         {/* Left / Hero Column: Interactive Virtual Browser OR Grid Stage */}
         <div className={`flex-1 min-w-0 flex flex-col gap-4 ${isTheaterMode ? "w-full" : ""}`}>
           {layoutMode === "cinema" ? (

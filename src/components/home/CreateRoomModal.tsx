@@ -85,11 +85,10 @@ export function CreateRoomModal() {
                 <button
                   type="button"
                   onClick={() => setPrivacy("public")}
-                  className={`p-3 rounded-2xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${
-                    privacy === "public"
-                      ? "bg-rose-950/40 border-rose-500/80 text-white"
-                      : "bg-zinc-950/60 border-white/[0.07] text-zinc-400 hover:border-white/[0.15]"
-                  }`}
+                  className={`p-3 rounded-2xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${privacy === "public"
+                    ? "bg-rose-950/40 border-rose-500/80 text-white"
+                    : "bg-zinc-950/60 border-white/[0.07] text-zinc-400 hover:border-white/[0.15]"
+                    }`}
                 >
                   <div className="flex items-center gap-1.5 text-xs font-semibold">
                     <Globe className="w-3.5 h-3.5 text-cyan-400" />
@@ -103,11 +102,10 @@ export function CreateRoomModal() {
                 <button
                   type="button"
                   onClick={() => setPrivacy("friends")}
-                  className={`p-3 rounded-2xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${
-                    privacy === "friends"
-                      ? "bg-rose-950/40 border-rose-500/80 text-white"
-                      : "bg-zinc-950/60 border-white/[0.07] text-zinc-400 hover:border-white/[0.15]"
-                  }`}
+                  className={`p-3 rounded-2xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${privacy === "friends"
+                    ? "bg-rose-950/40 border-rose-500/80 text-white"
+                    : "bg-zinc-950/60 border-white/[0.07] text-zinc-400 hover:border-white/[0.15]"
+                    }`}
                 >
                   <div className="flex items-center gap-1.5 text-xs font-semibold">
                     <Lock className="w-3.5 h-3.5 text-rose-400" />
@@ -129,11 +127,10 @@ export function CreateRoomModal() {
                 <button
                   type="button"
                   onClick={() => setControlMode("collaborative")}
-                  className={`p-3 rounded-2xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${
-                    controlMode === "collaborative"
-                      ? "bg-rose-950/40 border-rose-500/80 text-white"
-                      : "bg-zinc-950/60 border-white/[0.07] text-zinc-400 hover:border-white/[0.15]"
-                  }`}
+                  className={`p-3 rounded-2xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${controlMode === "collaborative"
+                    ? "bg-rose-950/40 border-rose-500/80 text-white"
+                    : "bg-zinc-950/60 border-white/[0.07] text-zinc-400 hover:border-white/[0.15]"
+                    }`}
                 >
                   <div className="flex items-center gap-1.5 text-xs font-semibold">
                     <MousePointer className="w-3.5 h-3.5 text-emerald-400" />
@@ -147,11 +144,10 @@ export function CreateRoomModal() {
                 <button
                   type="button"
                   onClick={() => setControlMode("host")}
-                  className={`p-3 rounded-2xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${
-                    controlMode === "host"
-                      ? "bg-rose-950/40 border-rose-500/80 text-white"
-                      : "bg-zinc-950/60 border-white/[0.07] text-zinc-400 hover:border-white/[0.15]"
-                  }`}
+                  className={`p-3 rounded-2xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${controlMode === "host"
+                    ? "bg-rose-950/40 border-rose-500/80 text-white"
+                    : "bg-zinc-950/60 border-white/[0.07] text-zinc-400 hover:border-white/[0.15]"
+                    }`}
                 >
                   <div className="flex items-center gap-1.5 text-xs font-semibold">
                     <Shield className="w-3.5 h-3.5 text-amber-400" />
