@@ -115,34 +115,40 @@ export function InteractiveVirtualBrowser() {
         {/* Virtual Browser Window Frame */}
         <div
           ref={browserContainerRef}
-          className="relative w-full bg-[#0a0c12] border border-white/[0.12] rounded-3xl overflow-hidden shadow-2xl flex flex-col justify-between select-none group"
+          className="relative w-full bg-[#0a0c12] border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl flex flex-col justify-between select-none group"
         >
           {/* Top Browser Chrome: Tabs Bar */}
-          <div className="flex items-center justify-between px-3 pt-2.5 pb-1 bg-[#06070a] border-b border-white/[0.06] overflow-x-auto scrollbar-none">
-            {/* Tabs List */}
-            <div className="flex items-center gap-1.5 min-w-0">
+          <div className="flex items-center justify-between px-3 py-2 bg-[#08090e] border-b border-white/[0.06] text-xs">
+            {/* Left: Window Dots & Tabs */}
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-none flex-1">
+              <div className="flex items-center gap-1.5 mr-2 shrink-0">
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+              </div>
+
+              {/* Tabs List */}
               {openTabs.map((tab) => {
                 const isActive = tab.id === activeTab.id;
                 return (
                   <div
                     key={tab.id}
                     onClick={() => setActiveTabId(tab.id)}
-                    className={`group/tab relative flex items-center gap-2 px-3.5 py-1.5 rounded-t-xl text-xs font-semibold cursor-pointer transition-all border-t border-x ${
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono font-medium max-w-[180px] cursor-pointer transition-colors shrink-0 group/tab ${
                       isActive
-                        ? "bg-[#0e111a] border-white/[0.1] text-white shadow-lg"
-                        : "bg-black/40 border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60"
+                        ? "bg-[#141722] text-white border border-white/[0.1]"
+                        : "bg-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"
                     }`}
                   >
-                    <Globe className={`w-3.5 h-3.5 ${isActive ? "text-rose-400" : "text-zinc-500"}`} />
-                    <span className="truncate max-w-[120px] sm:max-w-[160px]">{tab.title}</span>
-
+                    <Globe className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                    <span className="truncate">{tab.title}</span>
                     {openTabs.length > 1 && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           closeTab(tab.id);
                         }}
-                        className="p-0.5 rounded-full hover:bg-white/10 text-zinc-500 hover:text-zinc-200 opacity-0 group-hover/tab:opacity-100 transition-opacity"
+                        className="opacity-0 group-hover/tab:opacity-100 hover:text-rose-400 transition-opacity ml-1"
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -166,10 +172,10 @@ export function InteractiveVirtualBrowser() {
               {/* Button to toggle other users' mouse visibility */}
               <button
                 onClick={toggleMultiplayerCursors}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase transition-all cursor-pointer ${
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold tracking-wide uppercase transition-colors cursor-pointer ${
                   showMultiplayerCursors
                     ? "bg-rose-950/60 border border-rose-500/40 text-rose-300 hover:bg-rose-900/60"
-                    : "bg-zinc-850 border border-white/[0.1] text-zinc-400 hover:text-white"
+                    : "bg-[#141722] border border-white/[0.1] text-zinc-400 hover:text-white"
                 }`}
                 title={showMultiplayerCursors ? "Click to hide other users' cursors" : "Click to show other users' cursors"}
               >
@@ -180,7 +186,7 @@ export function InteractiveVirtualBrowser() {
               {/* Co-Browsing Permission Pill */}
               <button
                 onClick={toggleSharedControl}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase transition-all cursor-pointer ${
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold tracking-wide uppercase transition-colors cursor-pointer ${
                   hasSharedControl
                     ? "bg-emerald-950/60 border border-emerald-500/40 text-emerald-300"
                     : "bg-amber-950/60 border border-amber-500/40 text-amber-300"
@@ -194,7 +200,7 @@ export function InteractiveVirtualBrowser() {
           </div>
 
           {/* Browser Navigation & Address Bar */}
-          <div className="flex items-center gap-2.5 px-3 py-2 bg-[#0e111a] border-b border-white/[0.06]">
+          <div className="flex items-center gap-2.5 px-3 py-2 bg-[#0e1117] border-b border-white/[0.06]">
             {/* Back / Forward / Refresh */}
             <div className="flex items-center gap-1 text-zinc-400">
               <button
@@ -224,7 +230,7 @@ export function InteractiveVirtualBrowser() {
                 placeholder={activeTab.url}
                 value={urlInput}
                 onChange={(e) => setUrlInput(e.target.value)}
-                className="w-full px-3 py-1.5 pl-8 rounded-xl bg-zinc-950/90 border border-white/[0.08] text-xs font-mono text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500/30"
+                className="w-full px-3 py-1.5 pl-8 rounded-lg bg-[#141722] border border-white/[0.08] text-xs font-mono text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-rose-500"
               />
               <Globe className="w-3.5 h-3.5 text-zinc-500 absolute left-2.5 top-2" />
             </form>
@@ -235,7 +241,7 @@ export function InteractiveVirtualBrowser() {
                 <button
                   key={p.id}
                   onClick={() => setVideoUrl(p.url, p)}
-                  className="px-2 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-[11px] font-semibold text-zinc-300 hover:text-white border border-white/[0.05] transition-colors"
+                  className="px-2 py-1 rounded-lg bg-[#141722] hover:bg-[#1f2436] text-xs font-mono text-zinc-300 hover:text-white border border-white/[0.05] transition-colors"
                 >
                   {p.title.split("—")[0].split(":")[0]}
                 </button>
@@ -268,7 +274,7 @@ export function InteractiveVirtualBrowser() {
                     {r.emoji}
                   </span>
                   <span
-                    className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-full bg-gradient-to-r ${r.senderAvatar} shadow-lg border border-white/20`}
+                    className={`text-xs font-mono font-bold text-white px-2 py-0.5 rounded-full bg-[#1e2230] border border-white/20`}
                   >
                     {r.senderName}
                   </span>
@@ -280,10 +286,10 @@ export function InteractiveVirtualBrowser() {
             <div className="relative z-10 p-4 sm:p-6 flex items-start justify-between bg-gradient-to-b from-black/80 to-transparent">
               <div className="space-y-1 max-w-xl">
                 <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-md bg-rose-600 text-white text-[10px] font-black tracking-wider uppercase shadow-md">
+                  <span className="px-2.5 py-0.5 rounded bg-rose-500 text-white text-xs font-mono font-bold tracking-wider uppercase">
                     LIVE TAB
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-zinc-300 text-[10px] font-mono border border-white/10">
+                  <span className="px-2 py-0.5 rounded bg-black/70 backdrop-blur-md text-zinc-300 text-xs font-mono border border-white/10">
                     4K HDR • Co-Browsing
                   </span>
                   <span className="text-zinc-400 text-xs font-mono hidden sm:inline">
@@ -309,7 +315,7 @@ export function InteractiveVirtualBrowser() {
             <div className="relative z-10 self-center my-auto">
               <button
                 onClick={togglePlay}
-                className="w-18 h-18 sm:w-20 sm:h-20 rounded-3xl bg-rose-600/90 hover:bg-rose-500 text-white flex items-center justify-center shadow-2xl shadow-rose-950/80 backdrop-blur-md border border-white/20 transform group-hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                className="w-18 h-18 sm:w-20 sm:h-20 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center backdrop-blur-md border border-white/20 transform group-hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-2xl"
                 title={isPlaying ? "Pause Stream" : "Play Stream"}
               >
                 {isPlaying ? (
@@ -335,23 +341,23 @@ export function InteractiveVirtualBrowser() {
                     style={{ width: `${Math.min(100, ((currentTime + 45) / duration) * 100)}%` }}
                   />
                   <div
-                    className="h-full bg-gradient-to-r from-rose-500 via-rose-600 to-pink-500 rounded-full relative transition-all"
+                    className="h-full bg-rose-500 rounded-full relative transition-all"
                     style={{ width: `${(currentTime / duration) * 100}%` }}
                   >
-                    <span className="absolute right-0 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white shadow-md shadow-rose-950/80 scale-0 group-hover/scrubber:scale-100 transition-transform" />
+                    <span className="absolute right-0 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white scale-0 group-hover/scrubber:scale-100 transition-transform" />
                   </div>
 
                   {hoverTime !== null && (
                     <div
                       style={{ left: `${hoverPosition}%` }}
-                      className="absolute -top-8 -translate-x-1/2 px-2 py-0.5 rounded-md bg-zinc-900 border border-white/20 text-[10px] font-mono text-white shadow-lg pointer-events-none"
+                      className="absolute -top-8 -translate-x-1/2 px-2 py-0.5 rounded-md bg-zinc-900 border border-white/20 text-xs font-mono text-white shadow-lg pointer-events-none"
                     >
                       {formatTime(hoverTime)}
                     </div>
                   )}
                 </div>
 
-                <div className="flex justify-between text-[11px] font-mono text-zinc-400">
+                <div className="flex justify-between text-xs font-mono text-zinc-400">
                   <span>{formatTime(currentTime)}</span>
                   <span className="text-zinc-500">{formatTime(duration)}</span>
                 </div>
@@ -362,7 +368,7 @@ export function InteractiveVirtualBrowser() {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={togglePlay}
-                    className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
                   >
                     {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
                   </button>
@@ -370,7 +376,7 @@ export function InteractiveVirtualBrowser() {
                   <div className="flex items-center gap-2 pl-2 border-l border-white/10">
                     <button
                       onClick={toggleMute}
-                      className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                      className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
                     >
                       {isMuted || volume === 0 ? (
                         <VolumeX className="w-4 h-4 text-rose-400" />
@@ -392,7 +398,7 @@ export function InteractiveVirtualBrowser() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={toggleFullscreen}
-                    className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
                     title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
                   >
                     {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}

@@ -1,115 +1,173 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { featuredLounges } from "@/data/mockLounges";
-import { Users, Play, Radio, ArrowRight } from "@/icons";
+import { Users, ArrowRight, Film, Radio, Plus, Check } from "@/icons";
 
 export function FeaturedLounges() {
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [showAll, setShowAll] = useState(false);
+
+  const categories = [
+    { label: "All (24)", id: "All" },
+    { label: "Cinema & Sci-Fi", id: "Cinema & Sci-Fi" },
+    { label: "Gaming Lounge", id: "Gaming Lounge" },
+    { label: "Music & Beats", id: "Music & Beats" },
+    { label: "Anime & Film", id: "Anime & Film" },
+  ];
+
+  const filteredLounges = selectedCategory === "All"
+    ? featuredLounges
+    : featuredLounges.filter((l) => l.category === selectedCategory);
+
+  const premiere = filteredLounges[0] || featuredLounges[0];
+  const activeRooms = filteredLounges.slice(1);
+
   return (
-    <section id="lounges" className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-8">
+    <section id="lounges" className="w-full max-w-7xl mx-auto py-16 space-y-8 text-left">
       {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div className="space-y-2 text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-xs font-bold text-rose-400 uppercase tracking-wider">
-            <Radio className="w-3.5 h-3.5 animate-pulse" />
-            <span>Community Lounges</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            Jump Into a Live Public Watch Party
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#27211a] pb-6">
+        <div className="space-y-1.5 max-w-xl">
+          <p className="text-xs font-bold uppercase tracking-widest text-[#c8962e]">
+            PUBLIC SCREENING PROGRAM • 24 LOUNGES ACTIVE
+          </p>
+          <h2 className="text-3xl sm:text-4xl font-black text-[#f2e9d6] tracking-tight">
+            Live Community Screenings
           </h2>
-          <p className="text-xs sm:text-sm text-zinc-400 max-w-xl leading-relaxed">
-            Drop in on curated public screenings, join the live chat discussion, and stream together with fellow cinema and music enthusiasts worldwide.
+          <p className="text-sm text-[#907a5a] leading-relaxed">
+            Drop into curated public screenings. Synchronized 4K playback and live group discussion.
           </p>
         </div>
 
-        <Link
-          href="/room/lounge-cinema-88"
-          className="inline-flex items-center gap-2 text-xs font-bold text-rose-400 hover:text-rose-300 transition-colors"
-        >
-          <span>Explore All 24 Active Lounges</span>
-          <ArrowRight className="w-4 h-4" />
-        </Link>
+        {/* Category Pills Filter */}
+        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-[#161310] border border-[#27211a] rounded-xl">
+          {categories.map((c) => (
+            <button
+              key={c.id}
+              onClick={() => setSelectedCategory(c.id)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${selectedCategory === c.id
+                  ? "bg-[#c8962e] text-[#0c0a07] shadow-sm"
+                  : "text-[#907a5a] hover:text-[#f2e9d6] hover:bg-[#27211a]/50"
+                }`}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Lounges Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-        {featuredLounges.map((lounge) => (
-          <div
-            key={lounge.id}
-            className="group relative bg-[#0e111a] border border-white/[0.08] hover:border-rose-500/40 rounded-3xl overflow-hidden shadow-xl shadow-black/40 transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between"
-          >
-            {/* Top Video Preview with badges */}
-            <div className="relative aspect-video w-full overflow-hidden bg-zinc-900">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={lounge.videoThumbnail}
-                alt={lounge.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0e111a] via-black/20 to-transparent" />
+      {/* Asymmetric Distilled Layout: 1 Featured Premier + Runsheet List */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
 
-              {/* LIVE Badge */}
-              <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-600/90 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-wider shadow-md">
-                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                <span>LIVE</span>
-              </div>
+        {/* Dominant Premiere Card (7 cols) */}
+        <div className="lg:col-span-7 rounded-2xl overflow-hidden bg-[#161310] border border-[#27211a] flex flex-col justify-between group shadow-xl">
+          <div className="relative aspect-video w-full overflow-hidden bg-[#0c0a07]">
+            <div
+              className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700"
+              style={{ backgroundImage: `url(${premiere.videoThumbnail})` }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#161310] via-black/30 to-transparent" />
 
-              {/* Viewers count badge */}
-              <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-zinc-200 text-[11px] font-mono border border-white/10">
-                <Users className="w-3.5 h-3.5 text-rose-400" />
-                <span>{lounge.viewersCount}</span>
-              </div>
-
-              {/* Play icon overlay */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-[2px]">
-                <div className="w-12 h-12 rounded-2xl bg-rose-600 text-white flex items-center justify-center shadow-xl shadow-rose-950/60 transform group-hover:scale-110 transition-transform">
-                  <Play className="w-5 h-5 fill-white ml-0.5" />
-                </div>
-              </div>
+            <div className="absolute top-3 left-3 px-3 py-1 rounded-md bg-[#0c0a07]/90 text-xs font-bold text-[#c8962e] border border-[#27211a] flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#c8962e] animate-pulse" />
+              <span>FEATURED PREMIERE</span>
             </div>
 
-            {/* Content & Metadata */}
-            <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  {lounge.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-white/[0.05] border border-white/[0.08] text-zinc-300"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+            <div className="absolute top-3 right-3 px-3 py-1 rounded-md bg-[#0c0a07]/90 text-xs font-bold text-[#f2e9d6] border border-[#27211a] flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5 text-[#c8962e]" />
+              <span>{premiere.viewersCount} Watching</span>
+            </div>
+          </div>
 
-                <h3 className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors line-clamp-2">
-                  {lounge.title}
-                </h3>
+          <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
+            <div className="space-y-1.5">
+              <span className="text-xs text-[#907a5a] font-semibold">{premiere.category}</span>
+              <h3 className="text-xl sm:text-2xl font-bold text-[#f2e9d6] group-hover:text-[#c8962e] transition-colors leading-snug">
+                {premiere.title}
+              </h3>
+              <p className="text-xs text-[#907a5a]">Hosted by @{premiere.hostName} • Playing now</p>
+            </div>
+
+            {/* Stream Progress & Action */}
+            <div className="pt-4 border-t border-[#27211a] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1 flex-1 max-w-xs">
+                <div className="h-1 bg-[#27211a] rounded-full overflow-hidden">
+                  <div className="h-full bg-[#c8962e] rounded-full" style={{ width: "68%" }} />
+                </div>
+                <span className="text-[11px] text-[#907a5a]">01:14:20 / 01:48:00 (68% Complete)</span>
               </div>
 
-              {/* Host and Jump In Action */}
-              <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between">
-                <div className="flex items-center gap-2">
+              <Link
+                href={`/room/${premiere.id}`}
+                className="px-6 py-2.5 rounded-xl bg-[#c8962e] hover:bg-[#dba940] text-[#0c0a07] font-bold text-xs uppercase tracking-wider transition-colors text-center shrink-0 shadow-lg shadow-amber-950/20"
+              >
+                Join Premiere
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Screening Runsheet (5 cols) — Dense, multi-room list filling the vertical space */}
+        <div className="lg:col-span-5 flex flex-col space-y-3">
+          <div className="flex items-center justify-between text-xs font-bold text-[#907a5a] uppercase tracking-wider px-1">
+            <span>Now Streaming ({activeRooms.length} active)</span>
+            <span>Live Sync</span>
+          </div>
+
+          <div className="space-y-2.5 max-h-[480px] overflow-y-auto pr-1">
+            {activeRooms.map((room) => (
+              <div
+                key={room.id}
+                className="p-3.5 rounded-xl bg-[#161310] border border-[#27211a] hover:border-[#3a3022] flex items-center justify-between gap-3.5 transition-colors group shadow-md"
+              >
+                <div className="w-16 h-12 rounded-lg overflow-hidden shrink-0 bg-[#0c0a07]">
                   <div
-                    className={`w-6 h-6 rounded-full bg-gradient-to-r ${lounge.hostAvatarBg} flex items-center justify-center text-[10px] font-bold text-white shadow-sm`}
-                  >
-                    {lounge.hostName[0]}
+                    className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
+                    style={{ backgroundImage: `url(${room.videoThumbnail})` }}
+                  />
+                </div>
+
+                <div className="flex-1 min-w-0 space-y-0.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#c8962e] shrink-0" />
+                    <span className="text-[10px] font-bold text-[#c8962e] uppercase tracking-wider truncate">
+                      {room.category}
+                    </span>
                   </div>
-                  <div className="text-[11px]">
-                    <span className="text-zinc-400">Host: </span>
-                    <span className="font-semibold text-zinc-200">{lounge.hostName}</span>
-                  </div>
+                  <h4 className="text-xs font-bold text-[#f2e9d6] group-hover:text-[#c8962e] transition-colors truncate">
+                    {room.title}
+                  </h4>
+                  <p className="text-[10px] text-[#907a5a]">
+                    @{room.hostName} • {room.viewersCount} watching
+                  </p>
                 </div>
 
                 <Link
-                  href={`/room/${lounge.id}`}
-                  className="px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-rose-600 text-zinc-200 hover:text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1"
+                  href={`/room/${room.id}`}
+                  className="px-3 py-1.5 rounded-lg bg-[#27211a] hover:bg-[#c8962e] text-[#f2e9d6] hover:text-[#0c0a07] text-xs font-bold transition-colors shrink-0 border border-[#3a3022]"
                 >
-                  <span>Join</span>
-                  <ArrowRight className="w-3 h-3" />
+                  Join
                 </Link>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
+
+          {/* Quick Host Callout Card */}
+          <div className="p-3.5 rounded-xl bg-[#161310] border border-[#27211a] flex items-center justify-between gap-3 text-xs mt-1">
+            <div className="space-y-0.5">
+              <p className="font-bold text-[#f2e9d6]">Want to host a public lounge?</p>
+              <p className="text-[11px] text-[#907a5a]">Broadcast YouTube, Twitch, or MP4 in seconds.</p>
+            </div>
+            <a
+              href="#join-hub"
+              className="px-3 py-1.5 rounded-lg bg-[#c8962e] hover:bg-[#dba940] text-[#0c0a07] font-bold text-xs shrink-0 transition-colors"
+            >
+              Host Room
+            </a>
+          </div>
+        </div>
+
       </div>
     </section>
   );

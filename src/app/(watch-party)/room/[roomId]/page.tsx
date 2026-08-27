@@ -11,10 +11,9 @@ export default async function RoomPage({ params }: RoomPageProps) {
   await params;
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#07080b] text-zinc-100 relative selection:bg-rose-500 selection:text-white">
-      {/* Background Structural Grid & Lighting */}
+    <div className="flex flex-col min-h-screen bg-[#07080b] text-[#f4f4f5] relative selection:bg-rose-500 selection:text-white">
+      {/* Background Structural Grid */}
       <div className="fixed inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
-      <div className="fixed inset-0 bg-mesh-pattern pointer-events-none" />
 
       {/* Room Header */}
       <RoomHeader />

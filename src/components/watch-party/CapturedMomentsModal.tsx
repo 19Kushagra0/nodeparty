@@ -23,17 +23,17 @@ export function CapturedMomentsModal() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-3xl bg-[#0e111a] border border-white/[0.12] rounded-3xl p-6 sm:p-8 shadow-2xl shadow-rose-950/40 text-left space-y-6 max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-3xl bg-[#0e1117] border border-white/[0.08] rounded-2xl p-6 sm:p-8 shadow-2xl text-left space-y-6 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-start justify-between pb-4 border-b border-white/[0.08]">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-white shadow-md shadow-rose-950/50">
+              <span className="w-8 h-8 rounded-xl bg-rose-500 flex items-center justify-center text-white">
                 <Camera className="w-4 h-4" />
               </span>
-              <h3 className="text-xl font-black text-white tracking-tight">
+              <h3 className="text-xl font-black text-[#f4f4f5] tracking-tight">
                 Party Moments & Memories
               </h3>
             </div>
@@ -53,7 +53,7 @@ export function CapturedMomentsModal() {
         {/* Moments Polaroid Grid */}
         {capturedMoments.length === 0 ? (
           <div className="text-center py-12 space-y-3">
-            <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-white/[0.08] flex items-center justify-center text-zinc-500 mx-auto">
+            <div className="w-14 h-14 rounded-xl bg-[#141722] border border-white/[0.08] flex items-center justify-center text-zinc-500 mx-auto">
               <ImageIcon className="w-7 h-7" />
             </div>
             <p className="text-sm font-semibold text-zinc-300">No Moments Captured Yet</p>
@@ -66,17 +66,17 @@ export function CapturedMomentsModal() {
             {capturedMoments.map((moment) => (
               <div
                 key={moment.id}
-                className="group relative bg-zinc-950 border border-white/[0.08] hover:border-rose-500/40 rounded-2xl p-3 shadow-lg flex flex-col justify-between space-y-3 transition-all"
+                className="group relative bg-[#141722] border border-white/[0.08] hover:border-white/[0.2] rounded-xl p-3 shadow-lg flex flex-col justify-between space-y-3 transition-colors"
               >
                 {/* Image Snapshot Frame */}
-                <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-zinc-900">
+                <div className="relative aspect-video w-full rounded-lg overflow-hidden bg-zinc-900">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={moment.imageUrl}
                     alt={moment.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/70 backdrop-blur-md text-[10px] font-mono text-zinc-300 border border-white/10">
+                  <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/80 text-xs font-mono text-zinc-300 border border-white/10">
                     {moment.timestamp}
                   </div>
                 </div>
@@ -86,9 +86,9 @@ export function CapturedMomentsModal() {
                   <h4 className="text-xs font-bold text-white line-clamp-1">
                     {moment.title}
                   </h4>
-                  <div className="flex items-center gap-2 text-[11px] text-zinc-400">
+                  <div className="flex items-center gap-2 text-xs text-zinc-400">
                     <div
-                      className={`w-4 h-4 rounded-full bg-gradient-to-r ${moment.userAvatarBg} flex items-center justify-center text-[8px] font-bold text-white`}
+                      className="w-4 h-4 rounded-full bg-[#1e2230] flex items-center justify-center text-xs font-mono font-bold text-white"
                     >
                       {moment.capturedBy[0]}
                     </div>

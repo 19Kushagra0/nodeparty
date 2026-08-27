@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Outfit, Space_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const outfitSans = Outfit({
+  variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const spaceMono = Space_Mono({
+  weight: ["400", "700"],
+  variable: "--font-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -25,12 +28,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      className={`${outfitSans.variable} ${spaceMono.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col bg-[#07080b] text-zinc-100">{children}{/* impeccable-live-start */}
-<script src="http://localhost:8400/live.js?token=a4ab5a37-33f7-425f-a120-33b08c26ceee"></script>
-{/* impeccable-live-end */}
-</body>
+      <body className="min-h-full flex flex-col bg-[#0c0a07] text-[#f2e9d6]" suppressHydrationWarning>
+        {children}
+        {/* impeccable-live-start */}
+        <script src="http://localhost:8400/live.js?token=a4ab5a37-33f7-425f-a120-33b08c26ceee" async></script>
+        {/* impeccable-live-end */}
+      </body>
     </html>
   );
 }

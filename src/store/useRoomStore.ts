@@ -191,8 +191,8 @@ const initialMultiplayerCursors: MultiplayerCursor[] = [
   {
     id: "u3",
     name: "Marcus",
-    color: "#a855f7", // Violet
-    avatarBg: "from-violet-500 to-indigo-600",
+    color: "#06b6d4", // Phosphor Cyan
+    avatarBg: "from-cyan-500 to-teal-600",
     x: 25,
     y: 72,
     isClicking: false,
