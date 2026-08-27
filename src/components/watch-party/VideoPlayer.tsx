@@ -103,7 +103,7 @@ export function VideoPlayer() {
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#0e111a] border border-white/[0.08] p-3 rounded-2xl shadow-lg">
         {/* Curated Sample Video Switcher Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 px-2 shrink-0">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 px-2 shrink-0">
             Presets:
           </span>
           {curatedVideoPresets.map((preset) => {
@@ -190,7 +190,7 @@ export function VideoPlayer() {
                   {r.emoji}
                 </span>
                 <span
-                  className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-full bg-gradient-to-r ${r.senderAvatar} shadow-lg border border-white/20`}
+                  className={`text-xs font-mono font-bold text-white px-2 py-0.5 rounded-full bg-gradient-to-r ${r.senderAvatar} shadow-lg border border-white/20`}
                 >
                   {r.senderName}
                 </span>
@@ -202,10 +202,10 @@ export function VideoPlayer() {
           <div className="relative z-10 p-4 sm:p-6 flex items-start justify-between bg-gradient-to-b from-black/80 to-transparent">
             <div className="space-y-1 max-w-xl">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-md bg-rose-600 text-white text-[10px] font-black tracking-wider uppercase shadow-md">
+                <span className="px-2.5 py-0.5 rounded-md bg-rose-600 text-white text-xs font-mono font-bold tracking-wider uppercase shadow-md">
                   NOW STREAMING
                 </span>
-                <span className="px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-zinc-300 text-[10px] font-mono border border-white/10">
+                <span className="px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-zinc-300 text-xs font-mono border border-white/10">
                   4K HDR • 60 FPS
                 </span>
                 <span className="text-zinc-400 text-xs font-mono hidden sm:inline">
@@ -269,7 +269,7 @@ export function VideoPlayer() {
                 {hoverTime !== null && (
                   <div
                     style={{ left: `${hoverPosition}%` }}
-                    className="absolute -top-8 -translate-x-1/2 px-2 py-0.5 rounded-md bg-zinc-900 border border-white/20 text-[10px] font-mono text-white shadow-lg pointer-events-none"
+                    className="absolute -top-8 -translate-x-1/2 px-2 py-0.5 rounded-md bg-zinc-900 border border-white/20 text-xs font-mono text-white shadow-lg pointer-events-none"
                   >
                     {formatTime(hoverTime)}
                   </div>
@@ -277,7 +277,7 @@ export function VideoPlayer() {
               </div>
 
               {/* Time Indicators */}
-              <div className="flex justify-between text-[11px] font-mono text-zinc-400">
+              <div className="flex justify-between text-xs font-mono text-zinc-400">
                 <span>{formatTime(currentTime)}</span>
                 <span className="text-zinc-500">{formatTime(duration)}</span>
               </div>
@@ -403,7 +403,7 @@ export function VideoPlayer() {
         </div>
 
         <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-zinc-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-emerald-400" />
           <span>Real-time Stream Engine</span>
         </div>
       </div>

@@ -8,79 +8,76 @@ interface DemoReaction {
   id: string;
   emoji: string;
   sender: string;
-  avatarBg: string;
+  color: string;
   leftPercent: number;
 }
-
-let reactionCounter = 0;
 
 export function InteractiveHeroDemo() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
-  const [progress, setProgress] = useState(38);
-  const [reactions, setReactions] = useState<DemoReaction[]>([
-    { id: "demo-1", emoji: "🔥", sender: "Sarah", avatarBg: "from-rose-500 to-pink-600", leftPercent: 25 },
-    { id: "demo-2", emoji: "🍿", sender: "Kenji", avatarBg: "from-cyan-500 to-blue-600", leftPercent: 65 },
-  ]);
-
   const [activeTab, setActiveTab] = useState<"chat" | "crew">("chat");
+  const [reactions, setReactions] = useState<DemoReaction[]>([]);
+  const [currentTimeSec, setCurrentTimeSec] = useState(48);
 
-  // Simulated progress ticker
-  useEffect(() => {
-    if (!isPlaying) return;
-    const interval = setInterval(() => {
-      setProgress((prev) => (prev >= 100 ? 0 : prev + 0.5));
-    }, 400);
-    return () => clearInterval(interval);
-  }, [isPlaying]);
-
-  const triggerEmoji = useCallback((emoji: string) => {
-    reactionCounter += 1;
-    const offset = 20 + ((reactionCounter * 17) % 60);
+  const triggerEmoji = useCallback((emoji: string, sender = "You") => {
     const newReaction: DemoReaction = {
-      id: `react-${reactionCounter}`,
+      id: Math.random().toString(36).substring(2, 9),
       emoji,
-      sender: "You",
-      avatarBg: "from-rose-500 to-pink-600",
-      leftPercent: offset,
+      sender,
+      color: "from-rose-500 to-pink-600",
+      leftPercent: 20 + Math.random() * 60,
     };
-    setReactions((prev) => [...prev.slice(-6), newReaction]);
+    setReactions((prev) => [...prev, newReaction]);
+
     setTimeout(() => {
       setReactions((prev) => prev.filter((r) => r.id !== newReaction.id));
-    }, 2800);
+    }, 2500);
   }, []);
 
-  return (
-    <div className="relative w-full max-w-5xl mx-auto rounded-3xl p-1 bg-gradient-to-b from-white/[0.12] via-white/[0.04] to-transparent shadow-2xl shadow-rose-950/20">
-      {/* Background ambient glow behind preview */}
-      <div className="absolute -inset-4 bg-gradient-to-r from-rose-600/20 via-purple-600/15 to-cyan-600/20 rounded-3xl blur-2xl opacity-60 pointer-events-none" />
+  // Periodic simulated reactions
+  useEffect(() => {
+    const emojis = ["🔥", "🍿", "❤️", "😮", "⚡"];
+    const names = ["Elena", "Marcus", "Chloe", "Kai"];
+    const interval = setInterval(() => {
+      const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+      const randomName = names[Math.floor(Math.random() * names.length)];
+      triggerEmoji(randomEmoji, randomName);
+    }, 2800);
 
-      <div className="relative bg-[#0d0f17] border border-white/[0.08] rounded-[22px] overflow-hidden">
-        {/* Top Mini Window Bar */}
-        <div className="flex items-center justify-between px-4 py-3 bg-[#08090e] border-b border-white/[0.06] text-xs">
+    return () => clearInterval(interval);
+  }, [triggerEmoji]);
+
+  return (
+    <div className="relative w-full max-w-5xl mx-auto">
+      {/* Ambient Diffuse Stage Backlight */}
+      <div className="cinema-ambient-stage bg-[#c8962e]/15" />
+
+      <div className="relative w-full rounded-2xl overflow-hidden bg-[#161310] border border-[#27211a]">
+        {/* Top Master Window Bar */}
+        <div className="flex items-center justify-between px-4 py-3 bg-[#0c0a07] border-b border-[#27211a] text-xs">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+              <span className="w-2.5 h-2.5 rounded-full bg-white/20" />
+              <span className="w-2.5 h-2.5 rounded-full bg-white/20" />
+              <span className="w-2.5 h-2.5 rounded-full bg-white/20" />
             </div>
-            <span className="text-zinc-400 font-mono text-[11px] flex items-center gap-1.5 pl-2 border-l border-white/[0.08]">
-              <Radio className="w-3 h-3 text-rose-400 animate-pulse" />
-              <span>LIVE LOUNGE • #CYBER-4096</span>
+            <span className="text-zinc-400 font-mono text-xs flex items-center gap-1.5 pl-2 border-l border-white/[0.08]">
+              <Radio className="w-3 h-3 text-zinc-300" />
+              <span>STAGE • #CYBER-4096</span>
             </span>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-cyan-950/50 border border-cyan-500/30 text-[11px] font-mono text-cyan-300">
-              <Zap className="w-3 h-3 text-cyan-400" />
-              <span>12ms Sync Drift</span>
+            <div className="hidden sm:flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono text-zinc-300">
+              <Zap className="w-3 h-3 text-zinc-400" />
+              <span>SYNC LOCKED</span>
             </div>
 
             <Link
               href="/room/lounge-demo"
-              className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-medium text-xs transition-colors"
+              className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-white hover:bg-zinc-200 text-black font-bold text-xs transition-colors"
             >
-              <span>Enter Room</span>
+              <span>Launch Room</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -90,9 +87,9 @@ export function InteractiveHeroDemo() {
         <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[380px] sm:min-h-[440px]">
           {/* Left Hero Video Simulation Canvas (8 cols) */}
           <div className="lg:col-span-8 relative bg-black flex flex-col justify-between overflow-hidden group">
-            {/* Simulated Cinema Video Feed Poster with High Dynamic Overlay */}
+            {/* Simulated Cinema Video Feed Poster */}
             <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              className="absolute inset-0 bg-cover bg-center"
               style={{
                 backgroundImage: `url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop')`,
               }}
@@ -101,122 +98,85 @@ export function InteractiveHeroDemo() {
             </div>
 
             {/* Floating Emoji Reactions Stream */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
               {reactions.map((r) => (
                 <div
                   key={r.id}
-                  style={{ left: `${r.leftPercent}%`, bottom: "20%" }}
-                  className="absolute animate-float-reaction flex flex-col items-center gap-1 z-30"
+                  className="absolute bottom-16 animate-float-reaction flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/10 text-xs"
+                  style={{ left: `${r.leftPercent}%` }}
                 >
-                  <span className="text-3xl sm:text-4xl drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] filter">
-                    {r.emoji}
-                  </span>
-                  <span
-                    className={`text-[9px] font-bold text-white px-1.5 py-0.5 rounded-full bg-gradient-to-r ${r.avatarBg} shadow-md border border-white/20`}
-                  >
-                    {r.sender}
-                  </span>
+                  <span className="text-base">{r.emoji}</span>
+                  <span className="text-xs text-zinc-300 font-mono">{r.sender}</span>
                 </div>
               ))}
             </div>
 
-            {/* Video Top Metadata Bar */}
-            <div className="relative z-10 p-4 flex items-start justify-between">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-rose-600/90 text-white text-[10px] font-black tracking-wider uppercase">
-                    NOW PLAYING
-                  </span>
-                  <span className="px-2 py-0.5 rounded bg-black/60 backdrop-blur-md text-zinc-300 text-[10px] font-mono border border-white/10">
-                    4K HDR • 60 FPS
-                  </span>
-                </div>
-                <h3 className="text-sm sm:text-base font-bold text-white drop-shadow-md">
-                  Cyberpunk 2077: Phantom Liberty — Official Cinematic
-                </h3>
+            {/* Top Video Overlay Bar */}
+            <div className="relative z-10 p-4 flex items-center justify-between bg-gradient-to-b from-black/80 to-transparent">
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded bg-white text-black font-mono text-xs font-bold uppercase tracking-wider">
+                  LIVE STREAM
+                </span>
+                <span className="text-xs font-mono text-zinc-300">
+                  4K HDR • 60 FPS
+                </span>
               </div>
-
-              {/* Sound Wave Indicator */}
-              {isPlaying && (
-                <div className="flex items-end gap-1 h-5 px-2 py-1 rounded-md bg-black/60 backdrop-blur-md border border-white/10">
-                  <span className="w-1 bg-rose-400 rounded-full animate-equalizer-1" />
-                  <span className="w-1 bg-rose-500 rounded-full animate-equalizer-2" />
-                  <span className="w-1 bg-pink-400 rounded-full animate-equalizer-3" />
-                </div>
-              )}
+              <div className="flex items-center gap-1.5 text-xs font-mono text-zinc-300 bg-black/60 px-2.5 py-1 rounded-full border border-white/10">
+                <Users className="w-3.5 h-3.5 text-zinc-400" />
+                <span>5 Viewers In Sync</span>
+              </div>
             </div>
 
-            {/* Center Playback Trigger Overlay (shows on hover) */}
-            <div className="relative z-10 self-center my-auto flex items-center justify-center">
-              <button
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="w-16 h-16 rounded-2xl bg-rose-600/90 hover:bg-rose-500 text-white flex items-center justify-center shadow-xl shadow-rose-950/60 backdrop-blur-md border border-white/20 transition-transform active:scale-95 cursor-pointer"
-                title={isPlaying ? "Pause Video" : "Play Video"}
+            {/* Middle Big Play Indicator */}
+            <div className="relative z-10 my-auto flex items-center justify-center pointer-events-none">
+              <div
+                className={`w-14 h-14 rounded-full bg-white text-black flex items-center justify-center transition-all duration-300 ${
+                  isPlaying ? "opacity-0 scale-90" : "opacity-100 scale-100"
+                }`}
               >
-                {isPlaying ? (
-                  <Pause className="w-7 h-7 fill-white" />
-                ) : (
-                  <Play className="w-7 h-7 fill-white ml-1" />
-                )}
-              </button>
+                <Play className="w-6 h-6 fill-black ml-1" />
+              </div>
             </div>
 
-            {/* Interactive Control & Reaction Bar */}
-            <div className="relative z-10 p-4 space-y-3 bg-gradient-to-t from-black/95 via-black/80 to-transparent">
-              {/* Progress Scrubber */}
-              <div className="space-y-1">
+            {/* Bottom Scrubber & Interactive Controls Bar */}
+            <div className="relative z-10 p-4 bg-gradient-to-t from-black via-black/90 to-transparent space-y-3">
+              {/* Scrubber Line */}
+              <div className="w-full h-1.5 bg-white/20 rounded-full overflow-hidden cursor-pointer">
                 <div
-                  className="h-1.5 w-full bg-white/20 rounded-full overflow-hidden cursor-pointer relative"
-                  onClick={(e) => {
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    const clickX = e.clientX - rect.left;
-                    setProgress((clickX / rect.width) * 100);
-                  }}
-                >
-                  <div
-                    className="h-full bg-gradient-to-r from-rose-500 to-pink-500 rounded-full transition-all"
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
-                <div className="flex justify-between text-[10px] font-mono text-zinc-400">
-                  <span>01:24</span>
-                  <span>03:42</span>
-                </div>
+                  className="h-full bg-white transition-all duration-300"
+                  style={{ width: `${(currentTimeSec / 120) * 100}%` }}
+                />
               </div>
 
-              {/* Bottom Row Controls + Instant Emojis */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+              <div className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setIsPlaying(!isPlaying)}
                     className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
                   >
-                    {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                    {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-white" />}
                   </button>
 
                   <button
                     onClick={() => setIsMuted(!isMuted)}
                     className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
                   >
-                    {isMuted ? <VolumeX className="w-4 h-4 text-zinc-400" /> : <Volume2 className="w-4 h-4 text-white" />}
+                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                   </button>
 
-                  <span className="text-[11px] text-zinc-400 hidden sm:inline">
-                    Host: <strong className="text-zinc-200">Alex</strong> (broadcasting)
+                  <span className="font-mono text-zinc-300 text-xs">
+                    00:{currentTimeSec < 10 ? `0${currentTimeSec}` : currentTimeSec} / 02:00
                   </span>
                 </div>
 
-                {/* Instant Emoji Reaction Burst Buttons */}
-                <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2 py-1 rounded-xl border border-white/10">
-                  <span className="text-[10px] text-zinc-400 font-medium px-1 hidden sm:inline">
-                    React:
-                  </span>
-                  {["🔥", "🍿", "😂", "💜", "👏"].map((emoji) => (
+                {/* Quick Emoji Trigger Bar */}
+                <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md p-1 rounded-full border border-white/10">
+                  {["🔥", "🍿", "❤️", "😮", "⚡"].map((emoji) => (
                     <button
                       key={emoji}
                       onClick={() => triggerEmoji(emoji)}
-                      className="text-base hover:scale-125 active:scale-95 transition-transform p-1 cursor-pointer"
-                      title={`Send ${emoji}`}
+                      className="w-7 h-7 rounded-full hover:bg-white/20 active:scale-125 transition-all flex items-center justify-center text-sm cursor-pointer"
+                      title={`React with ${emoji}`}
                     >
                       {emoji}
                     </button>
@@ -226,16 +186,16 @@ export function InteractiveHeroDemo() {
             </div>
           </div>
 
-          {/* Right Social & Chat Simulator (4 cols) */}
-          <div className="lg:col-span-4 bg-[#0a0c12] border-t lg:border-t-0 lg:border-l border-white/[0.08] flex flex-col justify-between p-4">
-            {/* Sidebar Tabs */}
+          {/* Right Social & Crew Column (4 cols) */}
+          <div className="lg:col-span-4 bg-[#161310] border-t lg:border-t-0 lg:border-l border-[#27211a] p-4 flex flex-col justify-between text-left">
+            {/* Header Tabs */}
             <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setActiveTab("chat")}
                   className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
                     activeTab === "chat"
-                      ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                      ? "bg-white/10 text-white"
                       : "text-zinc-400 hover:text-zinc-200"
                   }`}
                 >
@@ -246,7 +206,7 @@ export function InteractiveHeroDemo() {
                   onClick={() => setActiveTab("crew")}
                   className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
                     activeTab === "crew"
-                      ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                      ? "bg-white/10 text-white"
                       : "text-zinc-400 hover:text-zinc-200"
                   }`}
                 >
@@ -255,27 +215,27 @@ export function InteractiveHeroDemo() {
                 </button>
               </div>
 
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-full flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Synced
+              <span className="text-xs font-mono text-zinc-300 bg-white/[0.04] border border-white/10 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                SYNCED
               </span>
             </div>
 
             {/* Chat Content */}
             {activeTab === "chat" ? (
               <div className="flex-1 my-3 space-y-3 overflow-y-auto max-h-[220px] text-xs">
-                <div className="p-2 rounded-lg bg-zinc-900/60 border border-white/[0.05] text-[11px] text-zinc-400">
-                  <span className="text-rose-400 font-semibold">✨ Room Engine:</span> Video stream lock established. All 5 participants synced.
+                <div className="py-1 text-xs text-zinc-400 font-mono">
+                  <span className="text-white font-bold">ENGINE:</span> Stream sync locked. 5 viewers aligned.
                 </div>
 
                 <div className="flex items-start gap-2">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 flex items-center justify-center text-[10px] font-bold text-white shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-white/[0.08] border border-white/10 flex items-center justify-center text-xs font-bold text-white shrink-0">
                     E
                   </div>
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-1.5">
                       <span className="font-semibold text-zinc-200 text-xs">Elena</span>
-                      <span className="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1 rounded font-bold">
+                      <span className="text-xs font-mono bg-white/[0.08] text-zinc-300 border border-white/10 px-1 rounded font-bold">
                         MOD
                       </span>
                     </div>
@@ -286,7 +246,7 @@ export function InteractiveHeroDemo() {
                 </div>
 
                 <div className="flex items-start gap-2">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-violet-500 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-white/[0.08] border border-white/10 flex items-center justify-center text-xs font-bold text-white shrink-0">
                     M
                   </div>
                   <div className="space-y-0.5">
@@ -302,22 +262,22 @@ export function InteractiveHeroDemo() {
             ) : (
               <div className="flex-1 my-3 space-y-2 text-xs">
                 {[
-                  { name: "Alex (You)", role: "Host 👑", color: "from-rose-500 to-pink-600" },
-                  { name: "Elena Rostova", role: "Mod ⭐", color: "from-amber-500 to-orange-600" },
-                  { name: "Marcus Vance", role: "Viewer", color: "from-violet-500 to-indigo-600" },
-                  { name: "Chloe Zhao", role: "Viewer", color: "from-emerald-500 to-teal-600" },
+                  { name: "Alex (You)", role: "HOST" },
+                  { name: "Elena Rostova", role: "MOD" },
+                  { name: "Marcus Vance", role: "VIEWER" },
+                  { name: "Chloe Zhao", role: "VIEWER" },
                 ].map((u) => (
                   <div
                     key={u.name}
-                    className="flex items-center justify-between p-2 rounded-lg bg-zinc-900/60 border border-white/[0.04]"
+                    className="flex items-center justify-between p-2 rounded-lg bg-black/40 border border-white/[0.04]"
                   >
                     <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full bg-gradient-to-r ${u.color} flex items-center justify-center text-[10px] font-bold text-white`}>
+                      <div className="w-6 h-6 rounded-full bg-white/[0.08] border border-white/10 flex items-center justify-center text-xs font-bold text-white">
                         {u.name[0]}
                       </div>
                       <span className="font-medium text-zinc-200 text-xs">{u.name}</span>
                     </div>
-                    <span className="text-[10px] text-zinc-400 font-mono">{u.role}</span>
+                    <span className="text-xs text-zinc-400 font-mono">{u.role}</span>
                   </div>
                 ))}
               </div>
@@ -329,7 +289,7 @@ export function InteractiveHeroDemo() {
                 <input
                   type="text"
                   placeholder="Type a reaction message..."
-                  className="flex-1 bg-zinc-900/90 border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-rose-500"
+                  className="flex-1 bg-black/40 border border-white/[0.08] rounded-xl px-3 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/40"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       triggerEmoji("🔥");
@@ -339,7 +299,7 @@ export function InteractiveHeroDemo() {
                 />
                 <button
                   onClick={() => triggerEmoji("🔥")}
-                  className="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold cursor-pointer"
+                  className="px-3.5 py-2 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold transition-colors cursor-pointer"
                 >
                   Send
                 </button>

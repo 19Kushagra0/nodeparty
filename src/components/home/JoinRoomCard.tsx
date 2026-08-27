@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Zap, Sparkles, Radio, Check } from "@/icons";
+import { Plus, Zap, Radio, Check } from "@/icons";
 import { useRoomStore } from "@/store/useRoomStore";
 
 export default function JoinRoomCard() {
@@ -11,6 +11,28 @@ export default function JoinRoomCard() {
   const [activeTab, setActiveTab] = useState<"quick" | "code">("quick");
   const [roomIdInput, setRoomIdInput] = useState("");
   const [isJoining, setIsJoining] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Global Keyboard Shortcut: Press '/' or 'Cmd/Ctrl+K' to focus room code
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isInputActive =
+        document.activeElement?.tagName === "INPUT" ||
+        document.activeElement?.tagName === "TEXTAREA";
+
+      if ((e.key === "/" && !isInputActive) || ((e.metaKey || e.ctrlKey) && e.key === "k")) {
+        e.preventDefault();
+        setActiveTab("code");
+        setTimeout(() => {
+          inputRef.current?.focus();
+          inputRef.current?.select();
+        }, 50);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const handleQuickCreate = () => {
     setCreateModalOpen(true);
@@ -43,83 +65,95 @@ export default function JoinRoomCard() {
   };
 
   return (
-    <div className="w-full max-w-md bg-[#0e111a]/95 border border-white/[0.1] rounded-3xl p-6 shadow-2xl shadow-rose-950/30 text-left space-y-5 backdrop-blur-xl">
-      {/* Switcher Tabs */}
-      <div className="flex items-center p-1 bg-zinc-950/80 rounded-2xl border border-white/[0.08]">
+    <div className="w-full bg-[#161310] border border-[#27211a] rounded-2xl p-6 text-left space-y-5 shadow-2xl">
+      {/* Tab Header (Flat, un-nested tab bar with high contrast) */}
+      <div className="flex items-center gap-2 border-b border-[#27211a] pb-3">
         <button
           type="button"
           onClick={() => setActiveTab("quick")}
-          className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
             activeTab === "quick"
-              ? "bg-gradient-to-r from-rose-600 to-pink-600 text-white shadow-md shadow-rose-950/40"
-              : "text-zinc-400 hover:text-white"
+              ? "bg-[#c8962e] text-[#0c0a07] shadow-sm"
+              : "text-[#d6c8b0] hover:text-[#f2e9d6] hover:bg-[#27211a]/50"
           }`}
         >
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Create Party</span>
+          <Plus className="w-3.5 h-3.5" />
+          <span>Launch Room</span>
         </button>
 
         <button
           type="button"
-          onClick={() => setActiveTab("code")}
-          className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+          onClick={() => {
+            setActiveTab("code");
+            setTimeout(() => inputRef.current?.focus(), 50);
+          }}
+          className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
             activeTab === "code"
-              ? "bg-zinc-800 text-white shadow-sm border border-white/[0.1]"
-              : "text-zinc-400 hover:text-white"
+              ? "bg-[#27211a] text-[#f2e9d6] border border-[#3a3022]"
+              : "text-[#d6c8b0] hover:text-[#f2e9d6] hover:bg-[#27211a]/50"
           }`}
         >
-          <Radio className="w-3.5 h-3.5 text-cyan-400" />
+          <Radio className="w-3.5 h-3.5 text-[#c8962e]" />
           <span>Join with Code</span>
+          <kbd className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-[#2c251e] text-[10px] font-mono font-bold text-[#f2e9d6] border border-[#524332]">
+            /
+          </kbd>
         </button>
       </div>
 
       {activeTab === "quick" ? (
         <div className="space-y-4">
-          <div className="space-y-1 text-center sm:text-left">
-            <h3 className="text-sm font-bold text-white">Start Your Cinema Room</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              Pick a video, customize privacy, and invite your crew in 5 seconds.
+          <div className="space-y-1">
+            <h2 className="text-sm font-bold text-[#f2e9d6]">Instant Cinema Room</h2>
+            <p className="text-xs text-[#c4b59d] leading-relaxed">
+              Create a private synchronized room in seconds. Invite friends with zero setup.
             </p>
           </div>
 
           <button
             onClick={handleQuickCreate}
-            className="w-full group relative inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-600 via-rose-500 to-pink-600 hover:from-rose-500 hover:to-pink-500 active:scale-[0.98] text-white font-bold text-sm shadow-xl shadow-rose-950/50 border border-rose-400/30 transition-all cursor-pointer"
+            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#c8962e] hover:bg-[#dba940] active:scale-[0.98] text-[#0c0a07] font-bold text-sm transition-all cursor-pointer shadow-lg shadow-amber-950/20"
           >
-            <Plus className="w-4 h-4 transition-transform group-hover:rotate-90 duration-300" />
-            <span>Configure & Launch Room</span>
+            <Plus className="w-4 h-4" />
+            <span>Enter Cinema</span>
           </button>
 
-          <div className="pt-2 flex items-center justify-center gap-4 text-[11px] font-mono text-zinc-400">
-            <span className="flex items-center gap-1">
-              <Zap className="w-3 h-3 text-cyan-400" /> Zero Sign-Up
+          <div className="pt-1 flex items-center justify-center gap-4 text-xs font-medium">
+            <span className="flex items-center gap-1.5 text-[#ded3be]">
+              <Zap className="w-3.5 h-3.5 text-[#c8962e]" /> Zero Sign-Up
             </span>
-            <span>•</span>
-            <span className="flex items-center gap-1">
-              <Check className="w-3 h-3 text-emerald-400" /> Free 4K HDR
+            <span className="text-[#524332]">•</span>
+            <span className="flex items-center gap-1.5 text-[#ded3be]">
+              <Check className="w-3.5 h-3.5 text-[#c8962e]" /> Sub-Frame Sync
             </span>
           </div>
         </div>
       ) : (
         <form onSubmit={handleJoinRoom} className="space-y-4">
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-zinc-300">Room Code or Invite URL</label>
+              <label className="text-xs font-bold text-[#f2e9d6] flex items-center gap-1.5">
+                <span>Room Code or Invite URL</span>
+                <kbd className="px-1.5 py-0.5 rounded bg-[#2c251e] text-[10px] font-mono font-bold text-[#f2e9d6] border border-[#524332]">
+                  /
+                </kbd>
+              </label>
               <button
                 type="button"
                 onClick={handlePasteCode}
-                className="text-[10px] text-rose-400 hover:text-rose-300 font-semibold cursor-pointer"
+                className="text-xs text-[#c8962e] hover:text-[#dba940] font-semibold cursor-pointer underline underline-offset-2"
               >
                 Paste Clipboard
               </button>
             </div>
             <div className="relative">
               <input
+                ref={inputRef}
                 type="text"
                 placeholder="e.g. CYBER-4096 or room/abc123"
                 value={roomIdInput}
                 onChange={(e) => setRoomIdInput(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl bg-zinc-950/90 border border-white/[0.1] text-white placeholder-zinc-500 font-mono text-sm focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500/30 transition-colors"
+                className="w-full px-4 py-3 rounded-xl bg-[#0c0a07] border border-[#3a3022] text-[#f2e9d6] placeholder-[#7d6f5c] text-sm focus:outline-none focus:border-[#c8962e] transition-colors"
               />
             </div>
           </div>
@@ -127,10 +161,10 @@ export default function JoinRoomCard() {
           <button
             type="submit"
             disabled={!roomIdInput.trim() || isJoining}
-            className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-zinc-800 hover:bg-zinc-700 disabled:opacity-40 text-white font-bold text-sm border border-white/[0.08] transition-all cursor-pointer disabled:cursor-not-allowed"
+            className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-[#27211a] hover:bg-[#3a3022] disabled:opacity-40 text-[#f2e9d6] font-bold text-sm border border-[#3a3022] transition-colors cursor-pointer disabled:cursor-not-allowed"
           >
             {isJoining ? (
-              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <span className="w-4 h-4 border-2 border-[#f2e9d6] border-t-transparent rounded-full animate-spin" />
             ) : (
               <span>Connect to Room</span>
             )}

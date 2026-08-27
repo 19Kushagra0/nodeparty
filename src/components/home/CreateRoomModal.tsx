@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { X, Sparkles, Lock, Globe, Shield, Play, MousePointer } from "@/icons";
+import { X, Lock, Globe, Shield, Play, MousePointer, Film } from "@/icons";
 import { useRoomStore } from "@/store/useRoomStore";
 import { PrivacyMode } from "@/types";
 
@@ -28,31 +28,34 @@ export function CreateRoomModal() {
     }, 300);
   };
 
+  const selectedClass = "bg-[#c8962e]/15 border-[#c8962e]/60 text-[#f2e9d6]";
+  const unselectedClass = "bg-[#1e1a14] border-[#27211a] text-[#907a5a] hover:border-[#3a3022]";
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-lg bg-[#0e111a] border border-white/[0.12] rounded-3xl p-6 sm:p-8 shadow-2xl shadow-rose-950/40 text-left space-y-6"
+        className="relative w-full max-w-lg bg-[#161310] border border-[#27211a] rounded-2xl p-6 sm:p-8 shadow-2xl text-left space-y-6"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between pb-4 border-b border-white/[0.08]">
+        <div className="flex items-start justify-between pb-4 border-b border-[#27211a]">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-white shadow-md shadow-rose-950/50">
-                <Sparkles className="w-4 h-4" />
+              <span className="w-8 h-8 rounded-xl bg-[#c8962e] flex items-center justify-center text-[#0c0a07]">
+                <Film className="w-4 h-4" />
               </span>
-              <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">
-                Create Watch Party
+              <h2 className="text-xl sm:text-2xl font-black tracking-tight text-[#f2e9d6]">
+                Create Cinema Room
               </h2>
             </div>
-            <p className="text-xs text-zinc-400">
-              Host a synchronized cinema lounge with interactive co-browsing and voice chat.
+            <p className="text-xs text-[#907a5a]">
+              Host a synchronized screening room with interactive co-browsing and low-latency chat.
             </p>
           </div>
 
           <button
             onClick={() => setCreateModalOpen(false)}
-            className="p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            className="p-2 rounded-xl bg-[#27211a] hover:bg-[#3a3022] text-[#907a5a] hover:text-[#f2e9d6] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -62,15 +65,15 @@ export function CreateRoomModal() {
         <div className="space-y-5">
           {/* Party Title */}
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-zinc-300">
-              Watch Party Name
+            <label className="text-xs font-bold uppercase tracking-wider text-[#b09070]">
+              Room Title
             </label>
             <input
               type="text"
               value={partyName}
               onChange={(e) => setPartyName(e.target.value)}
               placeholder="e.g., Cyberpunk Midnight Screening"
-              className="w-full px-4 py-3 rounded-2xl bg-zinc-950/90 border border-white/[0.1] text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500/30 transition-colors"
+              className="w-full px-4 py-3 rounded-xl bg-[#0c0a07] border border-[#27211a] text-[#f2e9d6] placeholder-[#5a4d3a] text-sm focus:outline-none focus:border-[#c8962e] focus:ring-1 focus:ring-[#c8962e]/30 transition-colors"
             />
           </div>
 
@@ -78,84 +81,72 @@ export function CreateRoomModal() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Privacy Setting */}
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-zinc-300">
-                Lounge Privacy
+              <label className="text-xs font-bold uppercase tracking-wider text-[#b09070]">
+                Privacy Mode
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => setPrivacy("public")}
-                  className={`p-3 rounded-2xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${privacy === "public"
-                    ? "bg-rose-950/40 border-rose-500/80 text-white"
-                    : "bg-zinc-950/60 border-white/[0.07] text-zinc-400 hover:border-white/[0.15]"
-                    }`}
+                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${
+                    privacy === "public" ? selectedClass : unselectedClass
+                  }`}
                 >
                   <div className="flex items-center gap-1.5 text-xs font-semibold">
-                    <Globe className="w-3.5 h-3.5 text-cyan-400" />
+                    <Globe className="w-3.5 h-3.5 text-[#c8962e]" />
                     <span>Public</span>
                   </div>
-                  <span className="text-[10px] text-zinc-400 leading-tight">
-                    Anyone can join
-                  </span>
+                  <span className="text-xs text-[#907a5a] leading-tight">Open to all</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setPrivacy("friends")}
-                  className={`p-3 rounded-2xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${privacy === "friends"
-                    ? "bg-rose-950/40 border-rose-500/80 text-white"
-                    : "bg-zinc-950/60 border-white/[0.07] text-zinc-400 hover:border-white/[0.15]"
-                    }`}
+                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${
+                    privacy === "friends" ? selectedClass : unselectedClass
+                  }`}
                 >
                   <div className="flex items-center gap-1.5 text-xs font-semibold">
-                    <Lock className="w-3.5 h-3.5 text-rose-400" />
+                    <Lock className="w-3.5 h-3.5 text-[#c8962e]" />
                     <span>Private</span>
                   </div>
-                  <span className="text-[10px] text-zinc-400 leading-tight">
-                    Invite link & code
-                  </span>
+                  <span className="text-xs text-[#907a5a] leading-tight">Invite code</span>
                 </button>
               </div>
             </div>
 
             {/* Playback & Co-Browsing Mode */}
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-zinc-300">
-                Co-Browsing Mode
+              <label className="text-xs font-bold uppercase tracking-wider text-[#b09070]">
+                DJ Control Mode
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => setControlMode("collaborative")}
-                  className={`p-3 rounded-2xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${controlMode === "collaborative"
-                    ? "bg-rose-950/40 border-rose-500/80 text-white"
-                    : "bg-zinc-950/60 border-white/[0.07] text-zinc-400 hover:border-white/[0.15]"
-                    }`}
+                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${
+                    controlMode === "collaborative" ? selectedClass : unselectedClass
+                  }`}
                 >
                   <div className="flex items-center gap-1.5 text-xs font-semibold">
-                    <MousePointer className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Shared Mouse</span>
+                    <MousePointer className="w-3.5 h-3.5 text-[#c8962e]" />
+                    <span>Shared</span>
                   </div>
-                  <span className="text-[10px] text-zinc-400 leading-tight">
-                    Everyone can click
-                  </span>
+                  <span className="text-xs text-[#907a5a] leading-tight">Everyone plays</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setControlMode("host")}
-                  className={`p-3 rounded-2xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${controlMode === "host"
-                    ? "bg-rose-950/40 border-rose-500/80 text-white"
-                    : "bg-zinc-950/60 border-white/[0.07] text-zinc-400 hover:border-white/[0.15]"
-                    }`}
+                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${
+                    controlMode === "host" ? selectedClass : unselectedClass
+                  }`}
                 >
                   <div className="flex items-center gap-1.5 text-xs font-semibold">
-                    <Shield className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Host Only</span>
+                    <Shield className="w-3.5 h-3.5 text-[#c8962e]" />
+                    <span>Host DJ</span>
                   </div>
-                  <span className="text-[10px] text-zinc-400 leading-tight">
-                    Host controls screen
-                  </span>
+                  <span className="text-xs text-[#907a5a] leading-tight">Host controls</span>
                 </button>
               </div>
             </div>
@@ -166,17 +157,17 @@ export function CreateRoomModal() {
             <button
               onClick={handleLaunch}
               disabled={isLaunching || !partyName.trim()}
-              className="w-full group inline-flex items-center justify-center gap-2.5 py-3.5 rounded-2xl bg-gradient-to-r from-rose-600 via-rose-500 to-pink-600 hover:from-rose-500 hover:to-pink-500 active:scale-[0.99] text-white font-bold text-sm shadow-xl shadow-rose-950/50 border border-rose-400/30 transition-all cursor-pointer disabled:opacity-50"
+              className="w-full inline-flex items-center justify-center gap-2.5 py-3.5 rounded-xl bg-[#c8962e] hover:bg-[#dba940] active:scale-[0.99] text-[#0c0a07] font-bold text-sm border border-[#dba940]/30 transition-colors cursor-pointer disabled:opacity-50"
             >
               {isLaunching ? (
                 <>
-                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Launching Lounge...</span>
+                  <span className="w-4 h-4 border-2 border-[#0c0a07] border-t-transparent rounded-full animate-spin" />
+                  <span>Launching Room...</span>
                 </>
               ) : (
                 <>
-                  <Play className="w-4 h-4 fill-white transition-transform group-hover:scale-110" />
-                  <span>Launch Watch Party Now</span>
+                  <Play className="w-4 h-4 fill-[#0c0a07]" />
+                  <span>Launch Cinema Room</span>
                 </>
               )}
             </button>

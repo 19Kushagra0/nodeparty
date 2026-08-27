@@ -62,10 +62,10 @@ export function RoomHeader() {
           {/* Room Code Badge */}
           <button
             onClick={copyRoomCode}
-            className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-850 border border-white/[0.08] text-[11px] font-mono text-zinc-300 transition-colors cursor-pointer group"
+            className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#141722] hover:bg-[#1a1e2c] border border-white/[0.08] text-xs font-mono text-zinc-300 transition-colors cursor-pointer group"
             title="Click to copy room code"
           >
-            <span className="text-zinc-500 font-sans text-[10px]">CODE:</span>
+            <span className="text-zinc-500 font-sans text-xs">CODE:</span>
             <span className="text-rose-400 font-bold">{roomPasscode || roomId}</span>
             {copiedCode ? (
               <Check className="w-3 h-3 text-emerald-400" />
@@ -80,15 +80,12 @@ export function RoomHeader() {
       <div className="hidden lg:flex items-center gap-3">
         <button
           onClick={resyncWithHost}
-          className={`flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/30 text-xs text-cyan-300 font-mono transition-all hover:bg-cyan-900/40 cursor-pointer ${
+          className={`flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/20 text-xs text-cyan-300 font-mono transition-all hover:bg-cyan-900/40 cursor-pointer ${
             isResyncing ? "animate-pulse ring-2 ring-cyan-400/50" : ""
           }`}
           title="Click to manually recalibrate sync clock with host"
         >
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-          </span>
+          <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
           <span>{isResyncing ? "Recalibrating..." : `⚡ ${syncDriftMs}ms Drift Lock`}</span>
         </button>
 
@@ -107,19 +104,19 @@ export function RoomHeader() {
           {participants.slice(0, 4).map((p) => (
             <div
               key={p.id}
-              className={`relative w-7 h-7 rounded-full bg-gradient-to-r ${p.avatarBg} border-2 border-[#07080b] flex items-center justify-center text-[10px] font-bold text-white shadow-sm ring-1 ring-white/10`}
+              className="relative w-7 h-7 rounded-full bg-[#1e2230] border-2 border-[#07080b] flex items-center justify-center text-xs font-mono font-bold text-white shadow-sm ring-1 ring-white/10"
               title={`${p.name} (${p.role})`}
             >
               {p.name[0]}
               {p.role === "host" && (
-                <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-rose-600 border border-white/20 flex items-center justify-center text-[7px]">
+                <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-rose-600 border border-white/20 flex items-center justify-center text-xs">
                   👑
                 </span>
               )}
             </div>
           ))}
           {participants.length > 4 && (
-            <div className="w-7 h-7 rounded-full bg-zinc-800 border-2 border-[#07080b] flex items-center justify-center text-[9px] font-bold text-zinc-300">
+            <div className="w-7 h-7 rounded-full bg-zinc-800 border-2 border-[#07080b] flex items-center justify-center text-xs font-mono font-bold text-zinc-300">
               +{participants.length - 4}
             </div>
           )}
@@ -143,7 +140,7 @@ export function RoomHeader() {
           onClick={toggleTheaterMode}
           className={`p-2 rounded-xl border transition-colors cursor-pointer hidden md:flex items-center gap-1.5 text-xs font-semibold ${
             isTheaterMode
-              ? "bg-purple-500/20 border-purple-500/40 text-purple-200"
+              ? "bg-[#141722] border-white/[0.2] text-white"
               : "bg-white/[0.04] border-white/[0.08] text-zinc-400 hover:text-white"
           }`}
           title="Toggle Cinema Theater Mode"
@@ -164,7 +161,7 @@ export function RoomHeader() {
         {/* Share Invite Trigger */}
         <button
           onClick={() => setInviteModalOpen(true)}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 active:scale-95 text-white text-xs font-bold shadow-lg shadow-rose-950/40 border border-rose-400/20 transition-all cursor-pointer"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-rose-500 hover:bg-rose-600 active:scale-95 text-white text-xs font-bold border border-rose-400/20 transition-colors cursor-pointer"
         >
           <Share2 className="w-3.5 h-3.5" />
           <span>Invite</span>

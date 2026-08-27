@@ -38,17 +38,17 @@ export function InviteModal() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-lg bg-[#0e111a] border border-white/[0.12] rounded-3xl p-6 sm:p-8 shadow-2xl shadow-rose-950/40 text-left space-y-6"
+        className="relative w-full max-w-lg bg-[#0e1117] border border-white/[0.08] rounded-2xl p-6 sm:p-8 shadow-2xl text-left space-y-6"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-start justify-between pb-4 border-b border-white/[0.08]">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-white shadow-md shadow-rose-950/40">
+              <span className="w-8 h-8 rounded-xl bg-rose-500 flex items-center justify-center text-white">
                 <Share2 className="w-4 h-4" />
               </span>
-              <h3 className="text-xl font-black text-white tracking-tight">
+              <h3 className="text-xl font-black text-[#f4f4f5] tracking-tight">
                 Invite Friends to Lounge
               </h3>
             </div>
@@ -67,7 +67,7 @@ export function InviteModal() {
 
         {/* Share Link Box */}
         <div className="space-y-2">
-          <label className="text-xs font-bold uppercase tracking-wider text-zinc-300">
+          <label className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-300">
             Lounge Direct Link
           </label>
           <div className="flex items-center gap-2">
@@ -75,11 +75,11 @@ export function InviteModal() {
               type="text"
               readOnly
               value={currentUrl}
-              className="flex-1 px-4 py-2.5 rounded-xl bg-zinc-950 border border-white/[0.1] text-xs font-mono text-zinc-300 focus:outline-none select-all"
+              className="flex-1 px-4 py-2.5 rounded-xl bg-[#141722] border border-white/[0.08] text-xs font-mono text-zinc-300 focus:outline-none select-all"
             />
             <button
               onClick={copyLink}
-              className="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer shrink-0"
+              className="px-4 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer shrink-0"
             >
               {copiedLink ? (
                 <>
@@ -99,9 +99,9 @@ export function InviteModal() {
         {/* Room Passcode & QR Code Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Room Code Card */}
-          <div className="p-4 rounded-2xl bg-zinc-950/80 border border-white/[0.08] flex flex-col justify-between space-y-3">
+          <div className="p-4 rounded-xl bg-[#141722] border border-white/[0.08] flex flex-col justify-between space-y-3">
             <div className="space-y-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400">
                 Room Passcode
               </span>
               <div className="font-mono text-lg font-black text-rose-400 tracking-wider">
@@ -118,7 +118,7 @@ export function InviteModal() {
           </div>
 
           {/* Simulated QR Code Card */}
-          <div className="p-4 rounded-2xl bg-zinc-950/80 border border-white/[0.08] flex items-center gap-3">
+          <div className="p-4 rounded-xl bg-[#141722] border border-white/[0.08] flex items-center gap-3">
             <div className="w-16 h-16 rounded-xl bg-white p-1.5 flex items-center justify-center shrink-0">
               <div className="w-full h-full border-2 border-dashed border-zinc-900 rounded grid grid-cols-3 gap-0.5 p-0.5">
                 <div className="bg-black rounded-xs" />
@@ -134,7 +134,7 @@ export function InviteModal() {
             </div>
             <div className="space-y-1">
               <h4 className="text-xs font-bold text-white">Scan with Phone</h4>
-              <p className="text-[11px] text-zinc-400 leading-tight">
+              <p className="text-xs text-zinc-400 leading-tight">
                 Scan QR to join instantly from mobile device.
               </p>
             </div>
@@ -143,7 +143,7 @@ export function InviteModal() {
 
         {/* Quick Social Share Buttons */}
         <div className="space-y-2 pt-2">
-          <label className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">
+          <label className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400">
             Quick Share
           </label>
           <div className="grid grid-cols-2 gap-2">

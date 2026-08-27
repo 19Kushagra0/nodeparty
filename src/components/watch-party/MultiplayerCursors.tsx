@@ -113,7 +113,7 @@ export function MultiplayerCursors({ containerRef }: { containerRef: React.RefOb
           {/* Participant Name Tag */}
           <div
             style={{ backgroundColor: cursor.color }}
-            className="px-2 py-0.5 rounded-full text-[10px] font-black text-white shadow-lg border border-white/20 whitespace-nowrap -mt-1 ml-3"
+            className="px-2 py-0.5 rounded-full text-xs font-mono font-bold text-white shadow-lg border border-white/20 whitespace-nowrap -mt-1 ml-3"
           >
             {cursor.name}
           </div>

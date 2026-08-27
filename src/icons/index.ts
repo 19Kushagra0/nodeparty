@@ -13,6 +13,7 @@ export {
   Lock,
   Play,
   Pause,
+  Clock,
   Users,
   Info,
   Volume2,
