@@ -27,7 +27,10 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col bg-[#07080b] text-zinc-100">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#07080b] text-zinc-100">{children}{/* impeccable-live-start */}
+<script src="http://localhost:8400/live.js?token=a4ab5a37-33f7-425f-a120-33b08c26ceee"></script>
+{/* impeccable-live-end */}
+</body>
     </html>
   );
 }

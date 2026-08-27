@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-27T18:02:00.000Z",
+  "title": "Design System: NodeParty",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Projection Crimson", "canonical": "oklch(62% 0.24 18)", "tonalRamp": ["#4c0519", "#881337", "#be123c", "#e11d48", "#f43f5e", "#fb7185", "#fda4af", "#ffe4e6"] },
+      "accent-cyan": { "role": "secondary", "displayName": "Phosphor Cyan", "canonical": "oklch(75% 0.16 210)", "tonalRamp": ["#083344", "#164e63", "#0e7490", "#0891b2", "#06b6d4", "#22d3ee", "#67e8f9", "#cffafe"] },
+      "accent-amber": { "role": "secondary", "displayName": "Cue Amber", "canonical": "oklch(78% 0.18 75)", "tonalRamp": ["#451a03", "#78350f", "#b45309", "#d97706", "#f59e0b", "#fbbf24", "#fde68a", "#fef3c7"] },
+      "background": { "role": "neutral", "displayName": "Deep Void Black", "canonical": "oklch(12% 0.01 260)", "tonalRamp": ["#030305", "#07080b", "#0e1117", "#141722", "#1e2230", "#2b3042", "#474e68", "#8c94b0"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Stark commanding hero headlines." },
+      "headline": { "displayName": "Headline", "purpose": "Section and surface headers." },
+      "title": { "displayName": "Title", "purpose": "Card titles and control labels." },
+      "body": { "displayName": "Body", "purpose": "Body copy and chat messages." },
+      "label": { "displayName": "Label", "purpose": "Monospace timecodes, latency, and status badges." }
+    },
+    "shadows": [
+      { "name": "dock-shadow", "value": "0 20px 40px -15px rgba(0, 0, 0, 0.7)", "purpose": "Floating bottom control dock." },
+      { "name": "cinema-ambient", "value": "0 0 80px rgba(244, 63, 94, 0.15)", "purpose": "Ambient backlighting glow behind video." }
+    ],
+    "motion": [
+      { "name": "ease-out-cinema", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Smooth cinema-grade transitions and docks." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Action Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Bold projection crimson button for primary actions.",
+      "html": "<button class=\"ds-btn-primary\">START WATCH PARTY</button>",
+      "css": ".ds-btn-primary { background: #f43f5e; color: #ffffff; padding: 12px 24px; font-weight: 700; font-size: 14px; border: none; border-radius: 12px; cursor: pointer; transition: background 0.15s ease, transform 0.15s ease; box-shadow: 0 4px 12px rgba(244, 63, 94, 0.25); } .ds-btn-primary:hover { background: #e11d48; transform: translateY(-1px); }"
+    },
+    {
+      "name": "Secondary Card Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Obsidian card button with subtle border.",
+      "html": "<button class=\"ds-btn-secondary\">JOIN LOUNGE</button>",
+      "css": ".ds-btn-secondary { background: #141722; color: #f4f4f5; padding: 12px 20px; font-weight: 600; font-size: 14px; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease; } .ds-btn-secondary:hover { border-color: rgba(255, 255, 255, 0.18); background: #1c2130; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Midnight Cinema Console",
+    "overview": "NodeParty pairs the atmospheric luxury of a private screening room with the precision of a modern broadcast master control deck. The visual space is built on deep optical black and layered obsidian surfaces, punctuated by crisp optical borders, subtle ambient screen backlighting, and monospaced telemetry readouts.",
+    "keyCharacteristics": [
+      "Deep obsidian and charcoal slate surfaces with high-contrast foreground legibility.",
+      "Broadcast tally accents used purposefully for state, never as arbitrary background noise.",
+      "Monospace SMPTE timecodes, latency meters, and sync telemetry.",
+      "Tactile control docks and floating reaction physics."
+    ],
+    "rules": [
+      { "name": "The Rarity Accent Rule", "body": "Projection Crimson and vibrant tally accents are reserved for active state, focus, and interaction triggers. They must never cover more than 10% of any viewport.", "section": "colors" },
+      { "name": "The No-Gradient-Text Rule", "body": "Headlines and typography must use stark solid contrast (Tungsten White or muted slate) rather than multi-color gradients. Hierarchy comes from weight, tracking, and scale.", "section": "typography" },
+      { "name": "The Tonal Layering Rule", "body": "Depth is established through stepped surface brightness and crisp 1px optical borders, never through heavy black drop shadows.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use monospaced fonts for room codes, timecodes, and clock latency indicators.",
+      "Do preserve the deep optical obsidian contrast hierarchy across all views.",
+      "Do provide smooth keyboard focus states and clear hover transitions on all interactive controls.",
+      "Do keep floating emoji reactions lightweight and non-distracting during video playback."
+    ],
+    "donts": [
+      "Don't use multi-color rainbow gradient text on headlines.",
+      "Don't rely on 3-card generic feature grids with floating watermark numbers.",
+      "Don't add decorative glowing pill eyebrows above headings without functional purpose.",
+      "Don't use pure gray text on colored surfaces; tint secondary text from the background hue."
+    ]
+  }
+}
