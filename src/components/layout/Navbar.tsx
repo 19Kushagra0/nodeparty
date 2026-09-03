@@ -36,7 +36,7 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setCreateModalOpen(true)}
-            className="group relative inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#c8962e] hover:bg-[#dba940] active:scale-[0.98] text-[#0c0a07] text-xs sm:text-sm font-bold transition-all cursor-pointer"
+            className="group relative inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#c8962e] hover:bg-[#dba940] active:scale-[0.98] text-[#0c0a07] text-xs sm:text-sm font-bold transition-all cursor-pointer"
           >
             <Plus className="w-4 h-4 transition-transform group-hover:rotate-90 duration-300" />
             <span>Create Room</span>

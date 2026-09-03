@@ -7,7 +7,7 @@ import JoinRoomCard from "@/components/home/JoinRoomCard";
 import { InteractiveHeroDemo } from "@/components/home/InteractiveHeroDemo";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { CreateRoomModal } from "@/components/home/CreateRoomModal";
-import { ArrowRight, Film, Radio, Sparkles, Zap, Shield, Check } from "@/icons";
+import { ArrowRight } from "@/icons";
 
 /* Palette: Tap House Gold */
 const c = {
@@ -23,8 +23,8 @@ const c = {
 };
 
 const photos = {
-  cinema:      "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1400&auto=format&fit=crop",
-  gaming:      "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop",
+  cinema: "https://lh3.googleusercontent.com/aida-public/AB6AXuBpLWNT0knaa7grBpWWh0_PAsBCaPdS3j2LM0JzSFyVADDWE7ZmJXjxF2nTKU36Zm53r6euZ14xPDmfFEaJAbM7DWmDxc7yFAV8jZ4cVxOfVpDY0MIAmtuVa1BOzGa3cnCtNwJUyylQhBd593Nks1w-hfBg0m8_84m1CgVVMUc5erHjy8Pcu6fCPE1KPZudBMiXWKlmBaFDkbKB2AH1bqsMPMS2XMLltdYJPccRHvvCKTmdDJsVwTvPmSaCt9Lg5qOOUkRVlDr-Yy4",
+  gaming: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop",
   homeTheater: "https://images.unsplash.com/photo-1593784991095-a205069470b6?q=80&w=1400&auto=format&fit=crop",
 };
 
@@ -40,53 +40,80 @@ export function HomePageContainer() {
         {/* ═══════════════════════════════════════════════════════════════════
             HERO: FULL-BLEED CINEMA ATMOSPHERE & HEADLINE
         ═══════════════════════════════════════════════════════════════════ */}
-        <section className="relative w-full overflow-hidden" style={{ minHeight: 520 }}>
-          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${photos.cinema})` }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(12,10,7,0.95) 40%, rgba(12,10,7,0.7) 70%, rgba(12,10,7,0.9) 100%)" }} />
-          
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 flex flex-col justify-end h-full text-left" style={{ minHeight: 520 }}>
-            <div className="space-y-6 max-w-2xl">
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-[-0.04em] leading-[0.92]">
-                Watch movies and games together, in perfect sync.
+        <section className="relative w-full h-[85vh] min-h-[600px] overflow-hidden bg-[#c8962e]">
+
+
+          <div className="relative z-10 w-full h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center">
+
+            {/* Top Left */}
+            <div className="absolute top-8 left-6 sm:left-8 flex flex-col text-[10px] sm:text-xs font-black tracking-[0.2em] text-[#0c0a07] uppercase">
+              <span>NodeParty's Story</span>
+              <span>Continues</span>
+            </div>
+
+            {/* Top Right */}
+            <div className="absolute top-8 right-6 sm:right-8 flex flex-col text-[10px] sm:text-xs font-black tracking-[0.2em] text-[#0c0a07] uppercase text-right">
+              <span>Version 1.0 Premiere</span>
+              <span>On <span className="text-white drop-shadow-[2px_2px_0_#0c0a07]">August 21st</span></span>
+            </div>
+
+            {/* Left Content Area */}
+            <div className="mt-16 sm:mt-24 max-w-2xl flex flex-col items-start space-y-12 relative z-20">
+              
+              {/* Massive Stacked Title */}
+              <h1 className="flex flex-col text-[17vw] sm:text-[14vw] lg:text-[130px] xl:text-[160px] leading-[0.8] font-black uppercase text-white drop-shadow-[4px_4px_0_#0c0a07] tracking-[-0.04em] scale-y-[1.15] origin-left">
+                <span>NODE</span>
+                <span>PARTY</span>
               </h1>
 
-              <p className="text-sm sm:text-base leading-relaxed max-w-xl" style={{ color: c.muted }}>
-                Private screening rooms for you and your friends. Paste any link, share the code, and stream in lockstep 4K sync. No accounts, no downloads.
-              </p>
+              {/* Thin Line & Lower Text */}
+              <div className="flex flex-col w-full max-w-md">
+                <div className="h-[2px] w-full bg-[#0c0a07]/30 mb-6"></div>
+                <div className="flex justify-between items-start">
+                  <div className="flex flex-col text-[10px] sm:text-xs font-black tracking-[0.15em] text-[#0c0a07] uppercase max-w-[200px]">
+                    <span>Perfect Sync</span>
+                    <span className="text-white drop-shadow-[1px_1px_0_#0c0a07]">Continues</span>
+                  </div>
+                  <div className="flex flex-col text-[10px] sm:text-xs font-black tracking-[0.15em] text-[#0c0a07] uppercase max-w-[200px]">
+                    <span>Plenty More Demon</span>
+                    <span className="text-white drop-shadow-[1px_1px_0_#0c0a07]">To Be Fleshed Out</span>
+                  </div>
+                </div>
+              </div>
 
-              <div className="flex flex-wrap items-center gap-4 pt-2">
+              {/* Bottom Actions */}
+              <div className="pt-2">
                 <a
                   href="#join-hub"
-                  className="px-7 py-3.5 rounded-xl text-sm font-bold transition-colors shadow-xl"
-                  style={{ backgroundColor: c.gold, color: c.bannerText }}
+                  className="inline-flex items-center justify-center px-10 py-4 rounded-full text-sm font-black tracking-[0.2em] uppercase bg-[#0c0a07] text-[#f2e9d6] shadow-[6px_6px_0_#ffffff] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0_#ffffff] active:translate-x-[6px] active:translate-y-[6px] active:shadow-none transition-all cursor-pointer"
                 >
                   Start a Room
                 </a>
-                <a
-                  href="#join-hub"
-                  className="text-sm underline underline-offset-4 transition-colors font-semibold"
-                  style={{ color: c.text }}
-                >
-                  Join with a code
-                </a>
               </div>
+
             </div>
           </div>
         </section>
 
-        {/* ── Gold Statement Banner ── */}
-        <section className="w-full py-8 px-6 sm:px-8" style={{ backgroundColor: c.bannerBg }}>
-          <p className="max-w-5xl mx-auto text-xl sm:text-3xl font-black tracking-tight leading-snug text-center" style={{ color: c.bannerText }}>
-            Every frame in perfect sync. Every viewer locked together.
-            <span className="italic"> That&apos;s NodeParty.</span>
-          </p>
+        {/* ── Cinematic Ambient Statement ── */}
+        <section className="relative w-full py-12 px-6 sm:px-8 border-y border-[#c8962e]/20 bg-[#0e0b08] overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_60%_70%_at_50%_50%,rgba(200,150,46,0.12)_0%,transparent_75%)]" />
+          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-2">
+            <p className="text-xs font-mono font-semibold uppercase tracking-[0.25em] text-[#c8962e]/90">
+              Zero-Latency Cinema Sync
+            </p>
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-snug text-[#f2e9d6]">
+              Every frame in perfect sync. Every viewer locked together.
+              <span className="italic text-[#c8962e]"> That&apos;s NodeParty.</span>
+            </h2>
+          </div>
         </section>
 
         {/* ═══════════════════════════════════════════════════════════════════
             DIRECTLY BELOW BANNER: STACKED COLUMN (JOIN CARD TOP + STAGE BELOW)
         ═══════════════════════════════════════════════════════════════════ */}
         <section id="join-hub" className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-16 space-y-16">
-          
+
           {/* 1. UPPER CARD: Launch Your Room (Centered) */}
           <div className="flex flex-col items-center text-center space-y-6">
             <div className="space-y-1 max-w-md">
@@ -96,7 +123,7 @@ export function HomePageContainer() {
               <h2 className="text-2xl sm:text-4xl font-black text-[#f2e9d6] tracking-tight">
                 Launch Your Room
               </h2>
-              <p className="text-xs sm:text-sm text-[#907a5a]">
+              <p className="text-xs sm:text-sm text-[#b8a68b]">
                 Instant 6-digit code or shareable invite link with zero configuration.
               </p>
             </div>
@@ -107,7 +134,7 @@ export function HomePageContainer() {
           </div>
 
           {/* 2. LOWER CARD: Live Stage Preview (Full Width) */}
-          <div className="pt-8 border-t border-[#27211a] space-y-4 text-left">
+          <div className="pt-8 border-t border-[#27211a] space-y-6 text-left">
             <div className="space-y-1">
               <p className="text-xs font-bold uppercase tracking-widest text-[#c8962e]">
                 LIVE INTERACTIVE DEMO
@@ -115,13 +142,16 @@ export function HomePageContainer() {
               <h3 className="text-2xl sm:text-3xl font-black text-[#f2e9d6] tracking-tight">
                 Live Stage Preview
               </h3>
-              <p className="text-sm text-[#907a5a]">
+              <p className="text-sm text-[#b8a68b]">
                 Test synchronized reactions, real-time live chat, and audio controls live in your browser.
               </p>
             </div>
 
-            <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ border: `1px solid ${c.border}` }}>
-              <InteractiveHeroDemo />
+            {/* Machined Double-Bezel Theater Framing */}
+            <div className="p-1 sm:p-1.5 rounded-[2rem] bg-gradient-to-b from-[#c8962e]/25 via-white/5 to-white/0 ring-1 ring-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.7)]">
+              <div className="rounded-[calc(2rem-0.375rem)] overflow-hidden bg-[#13100d] border border-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]">
+                <InteractiveHeroDemo />
+              </div>
             </div>
           </div>
 

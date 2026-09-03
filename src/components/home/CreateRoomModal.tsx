@@ -88,9 +88,8 @@ export function CreateRoomModal() {
                 <button
                   type="button"
                   onClick={() => setPrivacy("public")}
-                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${
-                    privacy === "public" ? selectedClass : unselectedClass
-                  }`}
+                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${privacy === "public" ? selectedClass : unselectedClass
+                    }`}
                 >
                   <div className="flex items-center gap-1.5 text-xs font-semibold">
                     <Globe className="w-3.5 h-3.5 text-[#c8962e]" />
@@ -102,9 +101,8 @@ export function CreateRoomModal() {
                 <button
                   type="button"
                   onClick={() => setPrivacy("friends")}
-                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${
-                    privacy === "friends" ? selectedClass : unselectedClass
-                  }`}
+                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${privacy === "friends" ? selectedClass : unselectedClass
+                    }`}
                 >
                   <div className="flex items-center gap-1.5 text-xs font-semibold">
                     <Lock className="w-3.5 h-3.5 text-[#c8962e]" />
@@ -124,9 +122,8 @@ export function CreateRoomModal() {
                 <button
                   type="button"
                   onClick={() => setControlMode("collaborative")}
-                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${
-                    controlMode === "collaborative" ? selectedClass : unselectedClass
-                  }`}
+                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${controlMode === "collaborative" ? selectedClass : unselectedClass
+                    }`}
                 >
                   <div className="flex items-center gap-1.5 text-xs font-semibold">
                     <MousePointer className="w-3.5 h-3.5 text-[#c8962e]" />
@@ -138,9 +135,8 @@ export function CreateRoomModal() {
                 <button
                   type="button"
                   onClick={() => setControlMode("host")}
-                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${
-                    controlMode === "host" ? selectedClass : unselectedClass
-                  }`}
+                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${controlMode === "host" ? selectedClass : unselectedClass
+                    }`}
                 >
                   <div className="flex items-center gap-1.5 text-xs font-semibold">
                     <Shield className="w-3.5 h-3.5 text-[#c8962e]" />
