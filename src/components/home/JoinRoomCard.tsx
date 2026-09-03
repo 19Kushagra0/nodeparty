@@ -65,112 +65,112 @@ export default function JoinRoomCard() {
   };
 
   return (
-    <div className="w-full bg-[#161310] border border-[#27211a] rounded-2xl p-6 text-left space-y-5 shadow-2xl">
-      {/* Tab Header (Flat, un-nested tab bar with high contrast) */}
-      <div className="flex items-center gap-2 border-b border-[#27211a] pb-3">
-        <button
-          type="button"
-          onClick={() => setActiveTab("quick")}
-          className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-            activeTab === "quick"
-              ? "bg-[#c8962e] text-[#0c0a07] shadow-sm"
-              : "text-[#d6c8b0] hover:text-[#f2e9d6] hover:bg-[#27211a]/50"
-          }`}
-        >
-          <Plus className="w-3.5 h-3.5" />
-          <span>Launch Room</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            setActiveTab("code");
-            setTimeout(() => inputRef.current?.focus(), 50);
-          }}
-          className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-            activeTab === "code"
-              ? "bg-[#27211a] text-[#f2e9d6] border border-[#3a3022]"
-              : "text-[#d6c8b0] hover:text-[#f2e9d6] hover:bg-[#27211a]/50"
-          }`}
-        >
-          <Radio className="w-3.5 h-3.5 text-[#c8962e]" />
-          <span>Join with Code</span>
-          <kbd className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-[#2c251e] text-[10px] font-mono font-bold text-[#f2e9d6] border border-[#524332]">
-            /
-          </kbd>
-        </button>
-      </div>
-
-      {activeTab === "quick" ? (
-        <div className="space-y-4">
-          <div className="space-y-1">
-            <h2 className="text-sm font-bold text-[#f2e9d6]">Instant Cinema Room</h2>
-            <p className="text-xs text-[#c4b59d] leading-relaxed">
-              Create a private synchronized room in seconds. Invite friends with zero setup.
-            </p>
-          </div>
-
+    <div className="w-full p-1 sm:p-1.5 rounded-3xl bg-gradient-to-b from-[#c8962e]/25 via-white/5 to-white/0 ring-1 ring-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
+      <div className="w-full bg-[#14110d] rounded-[calc(1.5rem-0.25rem)] p-6 text-left space-y-5 border border-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]">
+        {/* Tab Header */}
+        <div className="flex items-center gap-2 border-b border-[#27211a] pb-3">
           <button
-            onClick={handleQuickCreate}
-            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#c8962e] hover:bg-[#dba940] active:scale-[0.98] text-[#0c0a07] font-bold text-sm transition-all cursor-pointer shadow-lg shadow-amber-950/20"
+            type="button"
+            onClick={() => setActiveTab("quick")}
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${activeTab === "quick"
+                ? "bg-[#c8962e] text-[#0c0a07] shadow-sm font-black"
+                : "text-[#d6c8b0] hover:text-[#f2e9d6] hover:bg-[#27211a]/50"
+              }`}
           >
-            <Plus className="w-4 h-4" />
-            <span>Enter Cinema</span>
+            <Plus className="w-3.5 h-3.5" />
+            <span>Launch Room</span>
           </button>
 
-          <div className="pt-1 flex items-center justify-center gap-4 text-xs font-medium">
-            <span className="flex items-center gap-1.5 text-[#ded3be]">
-              <Zap className="w-3.5 h-3.5 text-[#c8962e]" /> Zero Sign-Up
-            </span>
-            <span className="text-[#524332]">•</span>
-            <span className="flex items-center gap-1.5 text-[#ded3be]">
-              <Check className="w-3.5 h-3.5 text-[#c8962e]" /> Sub-Frame Sync
-            </span>
-          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab("code");
+              setTimeout(() => inputRef.current?.focus(), 50);
+            }}
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${activeTab === "code"
+                ? "bg-[#27211a] text-[#f2e9d6] border border-[#3a3022] font-black"
+                : "text-[#d6c8b0] hover:text-[#f2e9d6] hover:bg-[#27211a]/50"
+              }`}
+          >
+            <Radio className="w-3.5 h-3.5 text-[#c8962e]" />
+            <span>Join with Code</span>
+            <kbd className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-[#2c251e] text-xs font-mono font-bold text-[#f2e9d6] border border-[#524332]">
+              /
+            </kbd>
+          </button>
         </div>
-      ) : (
-        <form onSubmit={handleJoinRoom} className="space-y-4">
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-[#f2e9d6] flex items-center gap-1.5">
-                <span>Room Code or Invite URL</span>
-                <kbd className="px-1.5 py-0.5 rounded bg-[#2c251e] text-[10px] font-mono font-bold text-[#f2e9d6] border border-[#524332]">
-                  /
-                </kbd>
-              </label>
-              <button
-                type="button"
-                onClick={handlePasteCode}
-                className="text-xs text-[#c8962e] hover:text-[#dba940] font-semibold cursor-pointer underline underline-offset-2"
-              >
-                Paste Clipboard
-              </button>
+
+        {activeTab === "quick" ? (
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <h2 className="text-sm font-bold text-[#f2e9d6]">Instant Cinema Room</h2>
+              <p className="text-xs text-[#c4b59d] leading-relaxed">
+                Create a private synchronized room in seconds. Invite friends with zero setup.
+              </p>
             </div>
-            <div className="relative">
-              <input
-                ref={inputRef}
-                type="text"
-                placeholder="e.g. CYBER-4096 or room/abc123"
-                value={roomIdInput}
-                onChange={(e) => setRoomIdInput(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-[#0c0a07] border border-[#3a3022] text-[#f2e9d6] placeholder-[#7d6f5c] text-sm focus:outline-none focus:border-[#c8962e] transition-colors"
-              />
+
+            <button
+              onClick={handleQuickCreate}
+              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#c8962e] hover:bg-[#dba940] active:scale-[0.98] text-[#0c0a07] font-bold text-sm transition-all cursor-pointer shadow-lg shadow-amber-950/20"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Enter Cinema</span>
+            </button>
+
+            <div className="pt-1 flex items-center justify-center gap-4 text-xs font-medium">
+              <span className="flex items-center gap-1.5 text-[#ded3be]">
+                <Zap className="w-3.5 h-3.5 text-[#c8962e]" /> Zero Sign-Up
+              </span>
+              <span className="text-[#524332]">•</span>
+              <span className="flex items-center gap-1.5 text-[#ded3be]">
+                <Check className="w-3.5 h-3.5 text-[#c8962e]" /> Sub-Frame Sync
+              </span>
             </div>
           </div>
+        ) : (
+          <form onSubmit={handleJoinRoom} className="space-y-4">
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-[#f2e9d6] flex items-center gap-1.5">
+                  <span>Room Code or Invite URL</span>
+                  <kbd className="px-1.5 py-0.5 rounded bg-[#2c251e] text-xs font-mono font-bold text-[#f2e9d6] border border-[#524332]">
+                    /
+                  </kbd>
+                </label>
+                <button
+                  type="button"
+                  onClick={handlePasteCode}
+                  className="text-xs text-[#c8962e] hover:text-[#dba940] font-semibold cursor-pointer underline underline-offset-2"
+                >
+                  Paste Clipboard
+                </button>
+              </div>
+              <div className="relative">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder="e.g. CYBER-4096 or room/abc123"
+                  value={roomIdInput}
+                  onChange={(e) => setRoomIdInput(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-[#0c0a07] border border-[#3a3022] text-[#f2e9d6] placeholder-[#7d6f5c] text-sm focus:outline-none focus:border-[#c8962e] transition-colors"
+                />
+              </div>
+            </div>
 
-          <button
-            type="submit"
-            disabled={!roomIdInput.trim() || isJoining}
-            className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-[#27211a] hover:bg-[#3a3022] disabled:opacity-40 text-[#f2e9d6] font-bold text-sm border border-[#3a3022] transition-colors cursor-pointer disabled:cursor-not-allowed"
-          >
-            {isJoining ? (
-              <span className="w-4 h-4 border-2 border-[#f2e9d6] border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <span>Connect to Room</span>
-            )}
-          </button>
-        </form>
-      )}
+            <button
+              type="submit"
+              disabled={!roomIdInput.trim() || isJoining}
+              className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-[#27211a] hover:bg-[#3a3022] disabled:opacity-40 text-[#f2e9d6] font-bold text-sm border border-[#3a3022] transition-colors cursor-pointer disabled:cursor-not-allowed"
+            >
+              {isJoining ? (
+                <span className="w-4 h-4 border-2 border-[#f2e9d6] border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <span>Connect to Room</span>
+              )}
+            </button>
+          </form>
+        )}
+      </div>
     </div>
   );
 }

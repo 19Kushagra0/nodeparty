@@ -47,8 +47,8 @@ export function FeaturedLounges() {
               key={c.id}
               onClick={() => setSelectedCategory(c.id)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${selectedCategory === c.id
-                  ? "bg-[#c8962e] text-[#0c0a07] shadow-sm"
-                  : "text-[#907a5a] hover:text-[#f2e9d6] hover:bg-[#27211a]/50"
+                ? "bg-[#c8962e] text-[#0c0a07] shadow-sm"
+                : "text-[#907a5a] hover:text-[#f2e9d6] hover:bg-[#27211a]/50"
                 }`}
             >
               {c.label}
