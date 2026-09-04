@@ -97,15 +97,15 @@ export function ParticipantSidebar() {
   };
 
   return (
-    <div className="w-full bg-[#0e1117] border border-white/[0.08] rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-xl min-h-[580px] lg:h-full">
-      {/* Top Tabs Switcher */}
-      <div className="flex items-center p-1 bg-[#141722] rounded-xl border border-white/[0.08] mb-4">
+    <div className="w-full bg-[#07080b] lg:bg-black border-t lg:border border-white/[0.08] lg:rounded-[20px] p-4 sm:p-5 flex flex-col justify-between shadow-xl min-h-[580px] lg:h-full">
+      {/* Top Tabs Switcher (Segmented Control) */}
+      <div className="flex items-center p-1 bg-[#0a0c12] rounded-xl border border-white/[0.06] mb-4 relative">
         <button
           onClick={() => setActiveSidebarTab("chat")}
-          className={`flex-1 py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
             activeSidebarTab === "chat"
-              ? "bg-rose-500 text-white"
-              : "text-zinc-400 hover:text-white"
+              ? "bg-white/[0.08] text-white shadow-sm ring-1 ring-white/10"
+              : "text-zinc-500 hover:text-zinc-300"
           }`}
         >
           <MessageSquare className="w-3.5 h-3.5" />
@@ -114,10 +114,10 @@ export function ParticipantSidebar() {
 
         <button
           onClick={() => setActiveSidebarTab("crew")}
-          className={`flex-1 py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
             activeSidebarTab === "crew"
-              ? "bg-rose-500 text-white"
-              : "text-zinc-400 hover:text-white"
+              ? "bg-white/[0.08] text-white shadow-sm ring-1 ring-white/10"
+              : "text-zinc-500 hover:text-zinc-300"
           }`}
         >
           <Users className="w-3.5 h-3.5" />
@@ -126,10 +126,10 @@ export function ParticipantSidebar() {
 
         <button
           onClick={() => setActiveSidebarTab("queue")}
-          className={`flex-1 py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
             activeSidebarTab === "queue"
-              ? "bg-rose-500 text-white"
-              : "text-zinc-400 hover:text-white"
+              ? "bg-white/[0.08] text-white shadow-sm ring-1 ring-white/10"
+              : "text-zinc-500 hover:text-zinc-300"
           }`}
         >
           <ListVideo className="w-3.5 h-3.5" />
@@ -138,14 +138,14 @@ export function ParticipantSidebar() {
 
         <button
           onClick={() => setActiveSidebarTab("settings")}
-          className={`p-2 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center justify-center ${
+          className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center ml-1 ${
             activeSidebarTab === "settings"
-              ? "bg-rose-500 text-white"
-              : "text-zinc-400 hover:text-white"
+              ? "bg-white/[0.08] text-white shadow-sm ring-1 ring-white/10"
+              : "text-zinc-500 hover:text-zinc-300"
           }`}
           title="Room Settings"
         >
-          <Settings className="w-3.5 h-3.5" />
+          <Settings className="w-4 h-4" />
         </button>
       </div>
 
@@ -157,15 +157,15 @@ export function ParticipantSidebar() {
             {messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`flex items-start gap-2.5 p-2 rounded-xl transition-colors ${
+                className={`group/msg flex items-start gap-3 p-2 rounded transition-colors ${
                   msg.isSystem
-                    ? "bg-[#141722] border border-white/[0.06] text-zinc-300 font-mono text-xs"
-                    : "hover:bg-zinc-900/40"
+                    ? "bg-white/[0.02] border-l-2 border-zinc-600 text-zinc-400 font-mono text-[11px]"
+                    : "hover:bg-white/[0.03]"
                 }`}
               >
                 {/* Avatar */}
                 <div
-                  className={`w-7 h-7 rounded-full bg-[#1e2230] flex items-center justify-center text-xs font-mono font-bold text-white shrink-0 border border-white/20`}
+                  className={`w-6 h-6 rounded bg-[#101218] flex items-center justify-center text-[10px] font-mono font-bold text-zinc-300 shrink-0 border border-white/[0.08] shadow-sm`}
                 >
                   {msg.senderName[0]}
                 </div>
@@ -224,20 +224,20 @@ export function ParticipantSidebar() {
           </div>
 
           {/* Chat Message Input */}
-          <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+          <form onSubmit={handleSendMessage} className="flex items-center gap-2 pt-2 border-t border-white/[0.06]">
             <input
               type="text"
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
-              placeholder="Send message to lounge..."
-              className="flex-1 px-4 py-2.5 rounded-xl bg-[#141722] border border-white/[0.08] text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-rose-500"
+              placeholder="Message lounge..."
+              className="flex-1 px-3 py-2 rounded bg-[#0a0c12] border border-white/[0.08] text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-white/20 transition-colors"
             />
             <button
               type="submit"
               disabled={!inputMessage.trim()}
-              className="p-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 disabled:opacity-40 text-white transition-colors cursor-pointer shrink-0"
+              className="p-2 rounded bg-white text-black hover:bg-zinc-200 disabled:opacity-20 transition-colors cursor-pointer shrink-0"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-3.5 h-3.5" />
             </button>
           </form>
         </div>
@@ -250,18 +250,18 @@ export function ParticipantSidebar() {
             {participants.map((p) => (
               <div
                 key={p.id}
-                className="p-3 rounded-xl bg-[#141722] border border-white/[0.06] hover:border-white/[0.12] transition-colors flex items-center justify-between gap-3"
+                className="p-2.5 rounded bg-transparent border-b border-white/[0.04] last:border-b-0 hover:bg-white/[0.02] transition-colors flex items-center justify-between gap-3"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   {/* Avatar with speaking wave */}
                   <div className="relative">
                     <div
-                      className="w-9 h-9 rounded-full bg-[#1e2230] flex items-center justify-center text-xs font-mono font-bold text-white shadow-sm"
+                      className="w-8 h-8 rounded bg-[#101218] flex items-center justify-center text-[10px] font-mono font-bold text-zinc-300 border border-white/[0.08]"
                     >
                       {p.name[0]}
                     </div>
                     {p.isSpeaking && (
-                      <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#0e1117]" />
+                      <span className="absolute -bottom-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-black" />
                     )}
                   </div>
 
@@ -333,10 +333,10 @@ export function ParticipantSidebar() {
             {queue.map((item, idx) => (
               <div
                 key={item.id}
-                className={`group/qitem relative p-2.5 rounded-xl border transition-colors flex items-center justify-between gap-3 ${
+                className={`group/qitem relative p-2 rounded border-l-2 transition-colors flex items-center justify-between gap-3 ${
                   item.isPlaying
-                    ? "bg-[#1f1624] border-rose-500/60"
-                    : "bg-[#141722] border-white/[0.06] hover:border-white/[0.15]"
+                    ? "bg-rose-500/10 border-rose-500"
+                    : "bg-transparent border-transparent hover:bg-white/[0.02] border-b border-b-white/[0.04]"
                 }`}
               >
                 {/* Thumbnail + Rank Badge */}
