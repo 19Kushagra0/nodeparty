@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
-import { Outfit, Space_Mono } from "next/font/google";
+import { Inter, Outfit, Space_Mono } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 const outfitSans = Outfit({
   variable: "--font-sans",
@@ -28,7 +34,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfitSans.variable} ${spaceMono.variable} h-full antialiased dark`}
+      className={`${inter.variable} ${outfitSans.variable} ${spaceMono.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col bg-[#0c0a07] text-[#f2e9d6]" suppressHydrationWarning>
         {children}

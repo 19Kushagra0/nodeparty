@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Zap, Radio, Check } from "@/icons";
+import { Plus, Radio } from "@/icons";
 import { useRoomStore } from "@/store/useRoomStore";
 
 export default function JoinRoomCard() {
@@ -118,13 +118,9 @@ export default function JoinRoomCard() {
             </button>
 
             <div className="pt-1 flex items-center justify-center gap-4 text-xs font-medium">
-              <span className="flex items-center gap-1.5 text-[#ded3be]">
-                <Zap className="w-3.5 h-3.5 text-[#c8962e]" /> Zero Sign-Up
-              </span>
+              <span className="text-[#ded3be]">Zero Sign-Up</span>
               <span className="text-[#524332]">•</span>
-              <span className="flex items-center gap-1.5 text-[#ded3be]">
-                <Check className="w-3.5 h-3.5 text-[#c8962e]" /> Sub-Frame Sync
-              </span>
+              <span className="text-[#ded3be]">Sub-Frame Sync</span>
             </div>
           </div>
         ) : (

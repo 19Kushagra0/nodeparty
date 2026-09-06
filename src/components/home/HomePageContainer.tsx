@@ -101,17 +101,18 @@ export function HomePageContainer() {
         </section>
 
         <div className="relative z-10 bg-[#0c0a07]">
-          {/* ── Cinematic Ambient Statement ── */}
-          <section className="relative w-full py-12 px-6 sm:px-8 border-y border-[#c8962e]/20 bg-[#0e0b08] overflow-hidden">
-            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_60%_70%_at_50%_50%,rgba(200,150,46,0.12)_0%,transparent_75%)]" />
-            <div className="relative z-10 max-w-5xl mx-auto text-center space-y-2">
-              <p className="text-xs font-mono font-semibold uppercase tracking-[0.25em] text-[#c8962e]/90">
-                Zero-Latency Cinema Sync
+          {/* ── Cinematic Statement Banner ── */}
+          <section className="w-full py-14 px-6 sm:px-8 border-y border-[#27211a] bg-[#161310] font-[family-name:var(--font-inter),Inter,sans-serif]">
+            <div className="max-w-4xl mx-auto text-center space-y-3">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c8962e]">
+                Zero-Latency Playback
               </p>
-              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-snug text-[#f2e9d6]">
+              <h2 className="text-xl sm:text-3xl lg:text-[32px] font-medium tracking-tight text-[#f2e9d6] leading-snug">
                 Every frame in perfect sync. Every viewer locked together.
-                <span className="italic text-[#c8962e]"> That&apos;s NodeParty.</span>
               </h2>
+              <p className="text-xs sm:text-sm text-[#907a5a] font-normal leading-relaxed max-w-xl mx-auto">
+                Sub-millisecond room synchronization built for movies, livestreams, and watch parties.
+              </p>
             </div>
           </section>
 
@@ -153,12 +154,8 @@ export function HomePageContainer() {
                 </p>
               </div>
 
-              {/* Machined Double-Bezel Theater Framing */}
-              <div className="p-1 sm:p-1.5 rounded-[2rem] bg-gradient-to-b from-[#c8962e]/25 via-white/5 to-white/0 ring-1 ring-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.7)]">
-                <div className="rounded-[calc(2rem-0.375rem)] overflow-hidden bg-[#13100d] border border-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]">
-                  <InteractiveHeroDemo />
-                </div>
-              </div>
+              {/* Theater Preview Showcase */}
+              <InteractiveHeroDemo />
             </div>
 
           </section>
