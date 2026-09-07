@@ -16,6 +16,7 @@ export interface Participant {
   isTyping?: boolean;
   statusText?: string;
   cursorColor?: string;
+  canInteract?: boolean;
 }
 
 export interface ChatMessage {

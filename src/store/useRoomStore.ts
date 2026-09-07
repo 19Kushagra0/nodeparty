@@ -47,7 +47,7 @@ interface RoomState {
   openTabs: SharedTab[];
   activeTabId: string;
   hasSharedControl: boolean;
-  showMultiplayerCursors: boolean;
+  globalInteractionEnabled: boolean;
   multiplayerCursors: MultiplayerCursor[];
 
   // Captured Moments Album
@@ -92,7 +92,8 @@ interface RoomState {
   setActiveTabId: (tabId: string) => void;
   updateTabUrl: (tabId: string, url: string, title?: string) => void;
   toggleSharedControl: () => void;
-  toggleMultiplayerCursors: () => void;
+  toggleGlobalInteraction: () => void;
+  toggleUserInteraction: (userId: string) => void;
   updateMyCursor: (x: number, y: number, isClicking?: boolean) => void;
 
   // Moments Actions
@@ -239,7 +240,7 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   openTabs: initialTabs,
   activeTabId: "tab-yt",
   hasSharedControl: true,
-  showMultiplayerCursors: true,
+  globalInteractionEnabled: true,
   multiplayerCursors: initialMultiplayerCursors,
 
   // Moments
@@ -386,14 +387,22 @@ export const useRoomStore = create<RoomState>((set, get) => ({
     );
   },
 
-  toggleMultiplayerCursors: () => {
-    const nextState = !get().showMultiplayerCursors;
-    set({ showMultiplayerCursors: nextState });
+  toggleGlobalInteraction: () => {
+    const nextState = !get().globalInteractionEnabled;
+    set({ globalInteractionEnabled: nextState });
     get().sendMessage(
       nextState
-        ? "👁️ Multiplayer live cursors visible on screen."
-        : "🙈 Other user cursors hidden from view."
+        ? "👁️ Global interactions (Cursors & Keys) enabled."
+        : "🙈 Global interactions hidden."
     );
+  },
+
+  toggleUserInteraction: (userId) => {
+    set((state) => ({
+      participants: state.participants.map((p) =>
+        p.id === userId ? { ...p, canInteract: !p.canInteract } : p
+      ),
+    }));
   },
 
   updateMyCursor: (x, y, isClicking) => {

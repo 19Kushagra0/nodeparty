@@ -11,7 +11,10 @@
 - **Real-Time Sync**: While the UI mimics real-time interactions, there is zero backend connectivity. No WebSockets, Socket.IO, or WebRTC have been implemented. 
 - **User Authentication**: Identities are hardcoded (e.g., "Alex (You)"). There is no authentication system, session management, or persistent user profiles.
 
-## Missing Components / API Routes
-- **Next.js API Routes**: There are no backend routes (`/api/rooms`, `/api/auth`) to create persistent rooms, validate passcodes, or handle user sessions.
-- **Database Integration**: Everything resets on page refresh. There is no database (PostgreSQL, Redis, etc.) configured to store active rooms, chat history, or persistent playlists.
-- **WebSocket Server**: There is no signaling or WebSocket server to handle event broadcasting (e.g., broadcasting `seek` events to ensure sub-millisecond sync across connected clients).
+## Missing Components
+The frontend UI is built and well-structured, but the core collaborative mechanisms are missing. We are currently missing:
+- **Watch Party Sync**: We need to integrate the YouTube IFrame API into our `CinematicVideoPlayer` and set up a signaling server (like PartyKit) to sync play/pause/seek events across the room.
+- **WebRTC Signaling Logic**: A mechanism to establish connections for the advanced Co-Browsing mode.
+- **DataChannel Implementation**: The WebRTC DataChannel to transmit normalized coordinates and keystrokes efficiently with low latency.
+- **Coordinate Normalization Math**: The calculations required to translate local pointer events into normalized percentages relative to the video bounding box.
+- **Chrome Extension Boilerplate**: The companion Chrome Extension required for the host to capture DataChannel packets and inject them into the shared tab using the `chrome.debugger` API.

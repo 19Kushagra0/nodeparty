@@ -11,6 +11,7 @@ import {
   MousePointer,
 } from "@/icons";
 import { useRoomStore } from "@/store/useRoomStore";
+import { MultiplayerCursors } from "./MultiplayerCursors";
 
 export function CinematicVideoPlayer() {
   const {
@@ -101,6 +102,9 @@ export function CinematicVideoPlayer() {
             ))}
           </div>
 
+          {/* Interactive Screen Share Overlay */}
+          <MultiplayerCursors containerRef={browserContainerRef} />
+
           {/* Top Edge Screen Meta (Optional, fades on hover/idle) */}
           <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-10 flex justify-between items-start opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
             <div className="flex flex-col gap-1">
@@ -129,29 +133,29 @@ export function CinematicVideoPlayer() {
           />
 
           {/* Sleek Floating Bottom HUD Controls */}
-          <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="bg-[#0e1117]/80 backdrop-blur-xl border border-white/[0.08] rounded-2xl p-3 sm:p-4 shadow-2xl flex flex-col gap-3">
+          <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="bg-[#0a0c10]/95 backdrop-blur-2xl border border-white/[0.04] rounded-[14px] px-4 py-3 shadow-2xl flex flex-col gap-2.5">
               
-              {/* Scrubber Area */}
-              <div className="flex items-center gap-3 sm:gap-4 w-full">
-                <span className="text-[10px] sm:text-xs font-mono text-zinc-400 w-10 text-right shrink-0">
+              {/* Top Row: Scrubber with Timestamps */}
+              <div className="flex items-center gap-3 w-full">
+                <span className="text-[11px] font-mono text-zinc-400 shrink-0 select-none">
                   {formatTime(currentTime)}
                 </span>
                 
                 <div
-                  className="h-2 flex-1 bg-black/50 hover:bg-black/70 rounded-full cursor-pointer relative transition-all group/scrubber overflow-hidden ring-1 ring-white/[0.05]"
+                  className="h-1.5 sm:h-2 flex-1 bg-white/[0.08] hover:bg-white/[0.12] rounded-full cursor-pointer relative transition-all group/scrubber overflow-hidden"
                   onClick={handleSeek}
                   onMouseMove={handleMouseMove}
                   onMouseLeave={() => setHoverTime(null)}
                 >
                   {/* Buffer / Loaded */}
                   <div
-                    className="h-full bg-white/10 rounded-full absolute left-0 top-0"
+                    className="h-full bg-white/10 rounded-full absolute left-0 top-0 pointer-events-none"
                     style={{ width: `${Math.min(100, ((currentTime + 45) / duration) * 100)}%` }}
                   />
                   {/* Progress Line */}
                   <div
-                    className="h-full bg-rose-500 rounded-full relative transition-all shadow-[0_0_10px_rgba(244,63,94,0.5)]"
+                    className="h-full bg-[#fa2c55] rounded-full relative transition-all pointer-events-none"
                     style={{ width: `${(currentTime / duration) * 100}%` }}
                   />
 
@@ -166,17 +170,17 @@ export function CinematicVideoPlayer() {
                   )}
                 </div>
 
-                <span className="text-[10px] sm:text-xs font-mono text-zinc-500 w-10 shrink-0">
+                <span className="text-[11px] font-mono text-zinc-500 shrink-0 select-none">
                   {formatTime(duration)}
                 </span>
               </div>
 
-              {/* Action Buttons Row */}
+              {/* Bottom Row: Actions */}
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 sm:gap-4">
+                <div className="flex items-center gap-4">
                   <button
                     onClick={togglePlay}
-                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+                    className="w-8 h-8 rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-white flex items-center justify-center transition-colors cursor-pointer"
                   >
                     {isPlaying ? <Pause className="w-4 h-4 fill-white" /> : <Play className="w-4 h-4 fill-white ml-0.5" />}
                   </button>
@@ -187,7 +191,7 @@ export function CinematicVideoPlayer() {
                       className="text-zinc-400 hover:text-white transition-colors cursor-pointer"
                     >
                       {isMuted || volume === 0 ? (
-                        <VolumeX className="w-4 h-4 text-rose-500" />
+                        <VolumeX className="w-4 h-4 text-[#fa2c55]" />
                       ) : (
                         <Volume2 className="w-4 h-4" />
                       )}
@@ -203,7 +207,7 @@ export function CinematicVideoPlayer() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-4">
                   <button
                     onClick={toggleFullscreen}
                     className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
@@ -213,7 +217,6 @@ export function CinematicVideoPlayer() {
                   </button>
                 </div>
               </div>
-
             </div>
           </div>
         </div>

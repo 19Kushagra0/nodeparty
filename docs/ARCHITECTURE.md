@@ -23,8 +23,13 @@ Components are neatly organized into context-specific directories:
 - `src/components/layout/`: Shared layouts like `Navbar.tsx` and `Footer.tsx`.
 
 ## Data Flow & Core Logic
-Currently, the application relies entirely on client-side state management using **Zustand** (`src/store/useRoomStore.ts`). 
-- The Zustand store serves as a centralized "mock server."
-- All mock data is seeded from `src/data/` (e.g., `mockParticipants.ts`, `mockPresets.ts`, `mockLounges.ts`).
-- When a user interacts with the UI (e.g., sending a chat, reacting, seeking the video, adding to the queue), the components dispatch actions to the Zustand store, which updates the local client state.
-- **Data flow is currently unidirectional and strictly local.** There are no active API calls or WebSocket connections emitting these state changes to a backend or other clients.
+The application operates as a hybrid platform supporting two distinct interaction modes:
+
+1. **Watch Party Mode (Default)**:
+   - The primary mode where users watch synchronized streaming video (e.g., via the YouTube IFrame API).
+   - A WebSocket signaling server broadcasts lightweight events (`play`, `pause`, `seekTo`) ensuring all clients are perfectly in sync.
+
+2. **Collaborative Browser Mode (Advanced)**:
+   - When the Host activates screen sharing, the architecture shifts to a two-part remote-control system:
+     - **Visual Layer (WebRTC)**: The host shares a tab (`getDisplayMedia`), broadcasting a live video feed to guests. The Next.js frontend captures guest mouse movements and keyboard events, converting them to normalized percentages (X/Y) over the video bounding box.
+     - **Control Layer (Chrome Extension)**: A custom extension installed by the host receives the normalized coordinates and keystrokes via a WebRTC DataChannel. The extension uses the `chrome.debugger` API (`Input.dispatchMouseEvent`/`Input.dispatchKeyEvent`) to inject interactions into the shared tab, granting true remote control.
