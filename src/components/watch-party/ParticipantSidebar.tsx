@@ -15,6 +15,7 @@ import {
   Mic,
   MicOff,
   Zap,
+  MousePointer,
 } from "@/icons";
 import { useRoomStore } from "@/store/useRoomStore";
 import { Role } from "@/types";
@@ -39,6 +40,9 @@ export function ParticipantSidebar() {
     isResyncing,
     toggleMuteParticipant,
     changeParticipantRole,
+    globalInteractionEnabled,
+    toggleGlobalInteraction,
+    toggleUserInteraction,
   } = useRoomStore();
 
   const [inputMessage, setInputMessage] = useState("");
@@ -298,6 +302,21 @@ export function ParticipantSidebar() {
                     getRoleBadge(p.role)
                   )}
 
+                  {/* Interaction Enable/Disable */}
+                  {userRole === "host" && !p.isMe && (
+                    <button
+                      onClick={() => toggleUserInteraction(p.id)}
+                      className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                        p.canInteract !== false
+                          ? "bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20"
+                          : "bg-rose-500/10 text-rose-400 hover:bg-rose-500/20"
+                      }`}
+                      title={p.canInteract !== false ? "Disable Interaction" : "Enable Interaction"}
+                    >
+                      <MousePointer className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+
                   {/* Mic mute/unmute */}
                   <button
                     onClick={() => toggleMuteParticipant(p.id)}
@@ -483,6 +502,23 @@ export function ParticipantSidebar() {
             <p className="text-zinc-400 text-xs leading-relaxed">
               As Host, you have exclusive control over video seeking, queue playback priorities, and room moderation.
             </p>
+            {userRole === "host" && (
+              <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between">
+                <span className="text-zinc-300">Allow Viewer Interactions</span>
+                <button
+                  onClick={toggleGlobalInteraction}
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
+                    globalInteractionEnabled ? "bg-emerald-500" : "bg-zinc-700"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                      globalInteractionEnabled ? "translate-x-5" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

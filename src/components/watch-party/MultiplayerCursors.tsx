@@ -5,7 +5,7 @@ import { useRoomStore } from "@/store/useRoomStore";
 import { MultiplayerCursor } from "@/types";
 
 export function MultiplayerCursors({ containerRef }: { containerRef: React.RefObject<HTMLDivElement | null> }) {
-  const { multiplayerCursors, updateMyCursor, showMultiplayerCursors } = useRoomStore();
+  const { multiplayerCursors, updateMyCursor, globalInteractionEnabled, participants } = useRoomStore();
   const [remoteCursors, setRemoteCursors] = useState<MultiplayerCursor[]>(multiplayerCursors);
 
   // Track local user mouse movement inside the shared browser canvas
@@ -43,7 +43,7 @@ export function MultiplayerCursors({ containerRef }: { containerRef: React.RefOb
       container.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [containerRef, updateMyCursor, multiplayerCursors]);
+  }, [containerRef, updateMyCursor, multiplayerCursors, globalInteractionEnabled]);
 
   // Organic simulated movement of other participant cursors (Elena, Marcus, Chloe)
   useEffect(() => {
@@ -71,8 +71,12 @@ export function MultiplayerCursors({ containerRef }: { containerRef: React.RefOb
     return () => clearInterval(interval);
   }, []);
 
-  const displayedCursors = showMultiplayerCursors
-    ? remoteCursors
+  const displayedCursors = globalInteractionEnabled
+    ? remoteCursors.filter(c => {
+        if (c.id === "u1") return true;
+        const p = participants.find(p => p.id === c.id);
+        return p?.canInteract !== false;
+      })
     : remoteCursors.filter((c) => c.id === "u1");
 
   return (

@@ -10,6 +10,7 @@ export const initialParticipants: Participant[] = [
     isSpeaking: false,
     isMuted: false,
     statusText: "Broadcasting in 1080p60",
+    canInteract: true,
   },
   {
     id: "u2",
@@ -20,6 +21,7 @@ export const initialParticipants: Participant[] = [
     isSpeaking: true,
     isMuted: false,
     statusText: "Synced (12ms)",
+    canInteract: true,
   },
   {
     id: "u3",
@@ -30,6 +32,7 @@ export const initialParticipants: Participant[] = [
     isSpeaking: false,
     isMuted: false,
     statusText: "Watching in Theater Mode",
+    canInteract: true,
   },
   {
     id: "u4",
@@ -40,6 +43,7 @@ export const initialParticipants: Participant[] = [
     isSpeaking: false,
     isMuted: false,
     statusText: "Synced (18ms)",
+    canInteract: true,
   },
   {
     id: "u5",
@@ -50,6 +54,7 @@ export const initialParticipants: Participant[] = [
     isSpeaking: false,
     isMuted: true,
     statusText: "Synced (24ms)",
+    canInteract: false,
   },
 ];
 

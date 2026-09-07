@@ -48,9 +48,7 @@ export default function JoinRoomCard() {
       ? cleanedId.split("/room/")[1].split("?")[0]
       : cleanedId.replace("#", "");
 
-    setTimeout(() => {
-      router.push(`/room/${extractedId}`);
-    }, 300);
+    router.push(`/room/${extractedId}`);
   };
 
   const handlePasteCode = async () => {

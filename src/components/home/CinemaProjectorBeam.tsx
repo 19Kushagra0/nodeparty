@@ -7,7 +7,7 @@ export function CinemaProjectorBeam() {
   return (
     <div
       aria-hidden="true"
-      className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0"
+      className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0"
     >
       {/* ── 1. Anime Cinema Watch Party Backdrop ── */}
       <div className="absolute inset-0 w-full h-full animate-cinematic-breathe origin-center scale-105">

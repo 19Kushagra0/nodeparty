@@ -22,10 +22,8 @@ export function CreateRoomModal() {
     const newRoomId = "party-" + Math.random().toString(36).substring(2, 8);
     setRoomName(partyName);
 
-    setTimeout(() => {
-      setCreateModalOpen(false);
-      router.push(`/room/${newRoomId}`);
-    }, 300);
+    setCreateModalOpen(false);
+    router.push(`/room/${newRoomId}`);
   };
 
   const selectedClass = "bg-[#c8962e]/15 border-[#c8962e]/60 text-[#f2e9d6]";
