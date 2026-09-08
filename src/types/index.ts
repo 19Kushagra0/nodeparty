@@ -10,6 +10,7 @@ export interface Participant {
   role: Role;
   isMe: boolean;
   avatarBg: string;
+  avatarUrl?: string;
   isSpeaking?: boolean;
   isMuted?: boolean;
   isCameraOn?: boolean;
@@ -17,6 +18,9 @@ export interface Participant {
   statusText?: string;
   cursorColor?: string;
   canInteract?: boolean;
+  ping?: string;
+  volume?: number;
+  vibeEmoji?: string;
 }
 
 export interface ChatMessage {
@@ -63,6 +67,7 @@ export interface VideoPreset {
   url: string;
   description: string;
   ambientColor: string;
+  year?: string;
 }
 
 export interface FeaturedLounge {

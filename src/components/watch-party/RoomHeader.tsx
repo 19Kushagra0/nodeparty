@@ -2,170 +2,114 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
-  ArrowLeft,
-  Copy,
-  Check,
-  Share2,
-  Maximize2,
-  Minimize2,
-  Sparkles,
-  Crown,
-} from "@/icons";
+  ChevronLeft,
+  Link as LinkIcon,
+  MoreHorizontal,
+  ChevronRight,
+  Heart,
+  User,
+  Users
+} from "lucide-react";
 import { useRoomStore } from "@/store/useRoomStore";
 
 export function RoomHeader() {
   const { roomId } = useParams<{ roomId: string }>();
+  const router = useRouter();
   const {
     roomName,
-    roomPasscode,
     participants,
-    syncDriftMs,
-    isTheaterMode,
-    toggleTheaterMode,
-    ambientGlow,
-    toggleAmbientGlow,
+    currentPreset,
     setInviteModalOpen,
-    resyncWithHost,
-    isResyncing,
   } = useRoomStore();
 
-  const [copiedCode, setCopiedCode] = useState(false);
-
-  const copyRoomCode = () => {
-    navigator.clipboard.writeText(roomPasscode || roomId || "CYBER-4096");
-    setCopiedCode(true);
-    setTimeout(() => setCopiedCode(false), 2000);
+  const handleLeave = () => {
+    router.push("/");
   };
 
   return (
-    <header className="h-16 px-4 sm:px-6 border-b border-white/[0.08] bg-[#07080b]/95 backdrop-blur-xl flex items-center justify-between sticky top-0 z-30 transition-all">
-      {/* Left: Navigation & Room Name */}
-      <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-        <Link
-          href="/"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-300 hover:text-white transition-colors text-xs font-semibold shrink-0"
-          title="Leave Watch Party"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Lobby</span>
-        </Link>
+    <header className="h-12 sm:h-14 px-1 sm:px-2 flex items-center justify-between z-30 transition-all w-full shrink-0 gap-3">
+      {/* Left: Leave Room */}
+      <button
+        onClick={handleLeave}
+        className="flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white shadow-2xs hover:shadow-xs hover:-translate-y-0.5 text-zinc-800 transition-all text-xs sm:text-sm font-semibold border border-white shrink-0 cursor-pointer"
+      >
+        <ChevronLeft className="w-4 h-4 text-zinc-500" />
+        <span>Leave Room</span>
+      </button>
 
-        <div className="h-4 w-[1px] bg-white/[0.08] hidden sm:block" />
-
-        <div className="flex items-center gap-2.5 min-w-0">
-          <h1 className="text-xs sm:text-sm font-bold text-white truncate max-w-[140px] sm:max-w-[240px] md:max-w-xs">
-            {roomName}
-          </h1>
-
-          {/* Room Code Badge */}
-          <button
-            onClick={copyRoomCode}
-            className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#141722] hover:bg-[#1a1e2c] border border-white/[0.08] text-xs font-mono text-zinc-300 transition-colors cursor-pointer group"
-            title="Click to copy room code"
-          >
-            <span className="text-zinc-500 font-sans text-xs">CODE:</span>
-            <span className="text-rose-400 font-bold">{roomPasscode || roomId}</span>
-            {copiedCode ? (
-              <Check className="w-3 h-3 text-emerald-400" />
-            ) : (
-              <Copy className="w-3 h-3 text-zinc-500 group-hover:text-zinc-300" />
+      {/* Center: Room Name & Participants */}
+      <div className="hidden md:flex items-center bg-white/90 shadow-2xs rounded-full px-4 py-1.5 border border-white gap-4 lg:gap-5 shrink-0">
+        <h1 className="text-xs sm:text-sm font-bold text-zinc-800 flex items-center gap-1.5">
+          <span>{roomName || "Together Hits Different"}</span>
+          <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-100" />
+        </h1>
+        
+        <div className="flex items-center gap-2.5">
+          {/* Avatars */}
+          <div className="flex items-center -space-x-1.5">
+            {participants.slice(0, 3).map((p) => (
+              <div
+                key={p.id}
+                className="relative w-6 h-6 rounded-full bg-zinc-200 border-2 border-white flex items-center justify-center text-[10px] font-bold text-zinc-600 shadow-2xs overflow-hidden"
+              >
+                <div className="w-full h-full bg-pink-100 flex items-center justify-center text-pink-600 text-[10px]">
+                  {p.name[0]}
+                </div>
+              </div>
+            ))}
+            {participants.length > 3 && (
+              <div className="w-6 h-6 rounded-full bg-pink-50 border-2 border-white flex items-center justify-center text-[9px] font-bold text-pink-500 shadow-2xs z-10">
+                +{participants.length - 3}
+              </div>
             )}
+          </div>
+          
+          {/* People Count */}
+          <div className="flex items-center gap-1 text-zinc-600 text-xs font-semibold">
+            <User className="w-3.5 h-3.5" />
+            <span>{participants.length}</span>
+          </div>
+
+          <div className="w-[1px] h-3.5 bg-zinc-200" />
+
+          {/* Share/Link */}
+          <button 
+            onClick={() => setInviteModalOpen(true)}
+            className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-zinc-100 text-zinc-500 transition-colors cursor-pointer"
+            title="Invite link"
+          >
+            <LinkIcon className="w-3 h-3" />
+          </button>
+          
+          {/* More */}
+          <button className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-zinc-100 text-zinc-500 transition-colors cursor-pointer">
+            <MoreHorizontal className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
-      {/* Center: Live Sync Telemetry */}
-      <div className="hidden lg:flex items-center gap-3">
-        <button
-          onClick={resyncWithHost}
-          className={`flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/20 text-xs text-cyan-300 font-mono transition-all hover:bg-cyan-900/40 cursor-pointer ${
-            isResyncing ? "animate-pulse ring-2 ring-cyan-400/50" : ""
-          }`}
-          title="Click to manually recalibrate sync clock with host"
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-          <span>{isResyncing ? "Recalibrating..." : `⚡ ${syncDriftMs}ms Drift Lock`}</span>
-        </button>
-
-        <span className="text-zinc-600 text-xs">•</span>
-
-        <div className="flex items-center gap-1.5 text-xs text-zinc-400 font-medium">
-          <Crown className="w-3.5 h-3.5 text-rose-400" />
-          <span>Host: <strong className="text-zinc-200">Alex</strong></span>
-        </div>
-      </div>
-
-      {/* Right: Participant Stack, Theater Mode & Invite CTA */}
-      <div className="flex items-center gap-2.5 sm:gap-3">
-        {/* Participant Avatar Stack */}
-        <div className="hidden sm:flex items-center -space-x-2 mr-1">
-          {participants.slice(0, 4).map((p) => (
-            <div
-              key={p.id}
-              className="relative w-7 h-7 rounded-full bg-[#1e2230] border-2 border-[#07080b] flex items-center justify-center text-xs font-mono font-bold text-white shadow-sm ring-1 ring-white/10"
-              title={`${p.name} (${p.role})`}
-            >
-              {p.name[0]}
-              {p.role === "host" && (
-                <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-rose-600 border border-white/20 flex items-center justify-center text-xs">
-                  👑
-                </span>
-              )}
-            </div>
-          ))}
-          {participants.length > 4 && (
-            <div className="w-7 h-7 rounded-full bg-zinc-800 border-2 border-[#07080b] flex items-center justify-center text-xs font-mono font-bold text-zinc-300">
-              +{participants.length - 4}
-            </div>
-          )}
+      {/* Right: Now Watching & Room Count */}
+      <div className="flex items-center gap-2.5 shrink-0">
+        {/* Now Watching Mini Card */}
+        <div className="hidden sm:flex items-center gap-2.5 bg-white/90 shadow-2xs border border-white rounded-full pr-3 p-1 cursor-pointer hover:shadow-xs transition-shadow max-w-[260px]">
+          <div className="w-7 h-7 rounded-full bg-zinc-200 overflow-hidden shrink-0">
+             {/* eslint-disable-next-line @next/next/no-img-element */}
+             <img src={currentPreset.thumbnail} alt="Now Watching" className="w-full h-full object-cover" />
+          </div>
+          <div className="flex flex-col min-w-0">
+            <span className="text-[9px] font-semibold text-zinc-400 leading-none">Now Watching</span>
+            <span className="text-xs font-bold text-zinc-800 leading-tight truncate">{currentPreset.title}</span>
+          </div>
+          <ChevronRight className="w-3.5 h-3.5 text-zinc-400 shrink-0 ml-0.5" />
         </div>
 
-        {/* Ambient Glow Toggle */}
-        <button
-          onClick={toggleAmbientGlow}
-          className={`p-2 rounded-xl border transition-colors cursor-pointer ${
-            ambientGlow
-              ? "bg-rose-500/10 border-rose-500/30 text-rose-300"
-              : "bg-white/[0.04] border-white/[0.08] text-zinc-400 hover:text-white"
-          }`}
-          title={ambientGlow ? "Ambient Lighting Active" : "Ambient Lighting Off"}
-        >
-          <Sparkles className="w-4 h-4" />
-        </button>
-
-        {/* Theater Mode Toggle */}
-        <button
-          onClick={toggleTheaterMode}
-          className={`p-2 rounded-xl border transition-colors cursor-pointer hidden md:flex items-center gap-1.5 text-xs font-semibold ${
-            isTheaterMode
-              ? "bg-[#141722] border-white/[0.2] text-white"
-              : "bg-white/[0.04] border-white/[0.08] text-zinc-400 hover:text-white"
-          }`}
-          title="Toggle Cinema Theater Mode"
-        >
-          {isTheaterMode ? (
-            <>
-              <Minimize2 className="w-4 h-4" />
-              <span>Standard</span>
-            </>
-          ) : (
-            <>
-              <Maximize2 className="w-4 h-4" />
-              <span>Theater</span>
-            </>
-          )}
-        </button>
-
-        {/* Share Invite Trigger */}
-        <button
-          onClick={() => setInviteModalOpen(true)}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-rose-500 hover:bg-rose-600 active:scale-95 text-white text-xs font-bold border border-rose-400/20 transition-colors cursor-pointer"
-        >
-          <Share2 className="w-3.5 h-3.5" />
-          <span>Invite</span>
-        </button>
+        {/* Total Room Count - Far Right */}
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white shadow-2xs border border-white text-zinc-700 text-xs font-semibold shrink-0">
+           <Users className="w-3.5 h-3.5 text-zinc-500" />
+           <span>{participants.length}</span>
+        </div>
       </div>
     </header>
   );
