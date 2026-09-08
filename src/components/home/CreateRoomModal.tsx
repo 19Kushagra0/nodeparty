@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { X, Lock, Globe, Shield, Play, MousePointer, Film } from "@/icons";
+import { X, Play, Film } from "@/icons";
 import { useRoomStore } from "@/store/useRoomStore";
 import { PrivacyMode } from "@/types";
 
@@ -86,27 +86,19 @@ export function CreateRoomModal() {
                 <button
                   type="button"
                   onClick={() => setPrivacy("public")}
-                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${privacy === "public" ? selectedClass : unselectedClass
+                  className={`p-3 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${privacy === "public" ? selectedClass : unselectedClass
                     }`}
                 >
-                  <div className="flex items-center gap-1.5 text-xs font-semibold">
-                    <Globe className="w-3.5 h-3.5 text-[#c8962e]" />
-                    <span>Public</span>
-                  </div>
-                  <span className="text-xs text-[#907a5a] leading-tight">Open to all</span>
+                  <span className="text-sm font-medium whitespace-nowrap">Open to all</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setPrivacy("friends")}
-                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${privacy === "friends" ? selectedClass : unselectedClass
+                  className={`p-3 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${privacy === "friends" ? selectedClass : unselectedClass
                     }`}
                 >
-                  <div className="flex items-center gap-1.5 text-xs font-semibold">
-                    <Lock className="w-3.5 h-3.5 text-[#c8962e]" />
-                    <span>Private</span>
-                  </div>
-                  <span className="text-xs text-[#907a5a] leading-tight">Invite code</span>
+                  <span className="text-sm font-medium whitespace-nowrap">Invite code</span>
                 </button>
               </div>
             </div>
@@ -120,27 +112,19 @@ export function CreateRoomModal() {
                 <button
                   type="button"
                   onClick={() => setControlMode("collaborative")}
-                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${controlMode === "collaborative" ? selectedClass : unselectedClass
+                  className={`p-3 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${controlMode === "collaborative" ? selectedClass : unselectedClass
                     }`}
                 >
-                  <div className="flex items-center gap-1.5 text-xs font-semibold">
-                    <MousePointer className="w-3.5 h-3.5 text-[#c8962e]" />
-                    <span>Shared</span>
-                  </div>
-                  <span className="text-xs text-[#907a5a] leading-tight">Everyone plays</span>
+                  <span className="text-sm font-medium whitespace-nowrap">Everyone plays</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setControlMode("host")}
-                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer ${controlMode === "host" ? selectedClass : unselectedClass
+                  className={`p-3 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${controlMode === "host" ? selectedClass : unselectedClass
                     }`}
                 >
-                  <div className="flex items-center gap-1.5 text-xs font-semibold">
-                    <Shield className="w-3.5 h-3.5 text-[#c8962e]" />
-                    <span>Host DJ</span>
-                  </div>
-                  <span className="text-xs text-[#907a5a] leading-tight">Host controls</span>
+                  <span className="text-sm font-medium whitespace-nowrap">Host controls</span>
                 </button>
               </div>
             </div>

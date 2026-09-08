@@ -4,11 +4,9 @@ import { useRoomStore } from "@/store/useRoomStore";
 import { CinematicVideoPlayer } from "@/components/watch-party/CinematicVideoPlayer";
 import { GridStageView } from "@/components/watch-party/GridStageView";
 import { ParticipantSidebar } from "@/components/watch-party/ParticipantSidebar";
-import { BottomControlDock } from "@/components/watch-party/BottomControlDock";
 import { ScreenShareModal } from "@/components/watch-party/ScreenShareModal";
 import { CapturedMomentsModal } from "@/components/watch-party/CapturedMomentsModal";
 import { InviteModal } from "@/components/watch-party/InviteModal";
-
 export function RoomClientView() {
   const { layoutMode, isTheaterMode, isShutterFlashing } = useRoomStore();
 
@@ -20,26 +18,25 @@ export function RoomClientView() {
       )}
 
       {/* Main Room Layout Grid */}
-      <main className="relative z-10 flex-1 px-0 pt-0 lg:px-6 lg:pt-6 pb-[100px] max-w-[1800px] w-full mx-auto flex flex-col lg:flex-row gap-0 lg:gap-6 transition-all bg-[#07080b]">
-        {/* Left / Hero Column: Cinematic Video Player OR Grid Stage */}
-        <div className={`flex-1 min-w-0 flex flex-col ${isTheaterMode ? "w-full" : ""}`}>
-          {layoutMode === "cinema" ? (
-            <CinematicVideoPlayer />
-          ) : (
-            <GridStageView />
-          )}
+      <main className="relative z-10 flex-1 w-full flex flex-col lg:flex-row gap-3 lg:gap-4 h-full min-h-0 overflow-hidden">
+        {/* Left Column: Player Stage */}
+        <div className={`flex-1 min-w-0 flex flex-col h-full min-h-0 ${isTheaterMode ? "w-full" : ""}`}>
+          <div className="flex-1 min-h-0 relative w-full overflow-hidden flex flex-col">
+            {layoutMode === "cinema" ? (
+              <CinematicVideoPlayer />
+            ) : (
+              <GridStageView />
+            )}
+          </div>
         </div>
 
-        {/* Right Social & Control Sidebar Column (collapsible in theater mode) */}
+        {/* Right Social Column */}
         {!isTheaterMode && (
-          <div className="w-full lg:w-[420px] shrink-0">
+          <div className="w-full lg:w-[320px] xl:w-[360px] shrink-0 flex flex-col h-full min-h-0 overflow-hidden">
             <ParticipantSidebar />
           </div>
         )}
       </main>
-
-      {/* Floating Bottom Control Bar Dock */}
-      <BottomControlDock />
 
       {/* Modals */}
       <ScreenShareModal />

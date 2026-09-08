@@ -8,7 +8,7 @@ import {
   Globe,
   Cast,
   Play,
-} from "@/icons";
+} from "lucide-react";
 import { useRoomStore } from "@/store/useRoomStore";
 import { curatedVideoPresets } from "@/data/mockPresets";
 
@@ -27,7 +27,7 @@ export function ScreenShareModal() {
 
   if (!isScreenShareModalOpen) return null;
 
-  const handleLaunchPreset = (preset: typeof curatedVideoPresets[0]) => {
+  const handleLaunchPreset = (preset: (typeof curatedVideoPresets)[0]) => {
     openNewTab({
       title: preset.title.split("—")[0].trim(),
       url: preset.url,
@@ -72,7 +72,7 @@ export function ScreenShareModal() {
       });
       setScreenShareModalOpen(false);
     } catch {
-      // User cancelled or simulated fallback
+      // Fallback
       openNewTab({
         title: "Live Screen Broadcast (Active)",
         url: "webrtc://screen-share-alex",
@@ -86,73 +86,77 @@ export function ScreenShareModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-zinc-950/40 backdrop-blur-md animate-in fade-in duration-200"
+      onClick={() => setScreenShareModalOpen(false)}
+    >
       <div
-        className="relative w-full max-w-2xl bg-[#0e1117] border border-white/[0.08] rounded-2xl p-6 sm:p-8 shadow-2xl text-left space-y-6 max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-2xl bg-white border border-zinc-200/80 rounded-[28px] sm:rounded-[32px] p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.12)] text-left space-y-5 max-h-[90vh] overflow-y-auto no-scrollbar"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between pb-4 border-b border-white/[0.08]">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="w-8 h-8 rounded-xl bg-cyan-600 flex items-center justify-center text-white">
-                <Tv className="w-4 h-4" />
-              </span>
-              <h3 className="text-xl font-black text-[#f4f4f5] tracking-tight">
+        <div className="flex items-start justify-between pb-4 border-b border-zinc-100">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500 shadow-2xs shrink-0">
+              <Tv className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-lg sm:text-xl font-bold text-zinc-900 tracking-tight">
                 Stream Video & Share Tab
               </h3>
+              <p className="text-xs sm:text-sm text-zinc-500 mt-0.5">
+                Stream in synchronized 4K, open a shared co-browsing tab, or share your screen.
+              </p>
             </div>
-            <p className="text-xs text-zinc-400">
-              Open a new interactive co-browsing tab, stream video in 4K, or share your screen.
-            </p>
           </div>
 
           <button
             onClick={() => setScreenShareModalOpen(false)}
-            className="p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-400 hover:text-zinc-700 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            title="Close"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Category Mode Switcher */}
-        <div className="flex items-center p-1 bg-[#141722] rounded-xl border border-white/[0.08] text-xs">
+        {/* Segmented Mode Switcher */}
+        <div className="flex items-center p-1 bg-[#F0F2F6] rounded-2xl border border-zinc-200/60 text-xs sm:text-sm font-medium">
           <button
             type="button"
             onClick={() => setActiveCategory("presets")}
-            className={`flex-1 py-2.5 rounded-lg font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               activeCategory === "presets"
-                ? "bg-rose-500 text-white"
-                : "text-zinc-400 hover:text-white"
+                ? "bg-white text-zinc-900 font-semibold shadow-xs"
+                : "text-zinc-500 hover:text-zinc-900 hover:bg-white/50"
             }`}
           >
-            <Film className="w-3.5 h-3.5" />
+            <Film className="w-3.5 h-3.5 text-rose-500" />
             <span>Curated Channels</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveCategory("screen")}
-            className={`flex-1 py-2.5 rounded-lg font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               activeCategory === "screen"
-                ? "bg-rose-500 text-white"
-                : "text-zinc-400 hover:text-white"
+                ? "bg-white text-zinc-900 font-semibold shadow-xs"
+                : "text-zinc-500 hover:text-zinc-900 hover:bg-white/50"
             }`}
           >
-            <Cast className="w-3.5 h-3.5" />
+            <Cast className="w-3.5 h-3.5 text-rose-500" />
             <span>Screen Share</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveCategory("url")}
-            className={`flex-1 py-2.5 rounded-lg font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               activeCategory === "url"
-                ? "bg-rose-500 text-white"
-                : "text-zinc-400 hover:text-white"
+                ? "bg-white text-zinc-900 font-semibold shadow-xs"
+                : "text-zinc-500 hover:text-zinc-900 hover:bg-white/50"
             }`}
           >
-            <Globe className="w-3.5 h-3.5" />
+            <Globe className="w-3.5 h-3.5 text-rose-500" />
             <span>Custom URL</span>
           </button>
         </div>
@@ -160,36 +164,42 @@ export function ScreenShareModal() {
         {/* 1. Curated Channels / Presets */}
         {activeCategory === "presets" && (
           <div className="space-y-3">
-            <label className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-300">
-              Select Watch Stream
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[260px] overflow-y-auto pr-1">
+            <div className="text-xs text-zinc-400 font-medium">
+              <span>Select Stream Source</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[300px] overflow-y-auto pr-1">
               {curatedVideoPresets.map((preset) => (
                 <div
                   key={preset.id}
                   onClick={() => handleLaunchPreset(preset)}
-                  className="group relative flex items-center gap-3 p-2.5 rounded-xl bg-[#141722] border border-white/[0.08] hover:border-rose-500/60 hover:bg-[#1a1e2c] cursor-pointer transition-colors shadow-sm"
+                  className="group relative flex items-center gap-3 p-2.5 rounded-2xl bg-[#F8FAFC] border border-zinc-200/70 hover:border-rose-300 hover:bg-white hover:shadow-xs cursor-pointer transition-all"
                 >
-                  <div className="relative w-16 h-12 rounded-lg overflow-hidden shrink-0 bg-zinc-900">
+                  <div className="relative w-20 h-14 rounded-xl overflow-hidden shrink-0 bg-zinc-100 border border-zinc-200/40">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={preset.thumbnail}
                       alt={preset.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                      <Play className="w-3.5 h-3.5 text-white fill-white" />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/35 flex items-center justify-center transition-colors">
+                      <div className="w-6 h-6 rounded-full bg-white/90 group-hover:bg-white text-rose-500 flex items-center justify-center shadow-xs transition-transform group-hover:scale-110">
+                        <Play className="w-2.5 h-2.5 fill-current ml-0.5" />
+                      </div>
                     </div>
+                    <span className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-md bg-black/75 text-[10px] font-mono text-white backdrop-blur-2xs">
+                      {preset.duration}
+                    </span>
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-xs font-bold text-white truncate group-hover:text-rose-300 transition-colors">
+                    <h4 className="text-xs sm:text-[13px] font-semibold text-zinc-800 line-clamp-1 group-hover:text-rose-600 transition-colors">
                       {preset.title}
                     </h4>
-                    <div className="flex items-center gap-1.5 text-xs font-mono text-zinc-400 mt-0.5">
-                      <span>{preset.channel}</span>
+                    <div className="flex items-center gap-1.5 text-xs text-zinc-400 mt-0.5">
+                      <span className="truncate">{preset.channel}</span>
                       <span>•</span>
-                      <span>{preset.duration}</span>
+                      <span className="text-[11px] font-medium text-zinc-500">{preset.category}</span>
                     </div>
                   </div>
                 </div>
@@ -200,62 +210,64 @@ export function ScreenShareModal() {
 
         {/* 2. Native Screen Share */}
         {activeCategory === "screen" && (
-          <div className="space-y-4 text-center py-4">
-            <div className="w-16 h-16 rounded-2xl bg-cyan-950/60 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mx-auto shadow-xl">
-              <Cast className="w-8 h-8" />
+          <div className="py-6 px-4 rounded-2xl bg-[#F8FAFC] border border-zinc-200/70 text-center space-y-4">
+            <div className="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-100 text-rose-500 flex items-center justify-center mx-auto shadow-2xs">
+              <Cast className="w-6 h-6" />
             </div>
 
-            <div className="space-y-1.5 max-w-md mx-auto">
-              <h4 className="text-base font-bold text-white">Share Your Screen with Crew</h4>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                Stream any application window, game, or browser tab with full audio synchronization in high-definition 60 FPS.
+            <div className="space-y-1.5 max-w-sm mx-auto">
+              <h4 className="text-sm sm:text-base font-bold text-zinc-900">
+                Share Screen with Lounge
+              </h4>
+              <p className="text-xs sm:text-sm text-zinc-500 leading-relaxed">
+                Stream any app window, gameplay, or browser tab with synchronous audio in 1080p 60FPS.
               </p>
             </div>
 
             <button
               onClick={handleNativeScreenShare}
               disabled={isStartingScreenShare}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs sm:text-sm border border-cyan-400/30 transition-colors cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-semibold text-xs sm:text-sm shadow-xs hover:shadow-sm active:scale-[0.98] transition-all cursor-pointer"
             >
               <Cast className="w-4 h-4" />
-              <span>{isStartingScreenShare ? "Requesting Screen..." : "Select Screen to Share"}</span>
+              <span>{isStartingScreenShare ? "Starting Stream..." : "Select Screen to Share"}</span>
             </button>
           </div>
         )}
 
         {/* 3. Custom URL */}
         {activeCategory === "url" && (
-          <form onSubmit={handleLaunchCustomUrl} className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-300">
+          <form onSubmit={handleLaunchCustomUrl} className="space-y-4 pt-1">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-zinc-700">
                 Webpage or Stream URL
               </label>
               <input
                 type="text"
-                placeholder="https://twitch.tv/... or https://youtube.com/..."
+                placeholder="https://youtube.com/watch?v=... or https://twitch.tv/..."
                 value={customUrl}
                 onChange={(e) => setCustomUrl(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-[#141722] border border-white/[0.08] text-white text-xs placeholder-zinc-500 focus:outline-none focus:border-rose-500 font-mono"
+                className="w-full px-4 py-2.5 sm:py-3 rounded-2xl bg-[#F0F2F6] border border-zinc-200/80 text-zinc-900 text-xs sm:text-sm placeholder:text-zinc-400 focus:outline-none focus:bg-white focus:border-rose-400 focus:ring-2 focus:ring-rose-500/10 transition-all font-mono"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-300">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-zinc-700">
                 Tab Name (Optional)
               </label>
               <input
                 type="text"
-                placeholder="e.g., Anime Stream Night"
+                placeholder="e.g. Cinema Stream, Game Highlights"
                 value={customTitle}
                 onChange={(e) => setCustomTitle(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-[#141722] border border-white/[0.08] text-white text-xs placeholder-zinc-500 focus:outline-none focus:border-rose-500"
+                className="w-full px-4 py-2.5 sm:py-3 rounded-2xl bg-[#F0F2F6] border border-zinc-200/80 text-zinc-900 text-xs sm:text-sm placeholder:text-zinc-400 focus:outline-none focus:bg-white focus:border-rose-400 focus:ring-2 focus:ring-rose-500/10 transition-all"
               />
             </div>
 
             <button
               type="submit"
               disabled={!customUrl.trim()}
-              className="w-full py-3 rounded-xl bg-rose-500 hover:bg-rose-600 disabled:opacity-40 text-white font-bold text-xs sm:text-sm transition-colors cursor-pointer"
+              className="w-full py-3 rounded-2xl bg-rose-500 hover:bg-rose-600 disabled:opacity-40 text-white font-semibold text-xs sm:text-sm shadow-xs active:scale-[0.98] transition-all cursor-pointer"
             >
               Open Interactive Shared Tab
             </button>
@@ -265,3 +277,4 @@ export function ScreenShareModal() {
     </div>
   );
 }
+
