@@ -25,6 +25,7 @@ export function RoomSidebar() {
     isVideoOn,
     toggleVideo,
     setScreenShareModalOpen,
+    setSettingsModalOpen,
     layoutMode,
     setLayoutMode,
     captureMoment,
@@ -131,6 +132,7 @@ export function RoomSidebar() {
       {/* Bottom Settings Button */}
       <div className="flex flex-col items-center pb-1">
         <button
+          onClick={() => setSettingsModalOpen(true)}
           className="p-2 rounded-2xl text-zinc-400 hover:text-zinc-600 hover:bg-white/80 transition-all cursor-pointer"
           title="Settings"
         >

@@ -63,6 +63,7 @@ interface RoomState {
   isCreateModalOpen: boolean;
   isScreenShareModalOpen: boolean;
   isMomentsGalleryOpen: boolean;
+  isSettingsModalOpen: boolean;
   isRightSidebarOpen: boolean;
   activeSidebarTab: "chat" | "reactions" | "users" | "crew" | "queue" | "settings";
 
@@ -122,6 +123,7 @@ interface RoomState {
   setCreateModalOpen: (open: boolean) => void;
   setScreenShareModalOpen: (open: boolean) => void;
   setMomentsGalleryOpen: (open: boolean) => void;
+  setSettingsModalOpen: (open: boolean) => void;
   setActiveSidebarTab: (tab: "chat" | "reactions" | "users" | "crew" | "queue" | "settings") => void;
 }
 
@@ -259,6 +261,7 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   isCreateModalOpen: false,
   isScreenShareModalOpen: false,
   isMomentsGalleryOpen: false,
+  isSettingsModalOpen: false,
   isRightSidebarOpen: true,
   activeSidebarTab: "users",
 
@@ -661,5 +664,6 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   setCreateModalOpen: (open) => set({ isCreateModalOpen: open }),
   setScreenShareModalOpen: (open) => set({ isScreenShareModalOpen: open }),
   setMomentsGalleryOpen: (open) => set({ isMomentsGalleryOpen: open }),
+  setSettingsModalOpen: (open) => set({ isSettingsModalOpen: open }),
   setActiveSidebarTab: (tab) => set({ activeSidebarTab: tab }),
 }));

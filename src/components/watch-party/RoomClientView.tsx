@@ -7,6 +7,7 @@ import { ParticipantSidebar } from "@/components/watch-party/ParticipantSidebar"
 import { ScreenShareModal } from "@/components/watch-party/ScreenShareModal";
 import { CapturedMomentsModal } from "@/components/watch-party/CapturedMomentsModal";
 import { InviteModal } from "@/components/watch-party/InviteModal";
+import { SettingsModal } from "@/components/watch-party/SettingsModal";
 import { ChevronLeft, MessageSquare, Smile, Users } from "lucide-react";
 
 export function RoomClientView() {
@@ -115,6 +116,7 @@ export function RoomClientView() {
       <ScreenShareModal />
       <CapturedMomentsModal />
       <InviteModal />
+      <SettingsModal />
     </>
   );
 }
