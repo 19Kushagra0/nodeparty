@@ -69,7 +69,9 @@ export function CinematicVideoPlayer() {
     if (controlsTimeoutRef.current) {
       clearTimeout(controlsTimeoutRef.current);
     }
-    setShowControls(false);
+    controlsTimeoutRef.current = setTimeout(() => {
+      setShowControls(false);
+    }, 3000);
   };
 
   useEffect(() => {
@@ -146,9 +148,8 @@ export function CinematicVideoPlayer() {
         onMouseMove={handlePlayerMouseMove}
         onMouseEnter={handlePlayerMouseMove}
         onMouseLeave={handlePlayerMouseLeave}
-        className={`relative w-full h-full min-h-0 bg-black rounded-[32px] sm:rounded-[42px] lg:rounded-[48px] overflow-hidden select-none shadow-[0_12px_40px_rgba(0,0,0,0.22)] ${
-          !showControls ? "cursor-none" : ""
-        }`}
+        className={`relative w-full h-full min-h-0 bg-black rounded-[32px] sm:rounded-[42px] lg:rounded-[48px] overflow-hidden select-none shadow-[0_12px_40px_rgba(0,0,0,0.22)] ${!showControls ? "cursor-none" : ""
+          }`}
       >
         {/* Active Content Background Poster */}
         <div
@@ -157,9 +158,8 @@ export function CinematicVideoPlayer() {
         >
           {/* subtle dimming to make UI pop */}
           <div
-            className={`absolute inset-0 transition-colors duration-500 ${
-              showControls ? "bg-black/35" : "bg-black/15"
-            }`}
+            className={`absolute inset-0 transition-colors duration-500 ${showControls ? "bg-black/35" : "bg-black/15"
+              }`}
           />
         </div>
 
@@ -186,13 +186,83 @@ export function CinematicVideoPlayer() {
         {/* Interactive Screen Share Overlay */}
         <MultiplayerCursors containerRef={browserContainerRef} />
 
-        {/* Top Floating Header with Dipped Center Notch */}
+        {/* Center Dipped Notch & Modal Capsule - Always visible at top-0 regardless of hover or inactivity */}
+        {isNotchOpen && (
+          <div className="pointer-events-auto absolute top-0 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-center animate-in fade-in slide-in-from-top-2 duration-300 cursor-default">
+            {/* White Curved Notch Background attached seamlessly to top-0 */}
+            <svg
+              className="w-[380px] sm:w-[430px] lg:w-[470px] h-[58px] sm:h-[64px] drop-shadow-[0_2px_8px_rgba(0,0,0,0.06)] block"
+              viewBox="0 0 480 66"
+              fill="none"
+              preserveAspectRatio="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M 0 -2 L 0 0 C 25 0, 45 64, 70 64 L 410 64 C 435 64, 455 0, 480 0 L 480 -2 Z"
+                fill="#ffffff"
+              />
+            </svg>
+
+            {/* Inner Soft-Tinted Modal Capsule */}
+            <div className="absolute inset-0 pt-1 sm:pt-1.5 pb-[12px] sm:pb-[14px] flex items-center justify-center">
+              <div className="bg-[#f0f2f6] rounded-full pl-6 pr-5 sm:pl-7 sm:pr-6 py-2 sm:py-2.5 flex items-center gap-3 sm:gap-3.5 text-zinc-600 text-[11px] sm:text-xs font-semibold shadow-2xs">
+                {/* Code Name & Copy Button */}
+                <button
+                  onClick={handleCopyCode}
+                  className="flex items-center gap-1.5 cursor-pointer hover:opacity-85 transition-opacity select-none group/code"
+                  title="Click to copy Room Code"
+                >
+                  <span className="font-semibold text-zinc-500 text-[10px] sm:text-[11px] tracking-wider uppercase">
+                    CODE:
+                  </span>
+                  <span className="font-mono font-bold text-rose-500 tracking-wider text-xs sm:text-[13px]">
+                    {roomPasscode || roomId}
+                  </span>
+                  <span className="text-zinc-400 group-hover/code:text-zinc-700 transition-colors ml-0.5">
+                    {copiedCode ? (
+                      <Check className="w-3.5 h-3.5 text-emerald-500 stroke-[2.5]" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" />
+                    )}
+                  </span>
+                </button>
+
+                {/* Dot Separator */}
+                <span className="text-zinc-300 font-bold text-xs select-none">•</span>
+
+                {/* Host Info */}
+                <div className="flex items-center gap-1.5 select-none">
+                  <Crown className="w-3.5 h-3.5 text-rose-500 stroke-[2.2]" />
+                  <span className="font-medium text-zinc-500 text-[10px] sm:text-[11px]">
+                    Host:
+                  </span>
+                  <span className="font-bold text-zinc-800 text-xs sm:text-[13px]">
+                    {hostName}
+                  </span>
+                </div>
+
+                {/* Toggle Button inside to Disappear/Collapse */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsNotchOpen(false);
+                  }}
+                  className="p-1 -mr-1 rounded-full hover:bg-zinc-200/80 text-zinc-400 hover:text-zinc-700 transition-all cursor-pointer"
+                  title="Hide modal"
+                >
+                  <ChevronUp className="w-3.5 h-3.5 stroke-[2.5]" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Top Floating Controls Header (Back to Home & Show details) - Hides/shows with mouse hover */}
         <div
-          className={`absolute top-0 left-0 right-0 z-[100] flex items-start justify-between pointer-events-none px-5 sm:px-7 lg:px-8 transition-all duration-300 ease-out ${
-            showControls
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 -translate-y-2 pointer-events-none"
-          }`}
+          className={`absolute top-0 left-0 right-0 z-[90] flex items-start justify-between pointer-events-none px-5 sm:px-7 lg:px-8 transition-all duration-300 ease-out ${showControls
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 -translate-y-2 pointer-events-none"
+            }`}
         >
           {/* Left Pill: Back to Home */}
           <div className="pt-3.5 sm:pt-4 transition-all duration-300 ease-out">
@@ -205,77 +275,6 @@ export function CinematicVideoPlayer() {
             </button>
           </div>
 
-          {/* Center Dipped Notch & Modal Capsule (Pinned at absolute top-0 with z-[100]) */}
-          {isNotchOpen ? (
-            <div className="pointer-events-auto absolute top-0 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-center animate-in fade-in slide-in-from-top-2 duration-300">
-              {/* White Curved Notch Background attached seamlessly to top-0 */}
-              <svg
-                className="w-[380px] sm:w-[430px] lg:w-[470px] h-[58px] sm:h-[64px] drop-shadow-[0_2px_8px_rgba(0,0,0,0.06)] block"
-                viewBox="0 0 480 66"
-                fill="none"
-                preserveAspectRatio="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M 0 -2 L 0 0 C 25 0, 45 64, 70 64 L 410 64 C 435 64, 455 0, 480 0 L 480 -2 Z"
-                  fill="#ffffff"
-                />
-              </svg>
-
-              {/* Inner Soft-Tinted Modal Capsule */}
-              <div className="absolute inset-0 pt-1 sm:pt-1.5 pb-[12px] sm:pb-[14px] flex items-center justify-center">
-                <div className="bg-[#f0f2f6] rounded-full pl-6 pr-5 sm:pl-7 sm:pr-6 py-2 sm:py-2.5 flex items-center gap-3 sm:gap-3.5 text-zinc-600 text-[11px] sm:text-xs font-semibold shadow-2xs">
-                  {/* Code Name & Copy Button */}
-                  <button
-                    onClick={handleCopyCode}
-                    className="flex items-center gap-1.5 cursor-pointer hover:opacity-85 transition-opacity select-none group/code"
-                    title="Click to copy Room Code"
-                  >
-                    <span className="font-semibold text-zinc-500 text-[10px] sm:text-[11px] tracking-wider uppercase">
-                      CODE:
-                    </span>
-                    <span className="font-mono font-bold text-rose-500 tracking-wider text-xs sm:text-[13px]">
-                      {roomPasscode || roomId}
-                    </span>
-                    <span className="text-zinc-400 group-hover/code:text-zinc-700 transition-colors ml-0.5">
-                      {copiedCode ? (
-                        <Check className="w-3.5 h-3.5 text-emerald-500 stroke-[2.5]" />
-                      ) : (
-                        <Copy className="w-3.5 h-3.5" />
-                      )}
-                    </span>
-                  </button>
-
-                  {/* Dot Separator */}
-                  <span className="text-zinc-300 font-bold text-xs select-none">•</span>
-
-                  {/* Host Info */}
-                  <div className="flex items-center gap-1.5 select-none">
-                    <Crown className="w-3.5 h-3.5 text-rose-500 stroke-[2.2]" />
-                    <span className="font-medium text-zinc-500 text-[10px] sm:text-[11px]">
-                      Host:
-                    </span>
-                    <span className="font-bold text-zinc-800 text-xs sm:text-[13px]">
-                      {hostName}
-                    </span>
-                  </div>
-
-                  {/* Toggle Button inside to Disappear/Collapse */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsNotchOpen(false);
-                    }}
-                    className="p-1 -mr-1 rounded-full hover:bg-zinc-200/80 text-zinc-400 hover:text-zinc-700 transition-all cursor-pointer"
-                    title="Hide modal"
-                  >
-                    <ChevronUp className="w-3.5 h-3.5 stroke-[2.5]" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : null}
-
           {/* Right Header Area (Show Info button when modal is closed) */}
           <div className="pt-3.5 sm:pt-4 flex items-center gap-2 pointer-events-auto transition-all duration-300 ease-out">
             {!isNotchOpen && (
@@ -287,7 +286,7 @@ export function CinematicVideoPlayer() {
                 className="flex items-center gap-1.5 px-5 py-2 rounded-full bg-white hover:bg-zinc-50 text-zinc-800 shadow-2xs border border-white transition-all text-xs sm:text-sm font-bold hover:scale-[1.02] active:scale-[0.98] cursor-pointer animate-in fade-in duration-200"
                 title="Show Room Code"
               >
-                <span>Show Code</span>
+                <span>Show details</span>
               </button>
             )}
           </div>
@@ -310,11 +309,10 @@ export function CinematicVideoPlayer() {
 
         {/* Bottom Progress Bar & Controls */}
         <div
-          className={`absolute bottom-0 left-0 right-0 p-4 sm:p-5 z-50 transition-all duration-300 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex flex-col gap-3 ${
-            showControls
-              ? "opacity-100 translate-y-0 pointer-events-auto"
-              : "opacity-0 translate-y-2 pointer-events-none"
-          }`}
+          className={`absolute bottom-0 left-0 right-0 p-4 sm:p-5 z-50 transition-all duration-300 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex flex-col gap-3 ${showControls
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 translate-y-2 pointer-events-none"
+            }`}
         >
 
           {/* Progress Line */}

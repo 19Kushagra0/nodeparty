@@ -59,14 +59,16 @@ interface RoomState {
   reactions: ReactionBurst[];
   queue: QueueItem[];
 
-  // Modals & UI Controls
   isInviteModalOpen: boolean;
   isCreateModalOpen: boolean;
   isScreenShareModalOpen: boolean;
   isMomentsGalleryOpen: boolean;
-  activeSidebarTab: "chat" | "crew" | "queue" | "settings";
+  isRightSidebarOpen: boolean;
+  activeSidebarTab: "chat" | "reactions" | "users" | "crew" | "queue" | "settings";
 
   // Actions
+  toggleRightSidebar: () => void;
+  setRightSidebarOpen: (open: boolean) => void;
   setRoomId: (id: string) => void;
   setRoomName: (name: string) => void;
   toggleMic: () => void;
@@ -120,7 +122,7 @@ interface RoomState {
   setCreateModalOpen: (open: boolean) => void;
   setScreenShareModalOpen: (open: boolean) => void;
   setMomentsGalleryOpen: (open: boolean) => void;
-  setActiveSidebarTab: (tab: "chat" | "crew" | "queue" | "settings") => void;
+  setActiveSidebarTab: (tab: "chat" | "reactions" | "users" | "crew" | "queue" | "settings") => void;
 }
 
 const initialTabs: SharedTab[] = [
@@ -252,12 +254,16 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   reactions: [],
   queue: initialQueue,
 
-  // Modals
+  // Modals & UI Controls
   isInviteModalOpen: false,
   isCreateModalOpen: false,
   isScreenShareModalOpen: false,
   isMomentsGalleryOpen: false,
-  activeSidebarTab: "chat",
+  isRightSidebarOpen: true,
+  activeSidebarTab: "users",
+
+  toggleRightSidebar: () => set((state) => ({ isRightSidebarOpen: !state.isRightSidebarOpen })),
+  setRightSidebarOpen: (open) => set({ isRightSidebarOpen: open }),
 
   setRoomId: (id) => set({ roomId: id }),
   setRoomName: (name) => set({ roomName: name }),

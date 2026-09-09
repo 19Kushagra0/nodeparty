@@ -9,7 +9,6 @@ import {
   MicOff,
   Video,
   VideoOff,
-  Tv,
   LayoutGrid,
   Camera,
   LogOut,
@@ -64,15 +63,6 @@ export function RoomSidebar() {
             )}
           </Link>
 
-          {/* Share Screen */}
-          <button
-            onClick={() => setScreenShareModalOpen(true)}
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-zinc-700 hover:text-zinc-900 flex items-center justify-center transition-all shadow-2xs border border-white hover:shadow-xs cursor-pointer"
-            title="Share Screen"
-          >
-            <Tv className="w-4 h-4" />
-          </button>
-
           {/* Layout Mode Toggle */}
           <button
             onClick={toggleLayout}
@@ -87,8 +77,8 @@ export function RoomSidebar() {
           </button>
         </nav>
 
-        {/* Subtle separator */}
-        <div className="w-6 h-[1px] bg-zinc-200/80 my-1 sm:my-1.5" />
+        {/* Visible divider separator */}
+        <div className="w-8 sm:w-9 h-[2px] bg-zinc-300 rounded-full my-1 sm:my-1.5 shadow-[0_1px_0px_rgba(255,255,255,0.9)]" />
 
         {/* Room Action Buttons inside Top Container */}
         <div className="flex flex-col gap-3 sm:gap-3.5 items-center w-full">

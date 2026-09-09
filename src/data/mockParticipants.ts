@@ -134,7 +134,7 @@ export const initialMessages: ChatMessage[] = [
 export const initialQueue: QueueItem[] = [
   {
     id: "q1",
-    title: "Cyberpunk 2077: Phantom Liberty — Official Cinematic 4K",
+    title: "Cyberpunk 2077: Phantom Liberty",
     channel: "CD PROJEKT RED",
     duration: "03:42",
     thumbnail: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=600&auto=format&fit=crop",
@@ -146,8 +146,8 @@ export const initialQueue: QueueItem[] = [
   },
   {
     id: "q2",
-    title: "Interstellar — Cornfield Chase & Gargantua IMAX",
-    channel: "Warner Bros. Cinema",
+    title: "Interstellar: Docking Scene",
+    channel: "Paramount",
     duration: "05:18",
     thumbnail: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=600&auto=format&fit=crop",
     url: "https://www.youtube.com/watch?v=4tr_Xg34sd0",
@@ -158,8 +158,8 @@ export const initialQueue: QueueItem[] = [
   },
   {
     id: "q3",
-    title: "Synthwave Sunset Drive — 80s Cyber Cruise 4K",
-    channel: "ChilledCow Retro",
+    title: "Night City FM: Cyber Drive",
+    channel: "Night City FM",
     duration: "28:15",
     thumbnail: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=600&auto=format&fit=crop",
     url: "https://www.youtube.com/watch?v=L_LUpnjgPso",

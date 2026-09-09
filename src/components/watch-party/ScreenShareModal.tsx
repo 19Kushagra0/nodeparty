@@ -3,7 +3,6 @@
 import { useState } from "react";
 import {
   X,
-  Tv,
   Film,
   Globe,
   Cast,
@@ -94,20 +93,15 @@ export function ScreenShareModal() {
         className="relative w-full max-w-2xl bg-white border border-zinc-200/80 rounded-[28px] sm:rounded-[32px] p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.12)] text-left space-y-5 max-h-[90vh] overflow-y-auto no-scrollbar"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+        {/* Header without icon */}
         <div className="flex items-start justify-between pb-4 border-b border-zinc-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500 shadow-2xs shrink-0">
-              <Tv className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-lg sm:text-xl font-bold text-zinc-900 tracking-tight">
-                Stream Video & Share Tab
-              </h3>
-              <p className="text-xs sm:text-sm text-zinc-500 mt-0.5">
-                Stream in synchronized 4K, open a shared co-browsing tab, or share your screen.
-              </p>
-            </div>
+          <div>
+            <h3 className="text-lg sm:text-xl font-bold text-zinc-900 tracking-tight">
+              Change Stream or Share Screen
+            </h3>
+            <p className="text-xs sm:text-sm text-zinc-500 mt-0.5">
+              Pick a video from tonight&apos;s queue, share your display, or paste any video link.
+            </p>
           </div>
 
           <button
@@ -131,7 +125,7 @@ export function ScreenShareModal() {
             }`}
           >
             <Film className="w-3.5 h-3.5 text-rose-500" />
-            <span>Curated Channels</span>
+            <span>Featured</span>
           </button>
 
           <button
@@ -157,15 +151,16 @@ export function ScreenShareModal() {
             }`}
           >
             <Globe className="w-3.5 h-3.5 text-rose-500" />
-            <span>Custom URL</span>
+            <span>Paste Link</span>
           </button>
         </div>
 
         {/* 1. Curated Channels / Presets */}
         {activeCategory === "presets" && (
           <div className="space-y-3">
-            <div className="text-xs text-zinc-400 font-medium">
-              <span>Select Stream Source</span>
+            <div className="flex items-center justify-between text-xs text-zinc-500 font-medium">
+              <span>Tonight&apos;s Featured Queue</span>
+              <span className="text-[11px] text-zinc-400 font-mono">Synced 4K</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[300px] overflow-y-auto pr-1">
@@ -196,10 +191,12 @@ export function ScreenShareModal() {
                     <h4 className="text-xs sm:text-[13px] font-semibold text-zinc-800 line-clamp-1 group-hover:text-rose-600 transition-colors">
                       {preset.title}
                     </h4>
-                    <div className="flex items-center gap-1.5 text-xs text-zinc-400 mt-0.5">
-                      <span className="truncate">{preset.channel}</span>
+                    <div className="flex items-center gap-1.5 text-xs text-zinc-400 mt-1">
+                      <span className="truncate text-zinc-600 font-medium">{preset.channel}</span>
                       <span>•</span>
-                      <span className="text-[11px] font-medium text-zinc-500">{preset.category}</span>
+                      <span className="text-[10px] font-medium text-zinc-600 bg-zinc-200/60 px-1.5 py-0.5 rounded-md">
+                        {preset.category}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -217,10 +214,10 @@ export function ScreenShareModal() {
 
             <div className="space-y-1.5 max-w-sm mx-auto">
               <h4 className="text-sm sm:text-base font-bold text-zinc-900">
-                Share Screen with Lounge
+                Share Display or Window
               </h4>
               <p className="text-xs sm:text-sm text-zinc-500 leading-relaxed">
-                Stream any app window, gameplay, or browser tab with synchronous audio in 1080p 60FPS.
+                Stream any app window, gameplay, or browser tab with synchronous room audio in 1080p 60FPS.
               </p>
             </div>
 
@@ -240,11 +237,11 @@ export function ScreenShareModal() {
           <form onSubmit={handleLaunchCustomUrl} className="space-y-4 pt-1">
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-zinc-700">
-                Webpage or Stream URL
+                Video or Stream URL
               </label>
               <input
                 type="text"
-                placeholder="https://youtube.com/watch?v=... or https://twitch.tv/..."
+                placeholder="https://youtube.com/watch?v=... or Twitch link"
                 value={customUrl}
                 onChange={(e) => setCustomUrl(e.target.value)}
                 className="w-full px-4 py-2.5 sm:py-3 rounded-2xl bg-[#F0F2F6] border border-zinc-200/80 text-zinc-900 text-xs sm:text-sm placeholder:text-zinc-400 focus:outline-none focus:bg-white focus:border-rose-400 focus:ring-2 focus:ring-rose-500/10 transition-all font-mono"
@@ -257,7 +254,7 @@ export function ScreenShareModal() {
               </label>
               <input
                 type="text"
-                placeholder="e.g. Cinema Stream, Game Highlights"
+                placeholder="e.g. Cyberpunk Cinema, Tournament Stream"
                 value={customTitle}
                 onChange={(e) => setCustomTitle(e.target.value)}
                 className="w-full px-4 py-2.5 sm:py-3 rounded-2xl bg-[#F0F2F6] border border-zinc-200/80 text-zinc-900 text-xs sm:text-sm placeholder:text-zinc-400 focus:outline-none focus:bg-white focus:border-rose-400 focus:ring-2 focus:ring-rose-500/10 transition-all"
@@ -269,7 +266,7 @@ export function ScreenShareModal() {
               disabled={!customUrl.trim()}
               className="w-full py-3 rounded-2xl bg-rose-500 hover:bg-rose-600 disabled:opacity-40 text-white font-semibold text-xs sm:text-sm shadow-xs active:scale-[0.98] transition-all cursor-pointer"
             >
-              Open Interactive Shared Tab
+              Play in Lounge
             </button>
           </form>
         )}
