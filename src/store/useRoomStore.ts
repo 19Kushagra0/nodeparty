@@ -67,6 +67,10 @@ interface RoomState {
   isRightSidebarOpen: boolean;
   activeSidebarTab: "chat" | "reactions" | "users" | "crew" | "queue" | "settings";
 
+  // Theme
+  themeMode: "light" | "dark";
+  accentColor: string;
+
   // Actions
   toggleRightSidebar: () => void;
   setRightSidebarOpen: (open: boolean) => void;
@@ -125,6 +129,7 @@ interface RoomState {
   setMomentsGalleryOpen: (open: boolean) => void;
   setSettingsModalOpen: (open: boolean) => void;
   setActiveSidebarTab: (tab: "chat" | "reactions" | "users" | "crew" | "queue" | "settings") => void;
+  setThemeMode: (mode: "light" | "dark") => void;
 }
 
 const initialTabs: SharedTab[] = [
@@ -264,6 +269,10 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   isSettingsModalOpen: false,
   isRightSidebarOpen: true,
   activeSidebarTab: "users",
+
+  // Theme — dark by default (matches homepage gold palette)
+  themeMode: "dark",
+  accentColor: "#c8962e",
 
   toggleRightSidebar: () => set((state) => ({ isRightSidebarOpen: !state.isRightSidebarOpen })),
   setRightSidebarOpen: (open) => set({ isRightSidebarOpen: open }),
@@ -666,4 +675,8 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   setMomentsGalleryOpen: (open) => set({ isMomentsGalleryOpen: open }),
   setSettingsModalOpen: (open) => set({ isSettingsModalOpen: open }),
   setActiveSidebarTab: (tab) => set({ activeSidebarTab: tab }),
+  setThemeMode: (mode) => set({
+    themeMode: mode,
+    accentColor: mode === "dark" ? "#c8962e" : "#F43F5E",
+  }),
 }));

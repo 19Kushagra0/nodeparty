@@ -9,6 +9,7 @@ import { CapturedMomentsModal } from "@/components/watch-party/CapturedMomentsMo
 import { InviteModal } from "@/components/watch-party/InviteModal";
 import { SettingsModal } from "@/components/watch-party/SettingsModal";
 import { ChevronLeft, MessageSquare, Smile, Users } from "lucide-react";
+import { useRoomTheme } from "@/hooks/useRoomTheme";
 
 export function RoomClientView() {
   const {
@@ -20,6 +21,8 @@ export function RoomClientView() {
     setActiveSidebarTab,
     participants,
   } = useRoomStore();
+
+  const t = useRoomTheme();
 
   const friendsCount = participants.filter((p) => !p.isMe).length;
 
@@ -52,11 +55,15 @@ export function RoomClientView() {
           ) : (
             <div className="hidden lg:flex shrink-0 flex-col items-center justify-start h-full py-0.5 transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-right-2">
               {/* Sleek Collapsed Right Rail */}
-              <div className="w-12 sm:w-14 bg-[#F0F2F6] rounded-[28px] sm:rounded-[32px] p-2 py-4 flex flex-col items-center gap-3.5 shadow-2xs">
+              <div
+                className="w-12 sm:w-14 rounded-[28px] sm:rounded-[32px] p-2 py-4 flex flex-col items-center gap-3.5"
+                style={{ backgroundColor: t.surface, border: `1px solid ${t.border}` }}
+              >
                 {/* Expand / Open Button */}
                 <button
                   onClick={toggleRightSidebar}
-                  className="w-9 h-9 rounded-full bg-white hover:bg-zinc-50 text-zinc-700 hover:text-zinc-900 flex items-center justify-center transition-all shadow-2xs border border-white hover:scale-105 active:scale-95 cursor-pointer outline-none focus:outline-none"
+                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer outline-none focus:outline-none"
+                  style={{ backgroundColor: t.surfaceHover, color: t.text, border: `1px solid ${t.border}` }}
                   title="Expand Sidebar"
                   aria-label="Expand Sidebar"
                 >
@@ -64,7 +71,7 @@ export function RoomClientView() {
                 </button>
 
                 {/* Divider Line */}
-                <div className="w-6 h-[2px] bg-zinc-300 rounded-full" />
+                <div className="w-6 h-[2px] rounded-full" style={{ backgroundColor: t.border }} />
 
                 {/* Quick Chat Shortcut */}
                 <button
@@ -72,7 +79,8 @@ export function RoomClientView() {
                     setActiveSidebarTab("chat");
                     toggleRightSidebar();
                   }}
-                  className="w-9 h-9 rounded-full bg-white hover:bg-zinc-50 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition-all shadow-2xs border border-white hover:scale-105 active:scale-95 cursor-pointer outline-none focus:outline-none"
+                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer outline-none focus:outline-none"
+                  style={{ backgroundColor: t.surfaceHover, color: t.muted, border: `1px solid ${t.border}` }}
                   title="Open Chat"
                 >
                   <MessageSquare className="w-4 h-4" />
@@ -84,7 +92,8 @@ export function RoomClientView() {
                     setActiveSidebarTab("reactions");
                     toggleRightSidebar();
                   }}
-                  className="w-9 h-9 rounded-full bg-white hover:bg-zinc-50 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition-all shadow-2xs border border-white hover:scale-105 active:scale-95 cursor-pointer outline-none focus:outline-none"
+                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer outline-none focus:outline-none"
+                  style={{ backgroundColor: t.surfaceHover, color: t.muted, border: `1px solid ${t.border}` }}
                   title="Open Reactions"
                 >
                   <Smile className="w-4 h-4" />
@@ -96,14 +105,18 @@ export function RoomClientView() {
                     setActiveSidebarTab("users");
                     toggleRightSidebar();
                   }}
-                  className="relative w-9 h-9 rounded-full bg-white hover:bg-zinc-50 text-zinc-600 hover:text-zinc-900 flex items-center justify-center transition-all shadow-2xs border border-white hover:scale-105 active:scale-95 cursor-pointer outline-none focus:outline-none"
+                  className="relative w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer outline-none focus:outline-none"
+                  style={{ backgroundColor: t.surfaceHover, color: t.muted, border: `1px solid ${t.border}` }}
                   title={`Open Users (${friendsCount})`}
                 >
                   <Users className="w-4 h-4" />
                   {friendsCount > 0 && (
-                    <span className="absolute -top-1 -right-1 px-1.5 py-0.2 bg-rose-500 text-white text-[9px] font-bold rounded-full border border-white shadow-2xs">
-                      {friendsCount}
-                    </span>
+                    <span
+                        className="absolute -top-1 -right-1 px-1.5 py-0.2 text-[9px] font-bold rounded-full border shadow-2xs"
+                        style={{ backgroundColor: t.accent, color: t.accentFg, borderColor: t.surface }}
+                      >
+                        {friendsCount}
+                      </span>
                   )}
                 </button>
               </div>

@@ -2,9 +2,11 @@
 
 import { Mic, MicOff, Crown, ShieldCheck, Play } from "@/icons";
 import { useRoomStore } from "@/store/useRoomStore";
+import { useRoomTheme } from "@/hooks/useRoomTheme";
 
 export function GridStageView() {
   const { participants, currentPreset, togglePlay } = useRoomStore();
+  const t = useRoomTheme();
 
   return (
     <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-20">
@@ -19,7 +21,10 @@ export function GridStageView() {
 
         {/* Header */}
         <div className="relative z-10 flex items-center justify-between">
-          <span className="px-2.5 py-1 rounded-full bg-rose-500 text-white text-xs font-mono font-bold uppercase tracking-wider">
+          <span
+            className="px-2.5 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider"
+            style={{ backgroundColor: t.accent, color: t.accentFg }}
+          >
             SHARED SCREEN
           </span>
           <span className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-xs font-mono text-zinc-300">
@@ -31,9 +36,10 @@ export function GridStageView() {
         <div className="relative z-10 self-center my-auto">
           <button
             onClick={togglePlay}
-            className="w-12 h-12 rounded-xl bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center shadow-xl transition-transform active:scale-95 cursor-pointer"
+            className="w-12 h-12 rounded-xl flex items-center justify-center shadow-xl transition-transform active:scale-95 cursor-pointer"
+            style={{ backgroundColor: t.accent, color: t.accentFg }}
           >
-            <Play className="w-5 h-5 fill-white ml-0.5" />
+            <Play className="w-5 h-5 fill-current ml-0.5" />
           </button>
         </div>
 
@@ -57,8 +63,15 @@ export function GridStageView() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               {p.role === "host" ? (
-                <span className="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-mono font-bold flex items-center gap-1">
-                  <Crown className="w-3 h-3 text-rose-400" />
+                <span
+                  className="px-2 py-0.5 rounded-full text-xs font-mono font-bold flex items-center gap-1 border"
+                  style={{
+                    backgroundColor: t.isDark ? `${t.accent}20` : "#fff1f2",
+                    color: t.accent,
+                    borderColor: t.isDark ? `${t.accent}40` : "#fecdd3",
+                  }}
+                >
+                  <Crown className="w-3 h-3" style={{ color: t.accent }} />
                   <span>HOST</span>
                 </span>
               ) : p.role === "moderator" ? (
