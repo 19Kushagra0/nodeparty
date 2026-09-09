@@ -19,10 +19,12 @@ import {
   Crown,
 } from "lucide-react";
 import { useRoomStore } from "@/store/useRoomStore";
+import { useRoomTheme } from "@/hooks/useRoomTheme";
 import { MultiplayerCursors } from "./MultiplayerCursors";
 
 export function CinematicVideoPlayer() {
   const router = useRouter();
+  const t = useRoomTheme();
   const {
     roomId,
     roomPasscode,
@@ -41,6 +43,7 @@ export function CinematicVideoPlayer() {
     messages,
     queue,
     playQueueItem,
+    setSettingsModalOpen,
   } = useRoomStore();
 
   const host = participants.find((p) => p.role === "host");
@@ -69,7 +72,9 @@ export function CinematicVideoPlayer() {
     if (controlsTimeoutRef.current) {
       clearTimeout(controlsTimeoutRef.current);
     }
-    setShowControls(false);
+    controlsTimeoutRef.current = setTimeout(() => {
+      setShowControls(false);
+    }, 3000);
   };
 
   useEffect(() => {
@@ -146,9 +151,9 @@ export function CinematicVideoPlayer() {
         onMouseMove={handlePlayerMouseMove}
         onMouseEnter={handlePlayerMouseMove}
         onMouseLeave={handlePlayerMouseLeave}
-        className={`relative w-full h-full min-h-0 bg-black rounded-[32px] sm:rounded-[42px] lg:rounded-[48px] overflow-hidden select-none shadow-[0_12px_40px_rgba(0,0,0,0.22)] ${
-          !showControls ? "cursor-none" : ""
-        }`}
+        className={`relative w-full h-full min-h-0 bg-black rounded-[32px] sm:rounded-[42px] lg:rounded-[48px] overflow-hidden select-none shadow-[0_12px_40px_rgba(0,0,0,0.22)] ${!showControls ? "cursor-none" : ""
+          }`}
+        style={{ border: `1px solid ${t.border}` }}
       >
         {/* Active Content Background Poster */}
         <div
@@ -157,9 +162,8 @@ export function CinematicVideoPlayer() {
         >
           {/* subtle dimming to make UI pop */}
           <div
-            className={`absolute inset-0 transition-colors duration-500 ${
-              showControls ? "bg-black/35" : "bg-black/15"
-            }`}
+            className={`absolute inset-0 transition-colors duration-500 ${showControls ? "bg-black/35" : "bg-black/15"
+              }`}
           />
         </div>
 
@@ -186,95 +190,113 @@ export function CinematicVideoPlayer() {
         {/* Interactive Screen Share Overlay */}
         <MultiplayerCursors containerRef={browserContainerRef} />
 
-        {/* Top Floating Header with Dipped Center Notch */}
+        {/* Center Dipped Notch & Modal Capsule - Always visible at top-0 regardless of hover or inactivity */}
+        {isNotchOpen && (
+          <div className="pointer-events-auto absolute top-0 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-center animate-in fade-in slide-in-from-top-2 duration-300 cursor-default">
+            {/* White/Dark Curved Notch Background attached seamlessly to top-0 */}
+            <svg
+              className="w-[380px] sm:w-[430px] lg:w-[470px] h-[58px] sm:h-[64px] drop-shadow-[0_2px_8px_rgba(0,0,0,0.06)] block"
+              viewBox="0 0 480 66"
+              fill="none"
+              preserveAspectRatio="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M 0 -2 L 0 0 C 25 0, 45 64, 70 64 L 410 64 C 435 64, 455 0, 480 0 L 480 -2 Z"
+                fill={t.isDark ? "#14110e" : "#ffffff"}
+              />
+              <path
+                d="M 0 0 C 25 0, 45 64, 70 64 L 410 64 C 435 64, 455 0, 480 0"
+                stroke={t.border}
+                strokeWidth="1.5"
+                fill="none"
+              />
+            </svg>
+
+            {/* Inner Soft-Tinted Modal Capsule */}
+            <div className="absolute inset-0 pt-1 sm:pt-1.5 pb-[12px] sm:pb-[14px] flex items-center justify-center">
+              <div
+                className="rounded-full pl-6 pr-5 sm:pl-7 sm:pr-6 py-2 sm:py-2.5 flex items-center gap-3 sm:gap-3.5 text-[11px] sm:text-xs font-semibold shadow-2xs transition-all"
+                style={{
+                  backgroundColor: t.isDark ? "#1e1a14" : "#f0f2f6",
+                  color: t.text,
+                  border: `1px solid ${t.border}`,
+                }}
+              >
+                {/* Code Name & Copy Button */}
+                <button
+                  onClick={handleCopyCode}
+                  className="flex items-center gap-1.5 cursor-pointer hover:opacity-85 transition-opacity select-none group/code"
+                  title="Click to copy Room Code"
+                >
+                  <span className="font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase" style={{ color: t.muted }}>
+                    CODE:
+                  </span>
+                  <span className="font-mono font-bold tracking-wider text-xs sm:text-[13px]" style={{ color: t.accent }}>
+                    {roomPasscode || roomId}
+                  </span>
+                  <span className="transition-colors ml-0.5" style={{ color: t.muted }}>
+                    {copiedCode ? (
+                      <Check className="w-3.5 h-3.5 text-emerald-500 stroke-[2.5]" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" />
+                    )}
+                  </span>
+                </button>
+
+                {/* Dot Separator */}
+                <span className="font-bold text-xs select-none" style={{ color: t.border }}>•</span>
+
+                {/* Host Info */}
+                <div className="flex items-center gap-1.5 select-none">
+                  <Crown className="w-3.5 h-3.5 stroke-[2.2]" style={{ color: t.accent }} />
+                  <span className="font-medium text-[10px] sm:text-[11px]" style={{ color: t.muted }}>
+                    Host:
+                  </span>
+                  <span className="font-bold text-xs sm:text-[13px]" style={{ color: t.text }}>
+                    {hostName}
+                  </span>
+                </div>
+
+                {/* Toggle Button inside to Disappear/Collapse */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsNotchOpen(false);
+                  }}
+                  className="p-1 -mr-1 rounded-full transition-all cursor-pointer"
+                  style={{ color: t.muted }}
+                  title="Hide modal"
+                >
+                  <ChevronUp className="w-3.5 h-3.5 stroke-[2.5]" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Top Floating Controls Header (Back to Home & Show details) - Hides/shows with mouse hover */}
         <div
-          className={`absolute top-0 left-0 right-0 z-[100] flex items-start justify-between pointer-events-none px-5 sm:px-7 lg:px-8 transition-all duration-300 ease-out ${
-            showControls
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 -translate-y-2 pointer-events-none"
-          }`}
+          className={`absolute top-0 left-0 right-0 z-[90] flex items-start justify-between pointer-events-none px-5 sm:px-7 lg:px-8 transition-all duration-300 ease-out ${showControls
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 -translate-y-2 pointer-events-none"
+            }`}
         >
           {/* Left Pill: Back to Home */}
           <div className="pt-3.5 sm:pt-4 transition-all duration-300 ease-out">
             <button
               onClick={handleBackToHome}
-              className="pointer-events-auto flex items-center gap-1.5 px-5 py-2 rounded-full bg-white hover:bg-zinc-50 text-zinc-900 shadow-2xs border border-white transition-all text-xs sm:text-sm font-bold hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              className="pointer-events-auto flex items-center gap-1.5 px-5 py-2 rounded-full shadow-2xs transition-all text-xs sm:text-sm font-bold hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              style={{
+                backgroundColor: t.surface,
+                color: t.text,
+                border: `1px solid ${t.border}`,
+              }}
             >
-              <ChevronLeft className="w-4 h-4 text-zinc-700 stroke-[2.5]" />
+              <ChevronLeft className="w-4 h-4 stroke-[2.5]" style={{ color: t.muted }} />
               <span>Back to Home</span>
             </button>
           </div>
-
-          {/* Center Dipped Notch & Modal Capsule (Pinned at absolute top-0 with z-[100]) */}
-          {isNotchOpen ? (
-            <div className="pointer-events-auto absolute top-0 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-center animate-in fade-in slide-in-from-top-2 duration-300">
-              {/* White Curved Notch Background attached seamlessly to top-0 */}
-              <svg
-                className="w-[380px] sm:w-[430px] lg:w-[470px] h-[58px] sm:h-[64px] drop-shadow-[0_2px_8px_rgba(0,0,0,0.06)] block"
-                viewBox="0 0 480 66"
-                fill="none"
-                preserveAspectRatio="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M 0 -2 L 0 0 C 25 0, 45 64, 70 64 L 410 64 C 435 64, 455 0, 480 0 L 480 -2 Z"
-                  fill="#ffffff"
-                />
-              </svg>
-
-              {/* Inner Soft-Tinted Modal Capsule */}
-              <div className="absolute inset-0 pt-1 sm:pt-1.5 pb-[12px] sm:pb-[14px] flex items-center justify-center">
-                <div className="bg-[#f0f2f6] rounded-full pl-6 pr-5 sm:pl-7 sm:pr-6 py-2 sm:py-2.5 flex items-center gap-3 sm:gap-3.5 text-zinc-600 text-[11px] sm:text-xs font-semibold shadow-2xs">
-                  {/* Code Name & Copy Button */}
-                  <button
-                    onClick={handleCopyCode}
-                    className="flex items-center gap-1.5 cursor-pointer hover:opacity-85 transition-opacity select-none group/code"
-                    title="Click to copy Room Code"
-                  >
-                    <span className="font-semibold text-zinc-500 text-[10px] sm:text-[11px] tracking-wider uppercase">
-                      CODE:
-                    </span>
-                    <span className="font-mono font-bold text-rose-500 tracking-wider text-xs sm:text-[13px]">
-                      {roomPasscode || roomId}
-                    </span>
-                    <span className="text-zinc-400 group-hover/code:text-zinc-700 transition-colors ml-0.5">
-                      {copiedCode ? (
-                        <Check className="w-3.5 h-3.5 text-emerald-500 stroke-[2.5]" />
-                      ) : (
-                        <Copy className="w-3.5 h-3.5" />
-                      )}
-                    </span>
-                  </button>
-
-                  {/* Dot Separator */}
-                  <span className="text-zinc-300 font-bold text-xs select-none">•</span>
-
-                  {/* Host Info */}
-                  <div className="flex items-center gap-1.5 select-none">
-                    <Crown className="w-3.5 h-3.5 text-rose-500 stroke-[2.2]" />
-                    <span className="font-medium text-zinc-500 text-[10px] sm:text-[11px]">
-                      Host:
-                    </span>
-                    <span className="font-bold text-zinc-800 text-xs sm:text-[13px]">
-                      {hostName}
-                    </span>
-                  </div>
-
-                  {/* Toggle Button inside to Disappear/Collapse */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsNotchOpen(false);
-                    }}
-                    className="p-1 -mr-1 rounded-full hover:bg-zinc-200/80 text-zinc-400 hover:text-zinc-700 transition-all cursor-pointer"
-                    title="Hide modal"
-                  >
-                    <ChevronUp className="w-3.5 h-3.5 stroke-[2.5]" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : null}
 
           {/* Right Header Area (Show Info button when modal is closed) */}
           <div className="pt-3.5 sm:pt-4 flex items-center gap-2 pointer-events-auto transition-all duration-300 ease-out">
@@ -284,10 +306,15 @@ export function CinematicVideoPlayer() {
                   e.stopPropagation();
                   setIsNotchOpen(true);
                 }}
-                className="flex items-center gap-1.5 px-5 py-2 rounded-full bg-white hover:bg-zinc-50 text-zinc-800 shadow-2xs border border-white transition-all text-xs sm:text-sm font-bold hover:scale-[1.02] active:scale-[0.98] cursor-pointer animate-in fade-in duration-200"
+                className="flex items-center gap-1.5 px-5 py-2 rounded-full shadow-2xs transition-all text-xs sm:text-sm font-bold hover:scale-[1.02] active:scale-[0.98] cursor-pointer animate-in fade-in duration-200"
+                style={{
+                  backgroundColor: t.surface,
+                  color: t.text,
+                  border: `1px solid ${t.border}`,
+                }}
                 title="Show Room Code"
               >
-                <span>Show Code</span>
+                <span>Show details</span>
               </button>
             )}
           </div>
@@ -310,11 +337,10 @@ export function CinematicVideoPlayer() {
 
         {/* Bottom Progress Bar & Controls */}
         <div
-          className={`absolute bottom-0 left-0 right-0 p-4 sm:p-5 z-50 transition-all duration-300 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex flex-col gap-3 ${
-            showControls
-              ? "opacity-100 translate-y-0 pointer-events-auto"
-              : "opacity-0 translate-y-2 pointer-events-none"
-          }`}
+          className={`absolute bottom-0 left-0 right-0 p-4 sm:p-5 z-50 transition-all duration-300 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex flex-col gap-3 ${showControls
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 translate-y-2 pointer-events-none"
+            }`}
         >
 
           {/* Progress Line */}
@@ -331,8 +357,12 @@ export function CinematicVideoPlayer() {
             />
             {/* Play Line */}
             <div
-              className="h-full bg-rose-500 rounded-full relative pointer-events-none shadow-[0_0_10px_rgba(244,63,94,0.5)]"
-              style={{ width: `${(currentTime / duration) * 100}%` }}
+              className="h-full rounded-full relative pointer-events-none"
+              style={{
+                width: `${(currentTime / duration) * 100}%`,
+                backgroundColor: t.accent,
+                boxShadow: `0 0 10px ${t.accent}80`,
+              }}
             />
 
             {/* Hover Time Tooltip */}
@@ -373,7 +403,8 @@ export function CinematicVideoPlayer() {
                   max="100"
                   value={isMuted ? 0 : volume}
                   onChange={(e) => setVolume(Number(e.target.value))}
-                  className="w-0 sm:w-20 opacity-0 group-hover/vol:w-20 group-hover/vol:opacity-100 sm:opacity-100 accent-rose-500 h-1 bg-white/20 rounded-full cursor-pointer transition-all duration-300"
+                  className="w-0 sm:w-20 opacity-0 group-hover/vol:w-20 group-hover/vol:opacity-100 sm:opacity-100 h-1 bg-white/20 rounded-full cursor-pointer transition-all duration-300"
+                  style={{ accentColor: t.accent }}
                 />
               </div>
 
@@ -394,7 +425,14 @@ export function CinematicVideoPlayer() {
               </button>
 
               {/* Settings */}
-              <button className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer backdrop-blur-md" title="Settings">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSettingsModalOpen(true);
+                }}
+                className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer backdrop-blur-md"
+                title="Settings"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /><circle cx="12" cy="12" r="3" /></svg>
               </button>
 
@@ -414,3 +452,5 @@ export function CinematicVideoPlayer() {
     </div>
   );
 }
+
+

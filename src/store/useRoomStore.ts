@@ -59,14 +59,21 @@ interface RoomState {
   reactions: ReactionBurst[];
   queue: QueueItem[];
 
-  // Modals & UI Controls
   isInviteModalOpen: boolean;
   isCreateModalOpen: boolean;
   isScreenShareModalOpen: boolean;
   isMomentsGalleryOpen: boolean;
-  activeSidebarTab: "chat" | "crew" | "queue" | "settings";
+  isSettingsModalOpen: boolean;
+  isRightSidebarOpen: boolean;
+  activeSidebarTab: "chat" | "reactions" | "users" | "crew" | "queue" | "settings";
+
+  // Theme
+  themeMode: "light" | "dark";
+  accentColor: string;
 
   // Actions
+  toggleRightSidebar: () => void;
+  setRightSidebarOpen: (open: boolean) => void;
   setRoomId: (id: string) => void;
   setRoomName: (name: string) => void;
   toggleMic: () => void;
@@ -120,7 +127,9 @@ interface RoomState {
   setCreateModalOpen: (open: boolean) => void;
   setScreenShareModalOpen: (open: boolean) => void;
   setMomentsGalleryOpen: (open: boolean) => void;
-  setActiveSidebarTab: (tab: "chat" | "crew" | "queue" | "settings") => void;
+  setSettingsModalOpen: (open: boolean) => void;
+  setActiveSidebarTab: (tab: "chat" | "reactions" | "users" | "crew" | "queue" | "settings") => void;
+  setThemeMode: (mode: "light" | "dark") => void;
 }
 
 const initialTabs: SharedTab[] = [
@@ -252,12 +261,21 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   reactions: [],
   queue: initialQueue,
 
-  // Modals
+  // Modals & UI Controls
   isInviteModalOpen: false,
   isCreateModalOpen: false,
   isScreenShareModalOpen: false,
   isMomentsGalleryOpen: false,
-  activeSidebarTab: "chat",
+  isSettingsModalOpen: false,
+  isRightSidebarOpen: true,
+  activeSidebarTab: "users",
+
+  // Theme — dark by default (matches homepage gold palette)
+  themeMode: "dark",
+  accentColor: "#c8962e",
+
+  toggleRightSidebar: () => set((state) => ({ isRightSidebarOpen: !state.isRightSidebarOpen })),
+  setRightSidebarOpen: (open) => set({ isRightSidebarOpen: open }),
 
   setRoomId: (id) => set({ roomId: id }),
   setRoomName: (name) => set({ roomName: name }),
@@ -655,5 +673,10 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   setCreateModalOpen: (open) => set({ isCreateModalOpen: open }),
   setScreenShareModalOpen: (open) => set({ isScreenShareModalOpen: open }),
   setMomentsGalleryOpen: (open) => set({ isMomentsGalleryOpen: open }),
+  setSettingsModalOpen: (open) => set({ isSettingsModalOpen: open }),
   setActiveSidebarTab: (tab) => set({ activeSidebarTab: tab }),
+  setThemeMode: (mode) => set({
+    themeMode: mode,
+    accentColor: mode === "dark" ? "#c8962e" : "#F43F5E",
+  }),
 }));

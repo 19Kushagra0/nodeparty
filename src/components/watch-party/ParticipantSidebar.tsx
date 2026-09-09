@@ -3,12 +3,12 @@
 import { useState } from "react";
 import {
   Plus,
+  Send,
   Smile,
-  Sparkles,
+  Flame,
   MessageSquare,
   Volume2,
   VolumeX,
-  ArrowLeft,
   Users,
   Crown,
   Shield,
@@ -20,10 +20,11 @@ import {
   Video,
   Zap,
   Radio,
-  Tv,
   Check,
+  ChevronRight,
 } from "lucide-react";
 import { useRoomStore } from "@/store/useRoomStore";
+import { useRoomTheme } from "@/hooks/useRoomTheme";
 
 // Web Audio sound FX synthesizer for clean sound feedback
 function playSoundFX(type: string) {
@@ -126,9 +127,14 @@ export function ParticipantSidebar() {
     triggerReaction,
     setInviteModalOpen,
     toggleMuteParticipant,
+    toggleRightSidebar,
+    activeSidebarTab,
+    setActiveSidebarTab,
   } = useRoomStore();
+  const t = useRoomTheme();
   const [inputMessage, setInputMessage] = useState("");
-  const [activeTab, setActiveTab] = useState<"chat" | "reactions" | "users">("users");
+  const activeTab = activeSidebarTab;
+  const setActiveTab = setActiveSidebarTab;
   const [usersViewMode, setUsersViewMode] = useState<"grid" | "list">("grid");
   const [userMutes, setUserMutes] = useState<Record<string, boolean>>({});
   const [userVolumes, setUserVolumes] = useState<Record<string, number>>({});
@@ -174,54 +180,67 @@ export function ParticipantSidebar() {
   const friends = participants.filter((p) => !p.isMe);
 
   return (
-    <div className="w-full h-full min-h-0 bg-white/70 backdrop-blur-md border border-white rounded-[20px] sm:rounded-[24px] p-3 sm:p-4 flex flex-col shadow-xs overflow-hidden">
+    <div
+      className="w-full h-full min-h-0 backdrop-blur-md rounded-[20px] sm:rounded-[24px] p-3 sm:p-4 flex flex-col overflow-hidden"
+      style={{ backgroundColor: `${t.surface}cc`, border: `1px solid ${t.border}` }}
+    >
       {/* Clean Header & Navigation */}
-      <div className="flex items-center justify-between mb-3 px-1 shrink-0 gap-2">
-        <h2 className="text-sm sm:text-base font-bold text-zinc-900 tracking-tight truncate">
-          {activeTab === "chat"
-            ? "Room Chat"
-            : activeTab === "reactions"
-            ? "Reactions"
-            : `Users (${friends.length})`}
-        </h2>
-        <div className="flex gap-0.5 sm:gap-1 bg-zinc-100/70 p-0.5 sm:p-1 rounded-full border border-zinc-200/50 shrink-0">
+      <div className="flex items-center justify-between mb-3 px-0.5 shrink-0 gap-2">
+        <div
+          className="flex-1 min-w-0 flex gap-1 p-1 rounded-full"
+          style={{ backgroundColor: t.surfaceHover, border: `1px solid ${t.border}` }}
+        >
           <button
             onClick={() => setActiveTab("chat")}
-            className={`px-2.5 sm:px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
-              activeTab === "chat"
-                ? "bg-white text-zinc-900 shadow-2xs border border-zinc-200/60"
-                : "text-zinc-500 hover:text-zinc-800"
-            }`}
+            className={`flex-1 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 outline-none focus:outline-none focus-visible:outline-none select-none border`}
+            style={{
+              backgroundColor: activeTab === "chat" ? (t.isDark ? "#221d17" : t.surface) : "transparent",
+              color: activeTab === "chat" ? (t.isDark ? t.accent : t.text) : t.muted,
+              borderColor: activeTab === "chat" ? (t.isDark ? t.borderHover : t.border) : "transparent",
+            }}
             title="Room Chat"
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Chat</span>
+            <span>Chat</span>
           </button>
           <button
             onClick={() => setActiveTab("reactions")}
-            className={`px-2.5 sm:px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
-              activeTab === "reactions"
-                ? "bg-white text-zinc-900 shadow-2xs border border-zinc-200/60"
-                : "text-zinc-500 hover:text-zinc-800"
-            }`}
+            className={`flex-1 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 outline-none focus:outline-none focus-visible:outline-none select-none border`}
+            style={{
+              backgroundColor: activeTab === "reactions" ? (t.isDark ? "#221d17" : t.surface) : "transparent",
+              color: activeTab === "reactions" ? (t.isDark ? t.accent : t.text) : t.muted,
+              borderColor: activeTab === "reactions" ? (t.isDark ? t.borderHover : t.border) : "transparent",
+            }}
             title="Reactions & Soundboard"
           >
             <Smile className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">React</span>
+            <span>React</span>
           </button>
           <button
             onClick={() => setActiveTab("users")}
-            className={`px-2.5 sm:px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
-              activeTab === "users"
-                ? "bg-white text-zinc-900 shadow-2xs border border-zinc-200/60"
-                : "text-zinc-500 hover:text-zinc-800"
-            }`}
-            title="View Users"
+            className={`flex-1 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 outline-none focus:outline-none focus-visible:outline-none select-none border`}
+            style={{
+              backgroundColor: activeTab === "users" ? (t.isDark ? "#221d17" : t.surface) : "transparent",
+              color: activeTab === "users" ? (t.isDark ? t.accent : t.text) : t.muted,
+              borderColor: activeTab === "users" ? (t.isDark ? t.borderHover : t.border) : "transparent",
+            }}
+            title={`View Users (${friends.length})`}
           >
             <Users className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Users</span>
+            <span>Users</span>
           </button>
         </div>
+
+        {/* Minimize / Collapse Button */}
+        <button
+          onClick={toggleRightSidebar}
+          className="w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer outline-none focus:outline-none active:scale-95 shrink-0"
+          style={{ backgroundColor: t.surfaceHover, color: t.muted, border: `1px solid ${t.border}` }}
+          title="Minimize sidebar to right"
+          aria-label="Minimize sidebar to right"
+        >
+          <ChevronRight className="w-4 h-4 stroke-[2.2]" style={{ color: t.muted }} />
+        </button>
       </div>
 
       {/* Main Content View */}
@@ -233,15 +252,20 @@ export function ParticipantSidebar() {
               .filter((m) => !m.isSystem)
               .map((msg) => (
                 <div key={msg.id} className="flex gap-2.5 items-start">
-                  <div className="w-7 h-7 rounded-full bg-pink-100 flex items-center justify-center text-xs font-bold text-pink-600 shrink-0 border border-white shadow-2xs overflow-hidden">
+                  <div 
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 overflow-hidden"
+                    style={{ backgroundColor: t.surfaceHover, color: t.accent, border: `2px solid ${t.surface}` }}>
                     {msg.senderName[0]}
                   </div>
                   <div className="flex flex-col gap-0.5 items-start min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-zinc-800">{msg.senderName}</span>
-                      <span className="text-[10px] text-zinc-400 font-medium">{msg.timestamp}</span>
+                      <span className="text-xs font-bold" style={{ color: t.text }}>{msg.senderName}</span>
+                      <span className="text-[10px] font-medium" style={{ color: t.muted }}>{msg.timestamp}</span>
                     </div>
-                    <div className="bg-white px-3 py-1.5 rounded-2xl rounded-tl-xs text-xs text-zinc-700 shadow-2xs border border-zinc-100/80 leading-relaxed max-w-[280px]">
+                    <div
+                      className="px-3 py-1.5 rounded-2xl rounded-tl-xs text-xs leading-relaxed max-w-[280px]"
+                      style={{ backgroundColor: t.surfaceHover, color: t.text, border: `1px solid ${t.border}` }}
+                    >
                       {msg.text}
                     </div>
                   </div>
@@ -256,14 +280,18 @@ export function ParticipantSidebar() {
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               placeholder="Send message to room..."
-              className="w-full bg-zinc-100/80 hover:bg-zinc-100 focus:bg-white text-zinc-900 placeholder:text-zinc-400 text-xs rounded-full pl-3.5 pr-9 py-2 border border-zinc-200/50 focus:border-zinc-300 focus:outline-none focus:ring-2 focus:ring-pink-500/20 transition-all shadow-inner"
+              className="w-full text-xs rounded-full pl-3.5 pr-9 py-2 focus:outline-none transition-all"
+              style={{ backgroundColor: t.surfaceHover, color: t.text, border: `1px solid ${t.border}`, caretColor: t.accent }}
             />
             <button
               type="submit"
               disabled={!inputMessage.trim()}
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-pink-500 hover:bg-pink-600 disabled:bg-zinc-300 disabled:opacity-40 text-white flex items-center justify-center transition-all cursor-pointer shadow-2xs disabled:cursor-not-allowed"
+              title="Send message"
+              aria-label="Send message"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
+              style={{ backgroundColor: inputMessage.trim() ? t.accent : t.surfaceHover, color: inputMessage.trim() ? t.accentFg : t.muted }}
             >
-              <Plus className="w-3.5 h-3.5" />
+              <Send className="w-3 h-3 ml-0.5" />
             </button>
           </form>
         </>
@@ -272,9 +300,9 @@ export function ParticipantSidebar() {
         <div className="flex-1 min-h-0 overflow-y-auto space-y-4 pr-1 pb-2">
           {/* Reaction Burst Board */}
           <div className="space-y-2">
-            <div className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider px-1 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-pink-500" />
-              Express Reactions
+            <div className="text-[11px] font-bold uppercase tracking-wider px-1 flex items-center gap-1.5" style={{ color: t.muted }}>
+              <Flame className="w-3.5 h-3.5" style={{ color: t.accent }} />
+              <span>Express Reactions</span>
             </div>
             <div className="grid grid-cols-4 gap-2">
               {PRIMARY_EMOJIS.map((emoji) => (
@@ -282,7 +310,11 @@ export function ParticipantSidebar() {
                   key={emoji}
                   type="button"
                   onClick={() => handleTriggerEmoji(emoji)}
-                  className="aspect-square rounded-2xl bg-white hover:bg-zinc-50 active:scale-90 border border-zinc-100/90 shadow-2xs flex items-center justify-center text-xl transition-all cursor-pointer hover:border-pink-200 hover:shadow-xs"
+                  className="aspect-square rounded-2xl active:scale-90 shadow-2xs flex items-center justify-center text-xl transition-all cursor-pointer hover:shadow-xs"
+                  style={{
+                    backgroundColor: t.surfaceHover,
+                    border: `1px solid ${t.border}`,
+                  }}
                 >
                   {emoji}
                 </button>
@@ -292,9 +324,9 @@ export function ParticipantSidebar() {
 
           {/* Soundboard Cues */}
           <div className="space-y-2">
-            <div className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider px-1 flex items-center gap-1.5">
-              <Volume2 className="w-3.5 h-3.5 text-zinc-500" />
-              Sound Cues
+            <div className="text-[11px] font-bold uppercase tracking-wider px-1 flex items-center gap-1.5" style={{ color: t.muted }}>
+              <Volume2 className="w-3.5 h-3.5" style={{ color: t.muted }} />
+              <span>Sound Cues</span>
             </div>
             <div className="grid grid-cols-2 gap-2">
               {SOUND_EFFECTS.map((s) => (
@@ -302,10 +334,14 @@ export function ParticipantSidebar() {
                   key={s.id}
                   type="button"
                   onClick={() => handleTriggerEmoji(s.emoji, s.sound)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white hover:bg-zinc-50 active:scale-95 border border-zinc-100/90 shadow-2xs transition-all text-left cursor-pointer"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl active:scale-95 shadow-2xs transition-all text-left cursor-pointer"
+                  style={{
+                    backgroundColor: t.surfaceHover,
+                    border: `1px solid ${t.border}`,
+                  }}
                 >
                   <span className="text-base shrink-0">{s.emoji}</span>
-                  <span className="text-xs font-semibold text-zinc-700 truncate">{s.name}</span>
+                  <span className="text-xs font-semibold truncate" style={{ color: t.text }}>{s.name}</span>
                 </button>
               ))}
             </div>
@@ -313,8 +349,9 @@ export function ParticipantSidebar() {
 
           {/* Vibe Broadcasts */}
           <div className="space-y-2">
-            <div className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider px-1">
-              Room Vibe
+            <div className="text-[11px] font-bold uppercase tracking-wider px-1 flex items-center gap-1.5" style={{ color: t.muted }}>
+              <Zap className="w-3.5 h-3.5" style={{ color: t.accent }} />
+              <span>Room Vibe</span>
             </div>
             <div className="grid grid-cols-2 gap-2">
               {VIBE_SHORTCUTS.map((v) => (
@@ -322,7 +359,12 @@ export function ParticipantSidebar() {
                   key={v.text}
                   type="button"
                   onClick={() => handleSendVibe(v.text, v.emoji)}
-                  className="px-3 py-2 rounded-xl bg-white hover:bg-zinc-50 active:scale-95 border border-zinc-100/90 shadow-2xs text-xs font-semibold text-zinc-700 hover:text-zinc-900 transition-all flex items-center gap-1.5 cursor-pointer truncate"
+                  className="px-3 py-2 rounded-xl active:scale-95 shadow-2xs text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer truncate"
+                  style={{
+                    backgroundColor: t.surfaceHover,
+                    border: `1px solid ${t.border}`,
+                    color: t.text,
+                  }}
                 >
                   <span className="shrink-0">{v.emoji}</span>
                   <span className="truncate">{v.label}</span>
@@ -330,46 +372,40 @@ export function ParticipantSidebar() {
               ))}
             </div>
           </div>
-
-          {/* Return to Chat link */}
-          <div className="pt-2">
-            <button
-              onClick={() => setActiveTab("chat")}
-              className="w-full py-2 rounded-xl bg-zinc-100/70 hover:bg-zinc-100 text-xs font-bold text-zinc-600 hover:text-zinc-900 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              Back to Room Chat
-            </button>
-          </div>
         </div>
       ) : (
         /* Users / Friends View (Full Box Video with Title, Mic, & Name) */
         <div className="flex-1 min-h-0 overflow-y-auto space-y-3 pr-1 pb-2">
           {/* Header Subtitle / Count & View Switcher */}
           <div className="flex items-center justify-between px-1">
-            <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">
+            <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: t.muted }}>
               Friends Online ({friends.length})
             </span>
             <div className="flex items-center gap-1.5">
-              <div className="flex bg-zinc-100/80 p-0.5 rounded-lg border border-zinc-200/50">
+              <div
+                className="flex p-0.5 rounded-lg border"
+                style={{ backgroundColor: t.surfaceHover, borderColor: t.border }}
+              >
                 <button
                   onClick={() => setUsersViewMode("grid")}
-                  className={`p-1 rounded-md text-xs transition-all cursor-pointer ${
-                    usersViewMode === "grid"
-                      ? "bg-white text-zinc-900 shadow-2xs font-bold"
-                      : "text-zinc-400 hover:text-zinc-700"
-                  }`}
+                  className="p-1 rounded-md text-xs transition-all cursor-pointer outline-none select-none border"
+                  style={{
+                    backgroundColor: usersViewMode === "grid" ? (t.isDark ? "#221d17" : "#ffffff") : "transparent",
+                    color: usersViewMode === "grid" ? (t.isDark ? t.accent : "#18181b") : t.muted,
+                    borderColor: usersViewMode === "grid" ? t.border : "transparent",
+                  }}
                   title="Video Grid View"
                 >
                   <LayoutGrid className="w-3.5 h-3.5" />
                 </button>
                 <button
                   onClick={() => setUsersViewMode("list")}
-                  className={`p-1 rounded-md text-xs transition-all cursor-pointer ${
-                    usersViewMode === "list"
-                      ? "bg-white text-zinc-900 shadow-2xs font-bold"
-                      : "text-zinc-400 hover:text-zinc-700"
-                  }`}
+                  className="p-1 rounded-md text-xs transition-all cursor-pointer outline-none select-none border"
+                  style={{
+                    backgroundColor: usersViewMode === "list" ? (t.isDark ? "#221d17" : "#ffffff") : "transparent",
+                    color: usersViewMode === "list" ? (t.isDark ? t.accent : "#18181b") : t.muted,
+                    borderColor: usersViewMode === "list" ? t.border : "transparent",
+                  }}
                   title="List View"
                 >
                   <List className="w-3.5 h-3.5" />
@@ -419,11 +455,25 @@ export function ParticipantSidebar() {
                   {(p.role === "host" || p.role === "moderator") && (
                     <div className="absolute top-2.5 left-2.5 z-10">
                       {p.role === "host" ? (
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/90 text-white backdrop-blur-md flex items-center gap-1 shadow-2xs border border-rose-400/30">
+                        <span
+                          className="px-2.5 py-0.5 rounded-full text-[10px] font-bold backdrop-blur-md flex items-center gap-1 shadow-2xs border"
+                          style={{
+                            backgroundColor: t.isDark ? `${t.accent}e6` : "rgba(244, 63, 94, 0.9)",
+                            color: t.accentFg,
+                            borderColor: t.isDark ? `${t.accent}80` : "rgba(251, 113, 133, 0.3)",
+                          }}
+                        >
                           <Crown className="w-3 h-3" /> Host
                         </span>
                       ) : (
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/90 text-white backdrop-blur-md flex items-center gap-1 shadow-2xs border border-amber-400/30">
+                        <span
+                          className="px-2.5 py-0.5 rounded-full text-[10px] font-bold backdrop-blur-md flex items-center gap-1 shadow-2xs border"
+                          style={{
+                            backgroundColor: t.isDark ? "#d97706e6" : "rgba(245, 158, 11, 0.9)",
+                            color: "#ffffff",
+                            borderColor: "rgba(251, 191, 36, 0.3)",
+                          }}
+                        >
                           <Shield className="w-3 h-3" /> Mod
                         </span>
                       )}
@@ -469,7 +519,11 @@ export function ParticipantSidebar() {
               {friends.map((p) => (
                 <div
                   key={p.id}
-                  className="bg-white/95 border border-zinc-200/80 hover:border-zinc-300 rounded-2xl p-3 shadow-2xs hover:shadow-xs transition-all flex items-center justify-between gap-3 group"
+                  className="rounded-2xl p-3 shadow-2xs hover:shadow-xs transition-all flex items-center justify-between gap-3 group border"
+                  style={{
+                    backgroundColor: t.surfaceHover,
+                    borderColor: t.border,
+                  }}
                 >
                   {/* Left: Avatar & Name */}
                   <div className="flex items-center gap-3 min-w-0">
@@ -478,13 +532,15 @@ export function ParticipantSidebar() {
                         <img
                           src={p.avatarUrl}
                           alt={p.name}
-                          className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-2xs"
+                          className="w-10 h-10 rounded-full object-cover border-2 shadow-2xs"
+                          style={{ borderColor: t.surface }}
                         />
                       ) : (
                         <div
                           className={`w-10 h-10 rounded-full bg-gradient-to-tr ${
                             p.avatarBg || "from-pink-500 to-rose-600"
-                          } text-white font-bold text-xs flex items-center justify-center border-2 border-white shadow-2xs`}
+                          } text-white font-bold text-xs flex items-center justify-center border-2 shadow-2xs`}
+                          style={{ borderColor: t.surface }}
                         >
                           {p.name[0]}
                         </div>
@@ -492,12 +548,12 @@ export function ParticipantSidebar() {
                       {p.isSpeaking && (
                         <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                          <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2 border-white" />
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2" style={{ borderColor: t.surface }} />
                         </span>
                       )}
                     </div>
 
-                    <span className="text-xs font-bold text-zinc-900 truncate">
+                    <span className="text-xs font-bold truncate" style={{ color: t.text }}>
                       {p.name.replace(" (You)", "")}
                     </span>
                   </div>
@@ -506,11 +562,25 @@ export function ParticipantSidebar() {
                   <div className="flex items-center gap-2 shrink-0">
                     {/* Friend Title */}
                     {p.role === "host" ? (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-600 border border-rose-200/60 flex items-center gap-1">
+                      <span
+                        className="px-2.5 py-0.5 rounded-full text-[10px] font-bold border flex items-center gap-1"
+                        style={{
+                          backgroundColor: t.isDark ? `${t.accent}20` : "#fff1f2",
+                          color: t.accent,
+                          borderColor: t.isDark ? `${t.accent}40` : "#fecdd3",
+                        }}
+                      >
                         <Crown className="w-3 h-3" /> Host
                       </span>
                     ) : p.role === "moderator" ? (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-200/60 flex items-center gap-1">
+                      <span
+                        className="px-2.5 py-0.5 rounded-full text-[10px] font-bold border flex items-center gap-1"
+                        style={{
+                          backgroundColor: t.isDark ? "#3b2a14" : "#fef3c7",
+                          color: t.isDark ? "#f59e0b" : "#d97706",
+                          borderColor: t.isDark ? "#523c1c" : "#fde68a",
+                        }}
+                      >
                         <Shield className="w-3 h-3" /> Mod
                       </span>
                     ) : null}
@@ -524,15 +594,22 @@ export function ParticipantSidebar() {
                           toggleMuteParticipant(p.id);
                           playSoundFX("pop");
                         }}
-                        className={`p-1.5 rounded-lg border transition-all active:scale-90 cursor-pointer ${
-                          p.isMuted
-                            ? "bg-zinc-100 text-rose-500 border-rose-200/50 hover:bg-rose-50"
-                            : "bg-emerald-50 text-emerald-600 border-emerald-200/50 hover:bg-emerald-100"
-                        }`}
+                        className="p-1.5 rounded-lg border transition-all active:scale-90 cursor-pointer"
+                        style={{
+                          backgroundColor: p.isMuted
+                            ? (t.isDark ? "#2a1515" : "#f4f4f5")
+                            : (t.isDark ? "#062817" : "#ecfdf5"),
+                          color: p.isMuted
+                            ? (t.isDark ? "#f87171" : "#f43f5e")
+                            : (t.isDark ? "#34d399" : "#059669"),
+                          borderColor: p.isMuted
+                            ? (t.isDark ? "#451a1a" : "#fecdd3")
+                            : (t.isDark ? "#064e28" : "#a7f3d0"),
+                        }}
                         title={p.isMuted ? `Unmute ${p.name}` : `Mute ${p.name}`}
                       >
                         {p.isMuted ? (
-                          <MicOff className="w-3.5 h-3.5 text-rose-500" />
+                          <MicOff className="w-3.5 h-3.5" />
                         ) : (
                           <Mic className="w-3.5 h-3.5" />
                         )}
@@ -548,10 +625,15 @@ export function ParticipantSidebar() {
           <div className="pt-2">
             <button
               onClick={() => setInviteModalOpen(true)}
-              className="w-full py-2.5 px-3 rounded-2xl border-2 border-dashed border-zinc-200/90 hover:border-rose-300 hover:bg-rose-50/40 text-xs font-bold text-zinc-600 hover:text-rose-600 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-2xs hover:shadow-xs group"
+              className="w-full py-2.5 px-3 rounded-2xl border-2 border-dashed text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-2xs hover:shadow-xs group"
+              style={{
+                borderColor: t.border,
+                color: t.muted,
+                backgroundColor: t.surfaceHover,
+              }}
             >
-              <UserPlus className="w-4 h-4 text-rose-500 group-hover:scale-110 transition-transform" />
-              Invite More Friends
+              <UserPlus className="w-4 h-4 transition-transform group-hover:scale-110" style={{ color: t.accent }} />
+              <span>Invite More Friends</span>
             </button>
           </div>
         </div>

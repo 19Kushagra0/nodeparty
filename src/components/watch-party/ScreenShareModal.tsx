@@ -3,13 +3,13 @@
 import { useState } from "react";
 import {
   X,
-  Tv,
   Film,
   Globe,
   Cast,
   Play,
 } from "lucide-react";
 import { useRoomStore } from "@/store/useRoomStore";
+import { useRoomTheme } from "@/hooks/useRoomTheme";
 import { curatedVideoPresets } from "@/data/mockPresets";
 
 export function ScreenShareModal() {
@@ -19,6 +19,8 @@ export function ScreenShareModal() {
     openNewTab,
     setVideoUrl,
   } = useRoomStore();
+
+  const t = useRoomTheme();
 
   const [activeCategory, setActiveCategory] = useState<"presets" | "screen" | "url">("presets");
   const [customUrl, setCustomUrl] = useState("");
@@ -59,25 +61,33 @@ export function ScreenShareModal() {
   };
 
   const handleNativeScreenShare = async () => {
+    if (!navigator.mediaDevices?.getDisplayMedia) {
+      alert("Screen sharing is not supported on this device/browser.");
+      return;
+    }
     try {
       setIsStartingScreenShare(true);
-      if (typeof navigator !== "undefined" && navigator.mediaDevices?.getDisplayMedia) {
-        await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
-      }
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+        audio: true,
+      });
       openNewTab({
-        title: "Alex's Screen Share (1080p60)",
-        url: "webrtc://screen-share-alex",
+        title: "Your Display Screen Live",
+        url: "media-stream://local-display",
         type: "screen",
-        thumbnail: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop",
+        thumbnail: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=600&auto=format&fit=crop",
+      });
+      stream.getVideoTracks()[0].addEventListener("ended", () => {
+        // Stream stopped
       });
       setScreenShareModalOpen(false);
     } catch {
       // Fallback
       openNewTab({
-        title: "Live Screen Broadcast (Active)",
-        url: "webrtc://screen-share-alex",
+        title: "Host Display Share",
+        url: "media-stream://local-display",
         type: "screen",
-        thumbnail: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop",
+        thumbnail: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=600&auto=format&fit=crop",
       });
       setScreenShareModalOpen(false);
     } finally {
@@ -87,32 +97,33 @@ export function ScreenShareModal() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-zinc-950/40 backdrop-blur-md animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-md animate-in fade-in duration-200"
       onClick={() => setScreenShareModalOpen(false)}
     >
       <div
-        className="relative w-full max-w-2xl bg-white border border-zinc-200/80 rounded-[28px] sm:rounded-[32px] p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.12)] text-left space-y-5 max-h-[90vh] overflow-y-auto no-scrollbar"
+        className="relative w-full max-w-2xl border rounded-[28px] sm:rounded-[32px] p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.4)] text-left space-y-5 max-h-[90vh] overflow-y-auto no-scrollbar transition-all"
+        style={{
+          backgroundColor: t.surface,
+          borderColor: t.border,
+          color: t.text,
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between pb-4 border-b border-zinc-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500 shadow-2xs shrink-0">
-              <Tv className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-lg sm:text-xl font-bold text-zinc-900 tracking-tight">
-                Stream Video & Share Tab
-              </h3>
-              <p className="text-xs sm:text-sm text-zinc-500 mt-0.5">
-                Stream in synchronized 4K, open a shared co-browsing tab, or share your screen.
-              </p>
-            </div>
+        <div className="flex items-start justify-between pb-4 border-b" style={{ borderColor: t.border }}>
+          <div>
+            <h3 className="text-lg sm:text-xl font-bold tracking-tight" style={{ color: t.text }}>
+              Change Stream or Share Screen
+            </h3>
+            <p className="text-xs sm:text-sm mt-0.5" style={{ color: t.muted }}>
+              Pick a video from tonight&apos;s queue, share your display, or paste any video link.
+            </p>
           </div>
 
           <button
             onClick={() => setScreenShareModalOpen(false)}
-            className="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-400 hover:text-zinc-700 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            style={{ backgroundColor: t.surfaceHover, color: t.muted }}
             title="Close"
           >
             <X className="w-4 h-4" />
@@ -120,52 +131,59 @@ export function ScreenShareModal() {
         </div>
 
         {/* Segmented Mode Switcher */}
-        <div className="flex items-center p-1 bg-[#F0F2F6] rounded-2xl border border-zinc-200/60 text-xs sm:text-sm font-medium">
+        <div
+          className="flex items-center p-1 rounded-2xl border text-xs sm:text-sm font-medium"
+          style={{ backgroundColor: t.surfaceHover, borderColor: t.border }}
+        >
           <button
             type="button"
             onClick={() => setActiveCategory("presets")}
-            className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-              activeCategory === "presets"
-                ? "bg-white text-zinc-900 font-semibold shadow-xs"
-                : "text-zinc-500 hover:text-zinc-900 hover:bg-white/50"
-            }`}
+            className="flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5"
+            style={{
+              backgroundColor: activeCategory === "presets" ? t.surface : "transparent",
+              color: activeCategory === "presets" ? (t.isDark ? t.accent : t.text) : t.muted,
+              boxShadow: activeCategory === "presets" && !t.isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+            }}
           >
-            <Film className="w-3.5 h-3.5 text-rose-500" />
-            <span>Curated Channels</span>
+            <Film className="w-3.5 h-3.5" style={{ color: activeCategory === "presets" ? t.accent : t.muted }} />
+            <span>Featured</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveCategory("screen")}
-            className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-              activeCategory === "screen"
-                ? "bg-white text-zinc-900 font-semibold shadow-xs"
-                : "text-zinc-500 hover:text-zinc-900 hover:bg-white/50"
-            }`}
+            className="flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5"
+            style={{
+              backgroundColor: activeCategory === "screen" ? t.surface : "transparent",
+              color: activeCategory === "screen" ? (t.isDark ? t.accent : t.text) : t.muted,
+              boxShadow: activeCategory === "screen" && !t.isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+            }}
           >
-            <Cast className="w-3.5 h-3.5 text-rose-500" />
+            <Cast className="w-3.5 h-3.5" style={{ color: activeCategory === "screen" ? t.accent : t.muted }} />
             <span>Screen Share</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveCategory("url")}
-            className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-              activeCategory === "url"
-                ? "bg-white text-zinc-900 font-semibold shadow-xs"
-                : "text-zinc-500 hover:text-zinc-900 hover:bg-white/50"
-            }`}
+            className="flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5"
+            style={{
+              backgroundColor: activeCategory === "url" ? t.surface : "transparent",
+              color: activeCategory === "url" ? (t.isDark ? t.accent : t.text) : t.muted,
+              boxShadow: activeCategory === "url" && !t.isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+            }}
           >
-            <Globe className="w-3.5 h-3.5 text-rose-500" />
-            <span>Custom URL</span>
+            <Globe className="w-3.5 h-3.5" style={{ color: activeCategory === "url" ? t.accent : t.muted }} />
+            <span>Paste Link</span>
           </button>
         </div>
 
         {/* 1. Curated Channels / Presets */}
         {activeCategory === "presets" && (
           <div className="space-y-3">
-            <div className="text-xs text-zinc-400 font-medium">
-              <span>Select Stream Source</span>
+            <div className="flex items-center justify-between text-xs font-medium" style={{ color: t.muted }}>
+              <span>Tonight&apos;s Featured Queue</span>
+              <span className="text-[11px] font-mono">Synced 4K</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[300px] overflow-y-auto pr-1">
@@ -173,9 +191,13 @@ export function ScreenShareModal() {
                 <div
                   key={preset.id}
                   onClick={() => handleLaunchPreset(preset)}
-                  className="group relative flex items-center gap-3 p-2.5 rounded-2xl bg-[#F8FAFC] border border-zinc-200/70 hover:border-rose-300 hover:bg-white hover:shadow-xs cursor-pointer transition-all"
+                  className="group relative flex items-center gap-3 p-2.5 rounded-2xl border cursor-pointer transition-all"
+                  style={{
+                    backgroundColor: t.surfaceHover,
+                    borderColor: t.border,
+                  }}
                 >
-                  <div className="relative w-20 h-14 rounded-xl overflow-hidden shrink-0 bg-zinc-100 border border-zinc-200/40">
+                  <div className="relative w-20 h-14 rounded-xl overflow-hidden shrink-0 bg-black/40 border" style={{ borderColor: t.border }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={preset.thumbnail}
@@ -183,7 +205,10 @@ export function ScreenShareModal() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/35 flex items-center justify-center transition-colors">
-                      <div className="w-6 h-6 rounded-full bg-white/90 group-hover:bg-white text-rose-500 flex items-center justify-center shadow-xs transition-transform group-hover:scale-110">
+                      <div
+                        className="w-6 h-6 rounded-full flex items-center justify-center shadow-xs transition-transform group-hover:scale-110"
+                        style={{ backgroundColor: t.accent, color: t.accentFg }}
+                      >
                         <Play className="w-2.5 h-2.5 fill-current ml-0.5" />
                       </div>
                     </div>
@@ -193,13 +218,18 @@ export function ScreenShareModal() {
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-xs sm:text-[13px] font-semibold text-zinc-800 line-clamp-1 group-hover:text-rose-600 transition-colors">
+                    <h4 className="text-xs sm:text-[13px] font-semibold line-clamp-1 transition-colors" style={{ color: t.text }}>
                       {preset.title}
                     </h4>
-                    <div className="flex items-center gap-1.5 text-xs text-zinc-400 mt-0.5">
-                      <span className="truncate">{preset.channel}</span>
+                    <div className="flex items-center gap-1.5 text-xs mt-1" style={{ color: t.muted }}>
+                      <span className="truncate font-medium">{preset.channel}</span>
                       <span>•</span>
-                      <span className="text-[11px] font-medium text-zinc-500">{preset.category}</span>
+                      <span
+                        className="text-[10px] font-medium px-1.5 py-0.5 rounded-md"
+                        style={{ backgroundColor: t.surface, color: t.muted, border: `1px solid ${t.border}` }}
+                      >
+                        {preset.category}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -210,24 +240,35 @@ export function ScreenShareModal() {
 
         {/* 2. Native Screen Share */}
         {activeCategory === "screen" && (
-          <div className="py-6 px-4 rounded-2xl bg-[#F8FAFC] border border-zinc-200/70 text-center space-y-4">
-            <div className="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-100 text-rose-500 flex items-center justify-center mx-auto shadow-2xs">
+          <div
+            className="py-6 px-4 rounded-2xl border text-center space-y-4"
+            style={{ backgroundColor: t.surfaceHover, borderColor: t.border }}
+          >
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto shadow-2xs border"
+              style={{
+                backgroundColor: t.isDark ? `${t.accent}20` : "#fff1f2",
+                color: t.accent,
+                borderColor: t.isDark ? `${t.accent}40` : "#fecdd3",
+              }}
+            >
               <Cast className="w-6 h-6" />
             </div>
 
             <div className="space-y-1.5 max-w-sm mx-auto">
-              <h4 className="text-sm sm:text-base font-bold text-zinc-900">
-                Share Screen with Lounge
+              <h4 className="text-sm sm:text-base font-bold" style={{ color: t.text }}>
+                Share Display or Window
               </h4>
-              <p className="text-xs sm:text-sm text-zinc-500 leading-relaxed">
-                Stream any app window, gameplay, or browser tab with synchronous audio in 1080p 60FPS.
+              <p className="text-xs sm:text-sm leading-relaxed" style={{ color: t.muted }}>
+                Stream any app window, gameplay, or browser tab with synchronous room audio in 1080p 60FPS.
               </p>
             </div>
 
             <button
               onClick={handleNativeScreenShare}
               disabled={isStartingScreenShare}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-semibold text-xs sm:text-sm shadow-xs hover:shadow-sm active:scale-[0.98] transition-all cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl font-semibold text-xs sm:text-sm shadow-xs hover:shadow-sm active:scale-[0.98] transition-all cursor-pointer"
+              style={{ backgroundColor: t.accent, color: t.accentFg }}
             >
               <Cast className="w-4 h-4" />
               <span>{isStartingScreenShare ? "Starting Stream..." : "Select Screen to Share"}</span>
@@ -239,37 +280,48 @@ export function ScreenShareModal() {
         {activeCategory === "url" && (
           <form onSubmit={handleLaunchCustomUrl} className="space-y-4 pt-1">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-zinc-700">
-                Webpage or Stream URL
+              <label className="text-xs font-semibold" style={{ color: t.text }}>
+                Video or Stream URL
               </label>
               <input
                 type="text"
-                placeholder="https://youtube.com/watch?v=... or https://twitch.tv/..."
+                placeholder="https://youtube.com/watch?v=... or Twitch link"
                 value={customUrl}
                 onChange={(e) => setCustomUrl(e.target.value)}
-                className="w-full px-4 py-2.5 sm:py-3 rounded-2xl bg-[#F0F2F6] border border-zinc-200/80 text-zinc-900 text-xs sm:text-sm placeholder:text-zinc-400 focus:outline-none focus:bg-white focus:border-rose-400 focus:ring-2 focus:ring-rose-500/10 transition-all font-mono"
+                className="w-full px-4 py-2.5 sm:py-3 rounded-2xl border text-xs sm:text-sm focus:outline-none transition-all font-mono"
+                style={{
+                  backgroundColor: t.surfaceHover,
+                  borderColor: t.border,
+                  color: t.text,
+                }}
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-zinc-700">
+              <label className="text-xs font-semibold" style={{ color: t.text }}>
                 Tab Name (Optional)
               </label>
               <input
                 type="text"
-                placeholder="e.g. Cinema Stream, Game Highlights"
+                placeholder="e.g. Cyberpunk Cinema, Tournament Stream"
                 value={customTitle}
                 onChange={(e) => setCustomTitle(e.target.value)}
-                className="w-full px-4 py-2.5 sm:py-3 rounded-2xl bg-[#F0F2F6] border border-zinc-200/80 text-zinc-900 text-xs sm:text-sm placeholder:text-zinc-400 focus:outline-none focus:bg-white focus:border-rose-400 focus:ring-2 focus:ring-rose-500/10 transition-all"
+                className="w-full px-4 py-2.5 sm:py-3 rounded-2xl border text-xs sm:text-sm focus:outline-none transition-all"
+                style={{
+                  backgroundColor: t.surfaceHover,
+                  borderColor: t.border,
+                  color: t.text,
+                }}
               />
             </div>
 
             <button
               type="submit"
               disabled={!customUrl.trim()}
-              className="w-full py-3 rounded-2xl bg-rose-500 hover:bg-rose-600 disabled:opacity-40 text-white font-semibold text-xs sm:text-sm shadow-xs active:scale-[0.98] transition-all cursor-pointer"
+              className="w-full py-3 rounded-2xl disabled:opacity-40 font-semibold text-xs sm:text-sm shadow-xs active:scale-[0.98] transition-all cursor-pointer"
+              style={{ backgroundColor: t.accent, color: t.accentFg }}
             >
-              Open Interactive Shared Tab
+              Play in Lounge
             </button>
           </form>
         )}
@@ -277,4 +329,3 @@ export function ScreenShareModal() {
     </div>
   );
 }
-

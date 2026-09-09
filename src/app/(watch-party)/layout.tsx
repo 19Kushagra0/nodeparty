@@ -11,9 +11,9 @@ export default function WatchPartyLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-blue-50 to-purple-100 text-zinc-900 flex flex-col antialiased relative">
-      <div className="absolute inset-0 bg-white/40 pointer-events-none" />
+    <div className="min-h-screen flex flex-col antialiased relative" style={{ backgroundColor: "var(--background)", color: "var(--foreground)" }}>
       {children}
     </div>
   );
 }
+
