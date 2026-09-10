@@ -34,7 +34,8 @@ export function RoomClientView() {
       )}
 
       {/* Main Room Layout Grid */}
-      <main className="relative z-10 flex-1 w-full flex flex-col lg:flex-row gap-3 lg:gap-4 h-full min-h-0 overflow-hidden">
+      {/* pb-[76px] on mobile reserves space for the fixed bottom nav bar */}
+      <main className="relative z-10 flex-1 w-full flex flex-col lg:flex-row gap-3 lg:gap-4 h-full min-h-0 overflow-hidden pb-[76px] lg:pb-0">
         {/* Left Column: Player Stage */}
         <div className="flex-1 min-w-0 flex flex-col h-full min-h-0 transition-all duration-300">
           <div className="flex-1 min-h-0 relative w-full overflow-hidden flex flex-col">
@@ -49,7 +50,7 @@ export function RoomClientView() {
         {/* Right Social Column */}
         {!isTheaterMode && (
           isRightSidebarOpen ? (
-            <div className="w-full lg:w-[320px] xl:w-[360px] shrink-0 flex flex-col h-full min-h-0 overflow-hidden transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-right-3">
+            <div className="hidden lg:flex w-full lg:w-[320px] xl:w-[360px] shrink-0 flex-col h-full min-h-0 overflow-hidden transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-right-3">
               <ParticipantSidebar />
             </div>
           ) : (
@@ -112,11 +113,11 @@ export function RoomClientView() {
                   <Users className="w-4 h-4" />
                   {friendsCount > 0 && (
                     <span
-                        className="absolute -top-1 -right-1 px-1.5 py-0.2 text-[9px] font-bold rounded-full border shadow-2xs"
-                        style={{ backgroundColor: t.accent, color: t.accentFg, borderColor: t.surface }}
-                      >
-                        {friendsCount}
-                      </span>
+                      className="absolute -top-1 -right-1 px-1.5 py-0.2 text-[9px] font-bold rounded-full border shadow-2xs"
+                      style={{ backgroundColor: t.accent, color: t.accentFg, borderColor: t.surface }}
+                    >
+                      {friendsCount}
+                    </span>
                   )}
                 </button>
               </div>

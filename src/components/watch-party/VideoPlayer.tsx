@@ -330,7 +330,11 @@ export function VideoPlayer() {
                     max="100"
                     value={isMuted ? 0 : volume}
                     onChange={(e) => setVolume(Number(e.target.value))}
-                    className="w-16 sm:w-20 accent-rose-500 h-1.5 bg-white/20 rounded-lg cursor-pointer"
+                    className="w-16 sm:w-20 h-1.5 rounded-full cursor-pointer appearance-none"
+                    style={{
+                      background: `linear-gradient(to right, #f43f5e 0%, #f43f5e ${isMuted ? 0 : volume}%, rgba(255,255,255,0.25) ${isMuted ? 0 : volume}%, rgba(255,255,255,0.25) 100%)`,
+                      accentColor: "#f43f5e",
+                    }}
                   />
                 </div>
               </div>

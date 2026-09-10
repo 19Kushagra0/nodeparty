@@ -195,7 +195,11 @@ export function CinematicVideoPlayer() {
           <div className="pointer-events-auto absolute top-0 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-center animate-in fade-in slide-in-from-top-2 duration-300 cursor-default">
             {/* White/Dark Curved Notch Background attached seamlessly to top-0 */}
             <svg
-              className="w-[380px] sm:w-[430px] lg:w-[470px] h-[58px] sm:h-[64px] drop-shadow-[0_2px_8px_rgba(0,0,0,0.06)] block"
+              className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.06)] block transition-all"
+              style={{
+                width: "clamp(235px, 45vw, 460px)",
+                height: "clamp(36px, 5.4vw, 60px)",
+              }}
               viewBox="0 0 480 66"
               fill="none"
               preserveAspectRatio="none"
@@ -214,46 +218,107 @@ export function CinematicVideoPlayer() {
             </svg>
 
             {/* Inner Soft-Tinted Modal Capsule */}
-            <div className="absolute inset-0 pt-1 sm:pt-1.5 pb-[12px] sm:pb-[14px] flex items-center justify-center">
+            <div
+              className="absolute inset-0 flex items-center justify-center"
+              style={{
+                paddingBottom: "clamp(6px, 1.2vw, 14px)",
+                paddingTop: "clamp(1px, 0.3vw, 4px)",
+              }}
+            >
               <div
-                className="rounded-full pl-6 pr-5 sm:pl-7 sm:pr-6 py-2 sm:py-2.5 flex items-center gap-3 sm:gap-3.5 text-[11px] sm:text-xs font-semibold shadow-2xs transition-all"
+                className="rounded-full flex items-center font-semibold shadow-2xs transition-all whitespace-nowrap max-w-[94%]"
                 style={{
                   backgroundColor: t.isDark ? "#1e1a14" : "#f0f2f6",
                   color: t.text,
                   border: `1px solid ${t.border}`,
+                  paddingTop: "clamp(3px, 0.6vw, 8px)",
+                  paddingBottom: "clamp(3px, 0.6vw, 8px)",
+                  paddingLeft: "clamp(8px, 1.8vw, 24px)",
+                  paddingRight: "clamp(6px, 1.5vw, 20px)",
+                  gap: "clamp(5px, 1vw, 13px)",
                 }}
               >
                 {/* Code Name & Copy Button */}
                 <button
                   onClick={handleCopyCode}
-                  className="flex items-center gap-1.5 cursor-pointer hover:opacity-85 transition-opacity select-none group/code"
+                  className="flex items-center gap-1 sm:gap-1.5 cursor-pointer hover:opacity-85 transition-opacity select-none group/code whitespace-nowrap"
                   title="Click to copy Room Code"
                 >
-                  <span className="font-semibold text-[10px] sm:text-[11px] tracking-wider uppercase" style={{ color: t.muted }}>
+                  <span
+                    className="font-semibold tracking-wider uppercase hidden min-[621px]:inline"
+                    style={{
+                      color: t.muted,
+                      fontSize: "clamp(8px, 0.9vw, 11px)",
+                    }}
+                  >
                     CODE:
                   </span>
-                  <span className="font-mono font-bold tracking-wider text-xs sm:text-[13px]" style={{ color: t.accent }}>
+                  <span
+                    className="font-mono font-bold tracking-wider whitespace-nowrap"
+                    style={{
+                      color: t.accent,
+                      fontSize: "clamp(10px, 1.1vw, 13px)",
+                    }}
+                  >
                     {roomPasscode || roomId}
                   </span>
-                  <span className="transition-colors ml-0.5" style={{ color: t.muted }}>
+                  <span className="transition-colors ml-0.5 inline-flex items-center" style={{ color: t.muted }}>
                     {copiedCode ? (
-                      <Check className="w-3.5 h-3.5 text-emerald-500 stroke-[2.5]" />
+                      <Check
+                        className="text-emerald-500 stroke-[2.5]"
+                        style={{
+                          width: "clamp(10px, 1.1vw, 14px)",
+                          height: "clamp(10px, 1.1vw, 14px)",
+                        }}
+                      />
                     ) : (
-                      <Copy className="w-3.5 h-3.5" />
+                      <Copy
+                        style={{
+                          width: "clamp(10px, 1.1vw, 14px)",
+                          height: "clamp(10px, 1.1vw, 14px)",
+                        }}
+                      />
                     )}
                   </span>
                 </button>
 
                 {/* Dot Separator */}
-                <span className="font-bold text-xs select-none" style={{ color: t.border }}>•</span>
+                <span
+                  className="font-bold select-none"
+                  style={{
+                    color: t.border,
+                    fontSize: "clamp(8px, 0.9vw, 12px)",
+                  }}
+                >
+                  •
+                </span>
 
                 {/* Host Info */}
-                <div className="flex items-center gap-1.5 select-none">
-                  <Crown className="w-3.5 h-3.5 stroke-[2.2]" style={{ color: t.accent }} />
-                  <span className="font-medium text-[10px] sm:text-[11px]" style={{ color: t.muted }}>
+                <div className="flex items-center gap-1 sm:gap-1.5 select-none whitespace-nowrap">
+                  <Crown
+                    className="stroke-[2.2] shrink-0"
+                    style={{
+                      color: t.accent,
+                      width: "clamp(10px, 1.1vw, 14px)",
+                      height: "clamp(10px, 1.1vw, 14px)",
+                    }}
+                  />
+                  <span
+                    className="font-medium hidden min-[621px]:inline"
+                    style={{
+                      color: t.muted,
+                      fontSize: "clamp(8px, 0.9vw, 11px)",
+                    }}
+                  >
                     Host:
                   </span>
-                  <span className="font-bold text-xs sm:text-[13px]" style={{ color: t.text }}>
+                  <span
+                    className="font-bold whitespace-nowrap"
+                    style={{
+                      color: t.text,
+                      fontSize: "clamp(10px, 1.1vw, 13px)",
+                    }}
+                  >
                     {hostName}
                   </span>
                 </div>
@@ -264,11 +329,17 @@ export function CinematicVideoPlayer() {
                     e.stopPropagation();
                     setIsNotchOpen(false);
                   }}
-                  className="p-1 -mr-1 rounded-full transition-all cursor-pointer"
+                  className="p-0.5 sm:p-1 -mr-0.5 sm:-mr-1 rounded-full transition-all cursor-pointer hover:opacity-80"
                   style={{ color: t.muted }}
                   title="Hide modal"
                 >
-                  <ChevronUp className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <ChevronUp
+                    className="stroke-[2.5]"
+                    style={{
+                      width: "clamp(10px, 1.1vw, 14px)",
+                      height: "clamp(10px, 1.1vw, 14px)",
+                    }}
+                  />
                 </button>
               </div>
             </div>
@@ -277,36 +348,36 @@ export function CinematicVideoPlayer() {
 
         {/* Top Floating Controls Header (Back to Home & Show details) - Hides/shows with mouse hover */}
         <div
-          className={`absolute top-0 left-0 right-0 z-[90] flex items-start justify-between pointer-events-none px-5 sm:px-7 lg:px-8 transition-all duration-300 ease-out ${showControls
+          className={`absolute top-0 left-0 right-0 z-[90] flex items-start justify-between pointer-events-none px-3 sm:px-5 md:px-7 lg:px-8 transition-all duration-300 ease-out ${showControls
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-2 pointer-events-none"
             }`}
         >
-          {/* Left Pill: Back to Home */}
-          <div className="pt-3.5 sm:pt-4 transition-all duration-300 ease-out">
+          {/* Left Pill: Back to Home (Hidden on phones, visible on sm+) */}
+          <div className="hidden sm:block pt-2 sm:pt-3 md:pt-3.5 transition-all duration-300 ease-out">
             <button
               onClick={handleBackToHome}
-              className="pointer-events-auto flex items-center gap-1.5 px-5 py-2 rounded-full shadow-2xs transition-all text-xs sm:text-sm font-bold hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              className="pointer-events-auto flex items-center gap-1 sm:gap-1.5 px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 rounded-full shadow-2xs transition-all text-xs sm:text-sm font-bold hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
               style={{
                 backgroundColor: t.surface,
                 color: t.text,
                 border: `1px solid ${t.border}`,
               }}
             >
-              <ChevronLeft className="w-4 h-4 stroke-[2.5]" style={{ color: t.muted }} />
-              <span>Back to Home</span>
+              <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.5]" style={{ color: t.muted }} />
+              <span>Back<span className="hidden sm:inline"> to Home</span></span>
             </button>
           </div>
 
           {/* Right Header Area (Show Info button when modal is closed) */}
-          <div className="pt-3.5 sm:pt-4 flex items-center gap-2 pointer-events-auto transition-all duration-300 ease-out">
+          <div className="pt-2 sm:pt-3 md:pt-3.5 flex items-center gap-2 pointer-events-auto transition-all duration-300 ease-out">
             {!isNotchOpen && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsNotchOpen(true);
                 }}
-                className="flex items-center gap-1.5 px-5 py-2 rounded-full shadow-2xs transition-all text-xs sm:text-sm font-bold hover:scale-[1.02] active:scale-[0.98] cursor-pointer animate-in fade-in duration-200"
+                className="flex items-center gap-1 sm:gap-1.5 px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 rounded-full shadow-2xs transition-all text-xs sm:text-sm font-bold hover:scale-[1.02] active:scale-[0.98] cursor-pointer animate-in fade-in duration-200"
                 style={{
                   backgroundColor: t.surface,
                   color: t.text,
@@ -314,7 +385,7 @@ export function CinematicVideoPlayer() {
                 }}
                 title="Show Room Code"
               >
-                <span>Show details</span>
+                <span>Details<span className="hidden sm:inline"> / Code</span></span>
               </button>
             )}
           </div>
@@ -403,8 +474,11 @@ export function CinematicVideoPlayer() {
                   max="100"
                   value={isMuted ? 0 : volume}
                   onChange={(e) => setVolume(Number(e.target.value))}
-                  className="w-0 sm:w-20 opacity-0 group-hover/vol:w-20 group-hover/vol:opacity-100 sm:opacity-100 h-1 bg-white/20 rounded-full cursor-pointer transition-all duration-300"
-                  style={{ accentColor: t.accent }}
+                  className="w-0 sm:w-20 opacity-0 group-hover/vol:w-20 group-hover/vol:opacity-100 sm:opacity-100 h-1.5 rounded-full cursor-pointer transition-all duration-300 appearance-none"
+                  style={{
+                    background: `linear-gradient(to right, ${t.accent} 0%, ${t.accent} ${isMuted ? 0 : volume}%, rgba(255,255,255,0.25) ${isMuted ? 0 : volume}%, rgba(255,255,255,0.25) 100%)`,
+                    accentColor: t.accent,
+                  }}
                 />
               </div>
 

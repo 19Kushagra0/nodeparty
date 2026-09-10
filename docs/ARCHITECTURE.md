@@ -15,11 +15,12 @@ The application utilizes Next.js App Router route groups to separate concerns:
 
 ### Component Architecture
 Components are neatly organized into context-specific directories:
-- `src/components/home/`: Components for the landing page (e.g., `InteractiveHeroDemo.tsx`, `FeaturedLounges.tsx`, `JoinRoomCard.tsx`).
+- `src/components/home/`: Components for the landing page (e.g., `InteractiveHeroDemo.tsx`, `FeaturedLounges.tsx`, `JoinRoomCard.tsx`, `HowItWorks.tsx`).
 - `src/components/watch-party/`: Core functional components for the room.
-  - `VideoPlayer.tsx`: The main cinema viewport, custom controls, and ambient lighting.
+  - `CinematicVideoPlayer.tsx` / `VideoPlayer.tsx`: The main cinema viewport, custom controls, and ambient lighting.
   - `ParticipantSidebar.tsx`: The right-side panel handling tabs for Chat, Crew/Roles, Up-Next Queue, and Settings.
-  - `RoomHeader.tsx`, `InviteModal.tsx`, `ScreenShareModal.tsx`: Secondary room UI.
+  - `MultiplayerCursors.tsx`: Overlay component to render remote cursors during co-browsing.
+  - `RoomHeader.tsx`, `InviteModal.tsx`, `ScreenShareModal.tsx`, `SettingsModal.tsx`, `CapturedMomentsModal.tsx`: Secondary room UI.
 - `src/components/layout/`: Shared layouts like `Navbar.tsx` and `Footer.tsx`.
 
 ## Data Flow & Core Logic
@@ -27,7 +28,7 @@ The application operates as a hybrid platform supporting two distinct interactio
 
 1. **Watch Party Mode (Default)**:
    - The primary mode where users watch synchronized streaming video (e.g., via the YouTube IFrame API).
-   - A WebSocket signaling server broadcasts lightweight events (`play`, `pause`, `seekTo`) ensuring all clients are perfectly in sync.
+   - A WebSocket signaling server broadcasts lightweight events (`play`, `pause`, `seekTo`, `chat`, `reaction`) ensuring all clients are perfectly in sync. Local state is managed globally by Zustand (`useRoomStore.ts`).
 
 2. **Collaborative Browser Mode (Advanced)**:
    - When the Host activates screen sharing, the architecture shifts to a two-part remote-control system:
