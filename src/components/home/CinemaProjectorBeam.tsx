@@ -10,14 +10,18 @@ export function CinemaProjectorBeam() {
       className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0"
     >
       {/* ── 1. Anime Cinema Watch Party Backdrop ── */}
-      <div className="absolute inset-0 w-full h-full animate-cinematic-breathe origin-center scale-105">
+      <div
+        className="absolute inset-0 w-full h-full animate-cinematic-breathe origin-center scale-105"
+        style={{ transform: "translateZ(0)", willChange: "transform" }}
+      >
         <Image
           src="/hero-anime.jpg"
           alt="Cinematic watch party lounge background"
           fill
           priority
+          unoptimized
           sizes="100vw"
-          className="object-cover scale-60 object-center filter brightness-[0.88] contrast-[1.08]"
+          className="object-cover scale-100 sm:scale-60 object-center filter brightness-[0.88] contrast-[1.08]"
         />
       </div>
 

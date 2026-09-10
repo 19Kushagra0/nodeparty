@@ -41,56 +41,56 @@ export function HomePageContainer() {
         {/* ═══════════════════════════════════════════════════════════════════
             HERO: FULL-BLEED CINEMA ATMOSPHERE & HEADLINE
         ═══════════════════════════════════════════════════════════════════ */}
-        <section className="relative w-full h-[100svh] sm:h-[85vh] min-h-[620px] overflow-hidden bg-transparent">
+        <section className="relative w-full h-[70svh] sm:h-[85vh] min-h-[460px] sm:min-h-[620px] overflow-hidden bg-transparent">
           {/* Cinema Projector & Ambient Beam Animation Background */}
           <CinemaProjectorBeam />
 
           <div className="relative z-10 w-full h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center">
 
             {/* Top Left */}
-            <div className="absolute top-8 left-4 sm:top-8 sm:left-8 flex flex-col text-[9px] sm:text-xs font-black tracking-[0.2em] text-[#907a5a] uppercase">
+            <div className="absolute top-4 left-4 sm:top-8 sm:left-8 flex flex-col text-[9px] sm:text-xs font-black tracking-[0.2em] text-white sm:text-[#907a5a] uppercase drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] sm:drop-shadow-none">
               <span>NodeParty's Story</span>
-              <span className="text-[#f2e9d6]">Continues</span>
+              <span className="text-white sm:text-[#f2e9d6]">Continues</span>
             </div>
 
             {/* Top Right */}
-            <div className="absolute top-8 right-4 sm:top-8 sm:right-8 flex flex-col text-[9px] sm:text-xs font-black tracking-[0.2em] text-[#907a5a] uppercase text-right">
+            <div className="absolute top-4 right-4 sm:top-8 sm:right-8 flex flex-col text-[9px] sm:text-xs font-black tracking-[0.2em] text-white sm:text-[#907a5a] uppercase text-right drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] sm:drop-shadow-none">
               <span>Version 1.0 Premiere</span>
-              <span>On <span className="text-[#c8962e] font-bold">August 21st</span></span>
+              <span>On <span className="text-white sm:text-[#c8962e] font-bold">August 21st</span></span>
             </div>
 
             {/* Main Content Area */}
-            <div className="mt-8 sm:mt-24 w-full flex flex-col sm:items-start relative z-20">
+            <div className="mt-4 sm:mt-24 w-full flex flex-col sm:items-start relative z-20">
 
               {/* Massive Stacked Title */}
-              <h1 className="flex flex-col text-[21vw] sm:text-[14vw] lg:text-[130px] xl:text-[160px] leading-[0.8] font-black uppercase text-white drop-shadow-[0_12px_40px_rgba(0,0,0,0.9)] tracking-[-0.04em] scale-y-[1.15] sm:origin-left origin-center text-center sm:text-left w-full">
+              <h1 className="flex flex-col text-[18vw] sm:text-[14vw] lg:text-[130px] xl:text-[160px] leading-[0.8] font-black uppercase text-white drop-shadow-[0_12px_40px_rgba(0,0,0,0.9)] tracking-[-0.04em] scale-y-[1.15] sm:origin-left origin-center text-center sm:text-left w-full">
                 <span>NODE</span>
                 <span>PARTY</span>
               </h1>
 
               {/* Thin Line & Lower Text */}
-              <div className="flex flex-col w-full sm:max-w-md mt-10 sm:mt-12 relative px-2 sm:px-0 mx-auto sm:mx-0">
-                <div className="h-[1px] w-full bg-gradient-to-r from-transparent sm:from-[#c8962e]/40 via-white/20 sm:via-white/10 to-transparent mb-6" />
-                
-                <div className="relative flex flex-col sm:flex-row sm:justify-between items-start w-full min-h-[70px] sm:min-h-0">
+              <div className="flex flex-col w-full sm:max-w-md mt-4 sm:mt-12 relative px-2 sm:px-0 mx-auto sm:mx-0">
+                <div className="h-[1px] w-full bg-gradient-to-r from-transparent sm:from-[#c8962e]/40 via-white/20 sm:via-white/10 to-transparent mb-3.5 sm:mb-6" />
+
+                <div className="relative flex flex-col sm:flex-row sm:justify-between items-start w-full min-h-[45px] sm:min-h-0">
                   {/* Left Text */}
-                  <div className="absolute sm:relative left-0 top-0 flex flex-col text-[9px] sm:text-xs font-black tracking-[0.15em] text-[#907a5a] uppercase max-w-[200px] text-left">
+                  <div className="flex flex-col text-[9px] sm:text-xs font-black tracking-[0.15em] text-white sm:text-[#907a5a] uppercase max-w-[200px] text-left drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] sm:drop-shadow-none">
                     <span>Perfect Sync</span>
-                    <span className="text-[#f2e9d6]">Continues</span>
+                    <span className="text-white sm:text-[#f2e9d6]">Continues</span>
                   </div>
-                  {/* Right Text - Staggered down on mobile */}
-                  <div className="absolute sm:relative right-0 top-12 sm:top-0 flex flex-col text-[9px] sm:text-xs font-black tracking-[0.15em] text-[#907a5a] uppercase max-w-[200px] text-right sm:text-left">
+                  {/* Right Text */}
+                  <div className="flex flex-col text-[9px] sm:text-xs font-black tracking-[0.15em] text-white sm:text-[#907a5a] uppercase max-w-[200px] text-right sm:text-left mt-1.5 sm:mt-0 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] sm:drop-shadow-none">
                     <span>Synchronized Theater</span>
-                    <span className="text-[#c8962e]">Zero Configuration</span>
+                    <span className="text-white sm:text-[#c8962e]">Zero Configuration</span>
                   </div>
                 </div>
               </div>
 
               {/* Bottom Actions */}
-              <div className="absolute -bottom-32 sm:relative sm:-bottom-auto left-0 right-0 sm:pt-10 flex justify-center sm:justify-start w-full z-20">
+              <div className="relative mt-6 sm:mt-0 sm:relative sm:-bottom-auto left-0 right-0 sm:pt-10 flex justify-center sm:justify-start w-full z-20">
                 <a
                   href="#join-hub"
-                  className="inline-flex items-center justify-center px-10 py-4 rounded-full text-sm font-black tracking-[0.2em] uppercase bg-[#c8962e] text-[#0c0a07] hover:bg-[#dba940] active:scale-[0.98] transition-all cursor-pointer shadow-2xl"
+                  className="inline-flex items-center justify-center px-8 sm:px-10 py-3 sm:py-4 rounded-full text-xs sm:text-sm font-black tracking-[0.2em] uppercase bg-[#c8962e] text-[#0c0a07] hover:bg-[#dba940] active:scale-[0.98] transition-all cursor-pointer shadow-2xl"
                 >
                   Start a Room
                 </a>
