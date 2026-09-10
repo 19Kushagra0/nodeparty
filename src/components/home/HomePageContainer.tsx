@@ -79,9 +79,9 @@ export function HomePageContainer() {
                     <span className="text-white sm:text-[#f2e9d6]">Continues</span>
                   </div>
                   {/* Right Text */}
-                  <div className="flex flex-col text-[9px] sm:text-xs font-black tracking-[0.15em] text-white sm:text-[#907a5a] uppercase max-w-[200px] text-right sm:text-left mt-1.5 sm:mt-0 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] sm:drop-shadow-none">
+                  <div className="flex flex-col text-[9px] sm:text-xs font-black tracking-[0.15em] text-white uppercase max-w-[200px] text-right sm:text-left mt-1.5 sm:mt-0 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
                     <span>Synchronized Theater</span>
-                    <span className="text-white sm:text-[#c8962e]">Zero Configuration</span>
+                    <span className="text-white">Zero Configuration</span>
                   </div>
                 </div>
               </div>
