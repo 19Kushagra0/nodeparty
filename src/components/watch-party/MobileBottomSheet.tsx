@@ -51,12 +51,11 @@ export function MobileBottomSheet() {
         {/* Sheet panel */}
         <div
           ref={sheetRef}
-          className="absolute bottom-0 left-0 right-0 rounded-t-[28px] flex flex-col transition-transform duration-300 ease-out will-change-transform"
+          className="absolute bottom-0 left-0 right-0 rounded-t-[28px] flex flex-col transition-transform duration-300 ease-out will-change-transform border-t border-x"
           style={{
             height: "82dvh",
             backgroundColor: t.isDark ? "#14110e" : "#ffffff",
-            border: `1px solid ${t.border}`,
-            borderBottom: "none",
+            borderColor: t.border,
             transform: isRightSidebarOpen ? "translateY(0)" : "translateY(100%)",
           }}
           onClick={(e) => e.stopPropagation()}
