@@ -270,9 +270,9 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   isRightSidebarOpen: true,
   activeSidebarTab: "users",
 
-  // Theme — dark by default (matches homepage gold palette)
-  themeMode: "dark",
-  accentColor: "#c8962e",
+  // Theme — white / light by default in room
+  themeMode: "light",
+  accentColor: "#F43F5E",
 
   toggleRightSidebar: () => set((state) => ({ isRightSidebarOpen: !state.isRightSidebarOpen })),
   setRightSidebarOpen: (open) => set({ isRightSidebarOpen: open }),
