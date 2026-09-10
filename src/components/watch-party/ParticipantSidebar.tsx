@@ -252,7 +252,7 @@ export function ParticipantSidebar() {
               .filter((m) => !m.isSystem)
               .map((msg) => (
                 <div key={msg.id} className="flex gap-2.5 items-start">
-                  <div 
+                  <div
                     className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 overflow-hidden"
                     style={{ backgroundColor: t.surfaceHover, color: t.accent, border: `2px solid ${t.surface}` }}>
                     {msg.senderName[0]}
@@ -420,11 +420,10 @@ export function ParticipantSidebar() {
               {friends.map((p) => (
                 <div
                   key={p.id}
-                  className={`relative aspect-[16/10] sm:aspect-video rounded-[22px] overflow-hidden bg-zinc-950 border transition-all duration-300 group shadow-2xs hover:shadow-xs select-none ${
-                    p.isSpeaking
+                  className={`relative aspect-[16/10] sm:aspect-video rounded-[22px] overflow-hidden bg-zinc-950 border transition-all duration-300 group shadow-2xs hover:shadow-xs select-none ${p.isSpeaking
                       ? "border-emerald-400 ring-2 ring-emerald-400/30 shadow-emerald-500/10"
                       : "border-zinc-200/80 hover:border-zinc-300"
-                  }`}
+                    }`}
                 >
                   {/* Full Box Live Video Feed / Portrait */}
                   {p.avatarUrl && p.isCameraOn !== false ? (
@@ -435,9 +434,8 @@ export function ParticipantSidebar() {
                     />
                   ) : (
                     <div
-                      className={`w-full h-full bg-gradient-to-tr ${
-                        p.avatarBg || "from-pink-500 to-rose-600"
-                      } flex flex-col items-center justify-center text-white`}
+                      className={`w-full h-full bg-gradient-to-tr ${p.avatarBg || "from-pink-500 to-rose-600"
+                        } flex flex-col items-center justify-center text-white`}
                     >
                       <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center font-bold text-base">
                         {p.name[0]}
@@ -489,11 +487,10 @@ export function ParticipantSidebar() {
                         toggleMuteParticipant(p.id);
                         playSoundFX("pop");
                       }}
-                      className={`p-1.5 rounded-lg backdrop-blur-md shadow-2xs border flex items-center justify-center transition-all active:scale-90 cursor-pointer ${
-                        p.isMuted
+                      className={`p-1.5 rounded-lg backdrop-blur-md shadow-2xs border flex items-center justify-center transition-all active:scale-90 cursor-pointer ${p.isMuted
                           ? "bg-black/60 text-rose-400 border-white/10 hover:bg-black/80 hover:text-rose-300"
                           : "bg-emerald-500/90 text-white border-emerald-400/40 hover:bg-emerald-500 hover:scale-105"
-                      }`}
+                        }`}
                       title={p.isMuted ? `Unmute ${p.name}` : `Mute ${p.name}`}
                     >
                       {p.isMuted ? (
@@ -537,9 +534,8 @@ export function ParticipantSidebar() {
                         />
                       ) : (
                         <div
-                          className={`w-10 h-10 rounded-full bg-gradient-to-tr ${
-                            p.avatarBg || "from-pink-500 to-rose-600"
-                          } text-white font-bold text-xs flex items-center justify-center border-2 shadow-2xs`}
+                          className={`w-10 h-10 rounded-full bg-gradient-to-tr ${p.avatarBg || "from-pink-500 to-rose-600"
+                            } text-white font-bold text-xs flex items-center justify-center border-2 shadow-2xs`}
                           style={{ borderColor: t.surface }}
                         >
                           {p.name[0]}
