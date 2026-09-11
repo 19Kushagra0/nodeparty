@@ -193,78 +193,11 @@ body {
   animation: cinematicBreathe 22s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
 }
 
-/* Atmospheric Dust Motes drifting in the projector beam */
-.cinema-mote {
-  position: absolute;
-  border-radius: 9999px;
-  background-color: rgba(242, 233, 214, 0.7);
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
-  pointer-events: none;
-}
-
-.mote-1 {
-  width: 3px;
-  height: 3px;
-  top: 30%;
-  left: 48%;
-  animation: moteFloat 10s ease-in-out infinite;
-}
-
-.mote-2 {
-  width: 2px;
-  height: 2px;
-  top: 45%;
-  left: 54%;
-  animation: moteFloat 14s ease-in-out infinite 2s;
-}
-
-.mote-3 {
-  width: 4px;
-  height: 4px;
-  top: 25%;
-  left: 52%;
-  animation: moteFloat 12s ease-in-out infinite 4s;
-}
-
-.mote-4 {
-  width: 2px;
-  height: 2px;
-  top: 55%;
-  left: 46%;
-  animation: moteFloat 16s ease-in-out infinite 1s;
-}
-
-.mote-5 {
-  width: 3px;
-  height: 3px;
-  top: 65%;
-  left: 51%;
-  animation: moteFloat 11s ease-in-out infinite 3s;
-}
-
-@keyframes moteFloat {
-  0% {
-    transform: translateY(0px) translateX(0px);
-    opacity: 0.1;
-  }
-  30% {
-    opacity: 0.7;
-  }
-  70% {
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateY(-80px) translateX(15px);
-    opacity: 0;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .animate-projector-drift,
   .animate-projector-drift-alt,
   .animate-projector-pulse,
-  .animate-projector-flare,
-  .cinema-mote {
+  .animate-projector-flare {
     animation: none !important;
   }
 }

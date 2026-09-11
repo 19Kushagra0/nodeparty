@@ -294,7 +294,7 @@ export function CinematicVideoPlayer() {
                 </span>
 
                 {/* Host Info */}
-                <div className="flex items-center gap-1 sm:gap-1.5 select-none whitespace-nowrap">
+                <div className="flex items-center gap-1 sm:gap-1.5 select-none whitespace-nowrap min-w-0 max-w-[75px] sm:max-w-[130px] md:max-w-[180px]">
                   <Crown
                     className="stroke-[2.2] shrink-0"
                     style={{
@@ -304,7 +304,7 @@ export function CinematicVideoPlayer() {
                     }}
                   />
                   <span
-                    className="font-medium hidden min-[621px]:inline"
+                    className="font-medium hidden min-[621px]:inline shrink-0"
                     style={{
                       color: t.muted,
                       fontSize: "clamp(8px, 0.9vw, 11px)",
@@ -313,7 +313,8 @@ export function CinematicVideoPlayer() {
                     Host:
                   </span>
                   <span
-                    className="font-bold whitespace-nowrap"
+                    className="font-bold truncate"
+                    title={hostName}
                     style={{
                       color: t.text,
                       fontSize: "clamp(10px, 1.1vw, 13px)",
@@ -329,9 +330,9 @@ export function CinematicVideoPlayer() {
                     e.stopPropagation();
                     setIsNotchOpen(false);
                   }}
-                  className="p-0.5 sm:p-1 -mr-0.5 sm:-mr-1 rounded-full transition-all cursor-pointer hover:opacity-80"
+                  className="p-0.5 sm:p-1 -mr-0.5 sm:-mr-1 rounded-full transition-all cursor-pointer hover:opacity-80 shrink-0 ml-0.5"
                   style={{ color: t.muted }}
-                  title="Hide modal"
+                  title="Hide details"
                 >
                   <ChevronUp
                     className="stroke-[2.5]"

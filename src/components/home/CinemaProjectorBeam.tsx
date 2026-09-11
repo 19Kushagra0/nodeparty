@@ -24,15 +24,6 @@ export function CinemaProjectorBeam() {
           className="object-cover scale-100 sm:scale-60 object-center filter brightness-[0.88] contrast-[1.08]"
         />
       </div>
-
-      {/* ── 2. Atmospheric Floating Dust Motes ── */}
-      <div className="absolute inset-0 opacity-35 pointer-events-none">
-        <span className="cinema-mote mote-1" />
-        <span className="cinema-mote mote-2" />
-        <span className="cinema-mote mote-3" />
-        <span className="cinema-mote mote-4" />
-        <span className="cinema-mote mote-5" />
-      </div>
     </div>
   );
 }

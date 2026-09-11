@@ -1,4 +1,4 @@
-# Project Progress Report: Real-Time YouTube Watch Party
+# Project Progress Report: Real-Time YouTube Watch Party & Collaborative Cinema
 
 This document tracks our implementation progress. You can copy this summary to provide context to other AI sessions or to measure our development velocity over time.
 
@@ -12,44 +12,67 @@ This document tracks our implementation progress. You can copy this summary to p
 - Server Component and Client Component architecture properly delineated.
 
 ### Phase 2: Design Overhaul & Rich Micro-Interactions
-- **Eliminated AI-Generated Template Look**:
-  - Replaced generic dot grid with ambient obsidian & midnight layers (`#08090d`, `bg-cinema-ambient`, `bg-room-ambient`).
-  - Added dynamic ambient backlight glow (`.cinema-glow`) around the video canvas.
-  - Implemented `@keyframes floatUpAndFade` for smooth floating emoji reaction bursts (🔥, 🍿, 😂, 💜, 👏, 🎉).
+- **Handcrafted Tap House Gold Cinema Visual Hierarchy**:
+  - Replaced generic AI styling with warm obsidian & charcoal slate layers (`#0c0a07`, `#161310`, `#c8962e`).
+  - Added dynamic ambient backlight glow around the video canvas.
+  - Implemented `@keyframes floatReactionUp` for floating emoji bursts (🔥, 🍿, 😂, 💜, 👏, 🎉).
+  - Built procedural **Web Audio API Synthesizer** for real-time soundboard audio effects (party horn, applause, bass drop, magic sparkle).
 - **Landing Page Overhaul**:
-  - Added global responsive [`Navbar`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/layout/Navbar.tsx) with glowing brand icon, active streamer badge ("🟢 1,420 streaming together"), and instant room launcher.
+  - Added global responsive [`Navbar`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/layout/Navbar.tsx) with glowing brand icon and active streamer badge.
+  - Built [`HomePageContainer`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/home/HomePageContainer.tsx) with [`CinemaProjectorBeam`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/home/CinemaProjectorBeam.tsx) and full-bleed headline.
   - Built [`InteractiveHeroDemo`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/home/InteractiveHeroDemo.tsx) allowing visitors to test playback controls, trigger emoji reactions, and preview live chat on the homepage.
-  - Built [`FeaturedLounges`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/home/FeaturedLounges.tsx) showcasing curated public lounges (*Lo-Fi Chill, Synthwave Drive, Sci-Fi 4K, Esports*).
-  - Built tactile [`JoinRoomCard`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/home/JoinRoomCard.tsx) with tabbed Quick Start and Code Join.
+  - Built tactile [`JoinRoomCard`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/home/JoinRoomCard.tsx) with tabbed Quick Start and 6-digit Code Join.
+  - Built [`CreateRoomModal`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/home/CreateRoomModal.tsx) for customized room launch.
   - Built [`HowItWorks`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/home/HowItWorks.tsx) 3-step visual workflow and modern [`Footer`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/layout/Footer.tsx).
 
-### Phase 3: Watch Party Room & State Layer
-- Migrated state to a unified **Zustand store** ([`useRoomStore.ts`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/store/useRoomStore.ts)):
-  - Playback state (`isPlaying`, `currentTime`, `duration`, `volume`, `isMuted`, `isTheaterMode`).
-  - Chat state (`messages`, `sendMessage`).
-  - Live reaction stream (`reactions`, `triggerReaction`).
-  - Up-Next playlist queue (`queue`, `addToQueue`, `removeFromQueue`, `playQueueItem`).
-  - RBAC role switching (`changeParticipantRole` with automatic Host demotion to Moderator on transfer).
-- **Watch Room Components**:
-  - [`RoomHeader`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/RoomHeader.tsx): Live sync lock ticker (`⚡ 18ms`), connected participant avatar stack, Theater Mode toggle, and Invite trigger.
-  - [`InviteModal`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/InviteModal.tsx): 1-click clipboard link copy, room passcode, simulated QR code, and WhatsApp/Twitter quick share.
-  - [`VideoPlayer`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/VideoPlayer.tsx): Ambient glow cinema canvas, YouTube embed player with quick sample switcher pills, custom scrubber/progress bar, and floating emoji stream.
-  - [`ParticipantSidebar`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/ParticipantSidebar.tsx): 3-tab panel for **Live Chat**, **Crew & Role Controls**, and **Up-Next Video Queue**.
+### Phase 3: Watch Party Room, Responsive Shell & Theme Layer
+- **3-Column Theater Architecture**:
+  - [`RoomShell`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/RoomShell.tsx): Unified outer container with adaptive blur and dynamic theme backdrop.
+  - [`RoomSidebar`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/layout/RoomSidebar.tsx): Left navigation rail with cinema/grid layout toggle, mic/cam switches, moment snapshot trigger, and settings.
+  - [`RoomClientView`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/RoomClientView.tsx): Orchestrator managing stage views, shutter camera flash animation, and collapsible right rail.
+  - [`CinematicVideoPlayer`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/CinematicVideoPlayer.tsx): Ambient glow cinema canvas, dipped notch capsule with room code copy & next item indicator, floating transport controls, and floating reactions.
+  - [`GridStageView`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/GridStageView.tsx): Multi-participant grid view mode.
+  - [`ParticipantSidebar`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/ParticipantSidebar.tsx): 3-tab panel for **Live Chat**, **React & Soundboard** (with Web Audio synthesizer), and **Users** (friends list & volume sliders).
+  - [`MobileBottomSheet`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/MobileBottomSheet.tsx): Slide-up mobile drawer on viewports `< lg`.
+- **Dynamic Dual Theme Engine**:
+  - Implemented [`useRoomTheme.ts`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/hooks/useRoomTheme.ts) supporting Dark ("Tap House Gold") and Light (Minimalist Zinc).
+- **In-Room Modals**:
+  - [`InviteModal`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/InviteModal.tsx): 1-click clipboard link copy, 6-digit room passcode, QR code, and social share links.
+  - [`SettingsModal`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/SettingsModal.tsx): Audio/video device selector, playback preferences, privacy mode, and hotkey guide.
+  - [`CapturedMomentsModal`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/CapturedMomentsModal.tsx): Room photo album with camera shutter flash overlay.
+  - [`ScreenShareModal`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/ScreenShareModal.tsx): Tab sharing trigger and virtual co-browsing tabs.
+- **Unified Zustand Store** ([`useRoomStore.ts`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/store/useRoomStore.ts)):
+  - Playback state, chat messages, floating reactions, participant roles, layout modes, moments album, and modals.
+- **Dependencies Prepared**:
+  - `partykit` (`^0.0.115`), `partysocket` (`^1.3.0`), `react-youtube` (`^10.1.0`), and `framer-motion` (`^13.2.0`).
 
 ---
 
-## 🟡 Up Next (Phase 4 & 5: Video SDK & Real-Time Sync)
+## 🟡 Up Next: Real-Time Sync & Control Roadmap
 
-### Phase 4: YouTube IFrame SDK Integration
-- [ ] Connect official YouTube IFrame JavaScript API (`YT.Player`).
-- [ ] Bind state synchronization to YouTube player playback events (`onStateChange`, play, pause, seek, buffer).
-- [ ] Add playback rate synchronization (e.g., 1.25x, 1.5x speed sync).
+### Phase 4: Watch Party Sync (In Progress)
+- [ ] Initialize PartyKit WebSocket signaling server.
+- [ ] Connect `react-youtube` (`YT.Player`) inside `CinematicVideoPlayer`.
+- [ ] Implement authoritative host clock drift correction (play, pause, seek, playbackRate).
+- [ ] Sync live chat, floating reactions, and soundboard triggers over WebSocket channels.
+- [ ] Verify multi-client sync across two real browser windows.
 
-### Phase 5: WebSocket Server & Real-Time Sync
-- [ ] Initialize Node.js / Socket.IO or WebSocket backend server.
-- [ ] Create room connection & broadcast logic (`join-room`, `leave-room`, `broadcast-state`).
-- [ ] Enforce sub-millisecond drift correction for video timestamps across all connected clients.
-- [ ] Sync live chat messages and floating emoji reaction bursts over WebSocket channels.
+### Phase 5A: Screen Sharing (Visual Feed)
+- [ ] Implement `getDisplayMedia` tab capture.
+- [ ] WebRTC P2P video streaming to guests via PartyKit signaling.
+
+### Phase 5B: Remote Pointers (Coordinate Telemetry)
+- [ ] Normalize pointer coordinates over video bounding box.
+- [ ] Transmit coordinates via WebRTC DataChannel.
+- [ ] Render remote cursors (`MultiplayerCursors.tsx`) with zero click injection.
+
+### Phase 6: Remote Control (Host Page Bridge + Extension)
+- [ ] "Pass the Mouse" permission UI & `CONTROL SESSION` state machine.
+- [ ] Companion Chrome Extension (Manifest V3, `chrome.debugger`).
+- [ ] Bridge approved commands from Host web page to extension.
+- [ ] Inject mouse/keyboard events via Chrome DevTools Protocol (`Input` domain).
+- [ ] Host kill switch and status transparency UI.
 
 ---
-*Last Updated: August 16, 2026*
+
+*Last Updated: September 11, 2026*
