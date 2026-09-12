@@ -21,7 +21,7 @@ The frontend architecture, responsive 3-column UI, theme engine, and local state
 *Objective: Achieve rock-solid multi-browser synchronized YouTube playback and real-time chat before touching browser control.*
 
 - [ ] **PartyKit WebSocket Signaling Server**:
-  - [ ] Initialize a PartyKit server project or config within the workspace.
+  - [x] Initialize a PartyKit server project or config within the workspace.
   - [ ] Implement room connection handling (`onConnect`, `onMessage`, `onClose`) with room IDs and client presence.
   - [ ] Wire `partysocket` in [`useRoomStore.ts`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/store/useRoomStore.ts) to connect clients to the room room.
 - [ ] **Real YouTube IFrame Integration**:
