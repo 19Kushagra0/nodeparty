@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRoomStore } from "@/store/useRoomStore";
 import { CinematicVideoPlayer } from "@/components/watch-party/CinematicVideoPlayer";
 import { GridStageView } from "@/components/watch-party/GridStageView";
@@ -20,7 +21,14 @@ export function RoomClientView() {
     toggleRightSidebar,
     setActiveSidebarTab,
     participants,
+    connectToRoom,
+    disconnectFromRoom,
   } = useRoomStore();
+
+  useEffect(() => {
+    connectToRoom();
+    return () => disconnectFromRoom();
+  }, [connectToRoom, disconnectFromRoom]);
 
   const t = useRoomTheme();
 

@@ -24,13 +24,13 @@ _Objective: Achieve rock-solid multi-browser synchronized YouTube playback and r
 
 - [ ] **PartyKit WebSocket Signaling Server**:
   - [x] Initialize a PartyKit server project or config within the workspace.
-  - [ ] Start the PartyKit development server and wire `partysocket` in `useRoomStore.ts` to establish a basic connection (User verifies `Connection opened` logs in terminal).
-  - [ ] Implement room connection handling (`onConnect`, `onMessage`, `onClose`) with room IDs and client presence.
-  - [ ] Add frontend logs for receiving participant updates (User opens two tabs to verify logs of users joining/leaving).
+  - [x] Start the PartyKit development server and wire `partysocket` in `useRoomStore.ts` to establish a basic connection (User verifies `Connection opened` logs in terminal).
+  - [x] Implement room connection handling (`onConnect`, `onMessage`, `onClose`) with room IDs and client presence.
+  - [x] Add frontend logs for receiving participant updates (User opens two tabs to verify logs of users joining/leaving).
 - [ ] **Real YouTube IFrame Integration**:
-  - [ ] Replace the mock background poster in `CinematicVideoPlayer.tsx` with the `react-youtube` (`YT.Player`) component.
-  - [ ] Add `console.log` for player events (`onReady`, `onStateChange`) (User clicks play/pause and verifies logs).
-  - [ ] Bind local player events to the Zustand store.
+  - [x] Replace the mock background poster in `CinematicVideoPlayer.tsx` with the `react-youtube` (`YT.Player`) component.
+  - [x] Add `console.log` for player events (`onReady`, `onStateChange`) (User clicks play/pause and verifies logs).
+  - [x] Bind local player events to the Zustand store.
 - [ ] **Authoritative Playback Synchronization**:
   - [ ] Designate the room Host as the authoritative clock source.
   - [ ] Broadcast timestamped playback clock packets (`play`, `pause`, `seekTo`).

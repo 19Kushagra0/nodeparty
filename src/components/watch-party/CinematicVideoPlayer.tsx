@@ -21,6 +21,7 @@ import {
 import { useRoomStore } from "@/store/useRoomStore";
 import { useRoomTheme } from "@/hooks/useRoomTheme";
 import { MultiplayerCursors } from "./MultiplayerCursors";
+import YouTube from "react-youtube";
 
 export function CinematicVideoPlayer() {
   const router = useRouter();
@@ -55,8 +56,24 @@ export function CinematicVideoPlayer() {
   const [isNotchOpen, setIsNotchOpen] = useState(true);
   const [copiedCode, setCopiedCode] = useState(false);
   const [showControls, setShowControls] = useState(true);
+  const playerRef = useRef<any>(null);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const browserContainerRef = useRef<HTMLDivElement>(null);
+
+  // Sync Zustand store 'isPlaying' state to the actual YouTube player
+  useEffect(() => {
+    if (!playerRef.current) {
+      console.log("⚠️ [YouTube] togglePlay called but player not ready yet!");
+      return;
+    }
+    if (isPlaying) {
+      console.log("▶️ [YouTube] Calling playVideo()");
+      playerRef.current.playVideo();
+    } else {
+      console.log("⏸️ [YouTube] Calling pauseVideo()");
+      playerRef.current.pauseVideo();
+    }
+  }, [isPlaying]);
 
   const handlePlayerMouseMove = () => {
     setShowControls(true);
@@ -155,16 +172,47 @@ export function CinematicVideoPlayer() {
           }`}
         style={{ border: `1px solid ${t.border}` }}
       >
-        {/* Active Content Background Poster */}
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-opacity duration-700"
-          style={{ backgroundImage: `url('${currentPreset.thumbnail}')` }}
-        >
-          {/* subtle dimming to make UI pop */}
-          <div
-            className={`absolute inset-0 transition-colors duration-500 ${showControls ? "bg-black/35" : "bg-black/15"
-              }`}
-          />
+        {/* Active Content Background Poster / YouTube Player */}
+        <div className="absolute inset-0 bg-black">
+          {currentPreset.youtubeId ? (
+            <YouTube
+              videoId={currentPreset.youtubeId}
+              opts={{
+                width: "100%",
+                height: "100%",
+                playerVars: {
+                  autoplay: 0,
+                  controls: 0, // Hide native controls, we are using our custom UI now!
+                  disablekb: 1,
+                  modestbranding: 1,
+                  rel: 0,
+                },
+              }}
+              onReady={(e) => {
+                console.log("🎥 [YouTube] Player is READY! Saving player reference.");
+                playerRef.current = e.target;
+              }}
+              onStateChange={(e) => {
+                const stateNames = {
+                  "-1": "UNSTARTED",
+                  "0": "ENDED",
+                  "1": "PLAYING",
+                  "2": "PAUSED",
+                  "3": "BUFFERING",
+                  "5": "CUED"
+                };
+                const stateString = e.data.toString() as keyof typeof stateNames;
+                console.log(`🎥 [YouTube] State Changed to: ${stateNames[stateString] || e.data}`);
+              }}
+              className="absolute inset-0 w-full h-full pointer-events-none" // Disabled so custom UI overlay handles clicks
+              iframeClassName="w-full h-full scale-[1.2]" // Scale up slightly to hide youtube branding/bars
+            />
+          ) : (
+            <div
+              className="absolute inset-0 bg-cover bg-center transition-opacity duration-700"
+              style={{ backgroundImage: `url('${currentPreset.thumbnail}')` }}
+            />
+          )}
         </div>
 
         {/* Floating Emoji Reactions Stream */}

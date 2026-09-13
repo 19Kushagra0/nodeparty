@@ -68,15 +68,7 @@ export function MobileBottomSheet() {
             />
           </div>
 
-          {/* Close Button */}
-          <button
-            onClick={toggleRightSidebar}
-            className="absolute top-3 right-4 p-1.5 rounded-full transition-colors cursor-pointer"
-            style={{ color: t.muted, backgroundColor: t.surfaceHover }}
-            aria-label="Close panel"
-          >
-            <X className="w-4 h-4" />
-          </button>
+
 
           {/* Content */}
           <div className="flex-1 min-h-0 overflow-hidden p-3">
