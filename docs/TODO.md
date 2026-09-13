@@ -5,6 +5,7 @@ The frontend architecture, responsive 3-column UI, theme engine, and local state
 ---
 
 ## 🟢 Phase 1–3: Frontend UI, UX & State (COMPLETED)
+
 - [x] Responsive 3-column desktop shell & mobile slide-up sheet (`RoomShell.tsx`, `RoomSidebar.tsx`, `RoomClientView.tsx`, `MobileBottomSheet.tsx`).
 - [x] Dark "Tap House Gold" and Light minimalist theme system (`useRoomTheme.ts`, `globals.css`).
 - [x] Cinema player viewport with ambient backlighting, dipped notch, and floating transport controls (`CinematicVideoPlayer.tsx`).
@@ -18,32 +19,35 @@ The frontend architecture, responsive 3-column UI, theme engine, and local state
 ---
 
 ## 🟡 Phase 4: Watch Party Sync (Default Mode — In Progress)
-*Objective: Achieve rock-solid multi-browser synchronized YouTube playback and real-time chat before touching browser control.*
+
+_Objective: Achieve rock-solid multi-browser synchronized YouTube playback and real-time chat before touching browser control._
 
 - [ ] **PartyKit WebSocket Signaling Server**:
   - [x] Initialize a PartyKit server project or config within the workspace.
+  - [ ] Start the PartyKit development server and wire `partysocket` in `useRoomStore.ts` to establish a basic connection (User verifies `Connection opened` logs in terminal).
   - [ ] Implement room connection handling (`onConnect`, `onMessage`, `onClose`) with room IDs and client presence.
-  - [ ] Wire `partysocket` in [`useRoomStore.ts`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/store/useRoomStore.ts) to connect clients to the room room.
+  - [ ] Add frontend logs for receiving participant updates (User opens two tabs to verify logs of users joining/leaving).
 - [ ] **Real YouTube IFrame Integration**:
-  - [ ] Replace the mock background poster in [`CinematicVideoPlayer.tsx`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/CinematicVideoPlayer.tsx) with the `react-youtube` (`YT.Player`) component.
-  - [ ] Bind local player events (`onReady`, `onStateChange`, play, pause, seek) to the store.
+  - [ ] Replace the mock background poster in `CinematicVideoPlayer.tsx` with the `react-youtube` (`YT.Player`) component.
+  - [ ] Add `console.log` for player events (`onReady`, `onStateChange`) (User clicks play/pause and verifies logs).
+  - [ ] Bind local player events to the Zustand store.
 - [ ] **Authoritative Playback Synchronization**:
   - [ ] Designate the room Host as the authoritative clock source.
-  - [ ] Broadcast timestamped playback clock packets (`play`, `pause`, `seekTo`, `playbackRate`).
+  - [ ] Broadcast timestamped playback clock packets (`play`, `pause`, `seekTo`).
+  - [ ] Add frontend logs on guest clients when a playback packet is received (User verifies packet arrival in second tab).
   - [ ] Implement drift correction on non-host clients:
-    - *Drift > 1.5s*: Hard seek to host position.
-    - *Drift 0.3s–1.5s*: Smooth rate throttle (e.g., 0.95x or 1.05x) to catch up without audio pop.
+    - _Drift > 1.5s_: Hard seek to host position.
+    - _Drift 0.3s–1.5s_: Smooth rate throttle (e.g., 0.95x or 1.05x) to catch up without audio pop.
 - [ ] **Real-Time Social Sync**:
-  - [ ] Broadcast chat messages across WebSocket to all room participants.
-  - [ ] Broadcast floating emoji reaction bursts and soundboard triggers with origin coordinates.
+  - [ ] Broadcast chat messages and log them upon receipt across WebSocket.
+  - [ ] Broadcast floating emoji reaction bursts and log origin coordinates.
   - [ ] Synchronize participant presence and role updates (Host, Moderator, Participant).
-- [ ] **Multi-Browser Verification**:
-  - [ ] Test with two distinct browser windows: Host starts room, Guest joins via room code/URL, both verify synchronized play, pause, and seek.
 
 ---
 
 ## 🟡 Phase 5A: Collaborative Browser Mode — Tab Screen Sharing (Visual Feed)
-*Objective: Stream host tab video feed to guests over WebRTC.*
+
+_Objective: Stream host tab video feed to guests over WebRTC._
 
 - [ ] Implement `navigator.mediaDevices.getDisplayMedia({ video: { displaySurface: "browser" }, audio: true })` triggered from [`ScreenShareModal.tsx`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/ScreenShareModal.tsx).
 - [ ] Utilize the PartyKit signaling server to exchange WebRTC SDP offers, answers, and ICE candidates between Host and Guests.
@@ -52,7 +56,8 @@ The frontend architecture, responsive 3-column UI, theme engine, and local state
 ---
 
 ## 🟡 Phase 5B: Collaborative Browser Mode — Telemetry & Remote Cursors
-*Objective: Accurately map and broadcast mouse positions without injecting clicks.*
+
+_Objective: Accurately map and broadcast mouse positions without injecting clicks._
 
 - [ ] **Coordinate Normalization Math**:
   - [ ] Capture `pointermove` events over the video element on the Guest browser.
@@ -67,7 +72,8 @@ The frontend architecture, responsive 3-column UI, theme engine, and local state
 ---
 
 ## 🟡 Phase 6: Collaborative Browser Mode — Control Layer (Host Web Page Bridge + Extension)
-*Objective: Enable secure, permissioned remote mouse/keyboard control of the host's shared tab.*
+
+_Objective: Enable secure, permissioned remote mouse/keyboard control of the host's shared tab._
 
 - [ ] **Permission Handshake & "Pass the Mouse" UI**:
   - [ ] Guest clicks "Request Control".
@@ -92,6 +98,7 @@ The frontend architecture, responsive 3-column UI, theme engine, and local state
 ---
 
 ## 🧹 Codebase Cleanup
+
 - [ ] Remove or archive orphaned legacy components:
   - `src/components/watch-party/VideoPlayer.tsx`
   - `src/components/watch-party/RoomHeader.tsx`
