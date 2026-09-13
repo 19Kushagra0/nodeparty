@@ -70,6 +70,9 @@ interface RoomState {
   isSettingsModalOpen: boolean;
   isRightSidebarOpen: boolean;
   activeSidebarTab: "chat" | "reactions" | "users" | "crew" | "queue" | "settings";
+  isUrlBarOpen: boolean;
+  setIsUrlBarOpen: (open: boolean) => void;
+  toggleUrlBar: () => void;
 
   // Theme
   themeMode: "light" | "dark";
@@ -280,6 +283,7 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   isSettingsModalOpen: false,
   isRightSidebarOpen: false,
   activeSidebarTab: "users",
+  isUrlBarOpen: false,
 
   // Theme — white / light by default in room
   themeMode: "light",
@@ -724,6 +728,8 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   setMomentsGalleryOpen: (open) => set({ isMomentsGalleryOpen: open }),
   setSettingsModalOpen: (open) => set({ isSettingsModalOpen: open }),
   setActiveSidebarTab: (tab) => set({ activeSidebarTab: tab }),
+  setIsUrlBarOpen: (open) => set({ isUrlBarOpen: open }),
+  toggleUrlBar: () => set((state) => ({ isUrlBarOpen: !state.isUrlBarOpen })),
   setThemeMode: (mode) => set({
     themeMode: mode,
     accentColor: mode === "dark" ? "#c8962e" : "#F43F5E",
