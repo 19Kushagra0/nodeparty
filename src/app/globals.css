@@ -235,3 +235,29 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.22);
 }
+
+/* Notch URL Capsule Responsive Rules (< 635px) */
+@media (max-width: 635px) {
+  .notch-domain-prefix {
+    display: none !important;
+  }
+  .notch-code-label {
+    display: none !important;
+  }
+  .notch-input-responsive {
+    width: clamp(100px, 30vw, 150px) !important;
+  }
+}
+
+@media (min-width: 636px) {
+  .notch-domain-prefix {
+    display: inline !important;
+  }
+  .notch-code-label {
+    display: inline !important;
+  }
+  .notch-input-responsive {
+    width: 240px !important;
+  }
+}
+

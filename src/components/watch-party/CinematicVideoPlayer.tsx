@@ -278,7 +278,7 @@ export function CinematicVideoPlayer() {
             <svg
               className="block transition-all"
               style={{
-                width: "clamp(290px, 55vw, 560px)",
+                width: "clamp(300px, 84vw, 560px)",
                 height: "clamp(38px, 5.4vw, 62px)",
               }}
               viewBox="0 0 560 66"
@@ -310,9 +310,9 @@ export function CinematicVideoPlayer() {
                     border: `1px solid ${t.border}`,
                     paddingTop: "clamp(3px, 0.6vw, 8px)",
                     paddingBottom: "clamp(3px, 0.6vw, 8px)",
-                    paddingLeft: "clamp(10px, 1.8vw, 22px)",
-                    paddingRight: "clamp(10px, 1.8vw, 20px)",
-                    gap: "clamp(6px, 1.2vw, 14px)",
+                    paddingLeft: "clamp(8px, 1.6vw, 22px)",
+                    paddingRight: "clamp(8px, 1.6vw, 20px)",
+                    gap: "clamp(5px, 1vw, 14px)",
                   }}
                 >
                   {/* Link Icon */}
@@ -336,7 +336,7 @@ export function CinematicVideoPlayer() {
                         }
                         setIsEditingUrl(false);
                       }}
-                      className="flex items-center"
+                      className="flex items-center min-w-0"
                     >
                       <input
                         type="text"
@@ -344,8 +344,8 @@ export function CinematicVideoPlayer() {
                         value={inputUrl}
                         onChange={(e) => setInputUrl(e.target.value)}
                         onBlur={() => setIsEditingUrl(false)}
-                        placeholder="Paste YouTube or video URL and press Enter..."
-                        className="bg-transparent border-none outline-none font-mono font-medium text-[clamp(10px,1.1vw,13px)] w-44 sm:w-60"
+                        placeholder="Paste video URL..."
+                        className="notch-input-responsive bg-transparent border-none outline-none font-mono font-medium text-[clamp(10px,1.1vw,13px)] w-[110px] min-[420px]:w-[145px] min-[635px]:w-60"
                         style={{ color: t.text }}
                       />
                     </form>
@@ -359,7 +359,8 @@ export function CinematicVideoPlayer() {
                       title="Click to enter/paste a YouTube URL"
                       style={{ fontSize: "clamp(10px, 1.1vw, 13px)" }}
                     >
-                      <span style={{ color: t.muted }}>nodeparty.app/room/</span>
+                      <span className="notch-domain-prefix hidden min-[635px]:inline" style={{ color: t.muted }}>nodeparty.app/</span>
+                      <span style={{ color: t.muted }}>room/</span>
                       <span className="font-bold font-mono" style={{ color: t.accent }}>
                         {roomPasscode || roomId || "CYBER-4096"}
                       </span>
@@ -403,23 +404,24 @@ export function CinematicVideoPlayer() {
                     )}
                   </button>
 
-                  {/* Close URL bar button */}
+                  {/* Return to Room Code button */}
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsUrlBarOpen(false);
                     }}
-                    className="p-0.5 sm:p-1 -mr-1 rounded-full transition-all cursor-pointer hover:opacity-80 shrink-0 ml-0.5"
+                    className="flex items-center gap-0.5 px-1.5 min-[635px]:px-2 py-0.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer text-xs font-semibold shrink-0"
                     style={{ color: t.muted }}
-                    title="Close URL bar"
+                    title="Back to Room Code"
                   >
-                    <ChevronUp
+                    <ChevronLeft
                       className="stroke-[2.5]"
                       style={{
-                        width: "clamp(10px, 1.1vw, 14px)",
-                        height: "clamp(10px, 1.1vw, 14px)",
+                        width: "clamp(10px, 1.1vw, 13px)",
+                        height: "clamp(10px, 1.1vw, 13px)",
                       }}
                     />
+                    <span className="notch-code-label hidden min-[635px]:inline" style={{ fontSize: "clamp(9px, 1vw, 11px)" }}>CODE</span>
                   </button>
                 </div>
               ) : (
@@ -522,6 +524,37 @@ export function CinematicVideoPlayer() {
                       {hostName}
                     </span>
                   </div>
+
+                  {/* Dot Separator */}
+                  <span
+                    className="font-bold select-none opacity-40"
+                    style={{
+                      color: t.muted,
+                      fontSize: "clamp(8px, 0.9vw, 12px)",
+                    }}
+                  >
+                    •
+                  </span>
+
+                  {/* Switch to URL Bar Button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsUrlBarOpen(true);
+                    }}
+                    className="flex items-center gap-1 px-1.5 py-0.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer text-xs font-semibold shrink-0"
+                    style={{ color: t.accent }}
+                    title="Switch to URL Bar"
+                  >
+                    <Link2
+                      style={{
+                        width: "clamp(10px, 1.1vw, 13px)",
+                        height: "clamp(10px, 1.1vw, 13px)",
+                      }}
+                      strokeWidth={2.2}
+                    />
+                    <span style={{ fontSize: "clamp(9px, 1vw, 11px)" }}>URL</span>
+                  </button>
 
                   {/* Toggle Button inside to Disappear/Collapse */}
                   <button
