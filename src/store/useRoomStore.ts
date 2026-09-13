@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import PartySocket from "partysocket";
 import type {
   Role,
   Participant,
@@ -23,6 +24,9 @@ interface RoomState {
   privacyMode: PrivacyMode;
   userRole: Role;
   participants: Participant[];
+
+  // Socket
+  socket: PartySocket | null;
 
   // Call & Audio/Video Controls
   isMicOn: boolean;
@@ -72,6 +76,8 @@ interface RoomState {
   accentColor: string;
 
   // Actions
+  connectToRoom: () => void;
+  disconnectFromRoom: () => void;
   toggleRightSidebar: () => void;
   setRightSidebarOpen: (open: boolean) => void;
   setRoomId: (id: string) => void;
@@ -218,7 +224,12 @@ const initialMultiplayerCursors: MultiplayerCursor[] = [
   },
 ];
 
+// ------------------------------------------------------------------
+// Real-Time Socket Connection (Managed strictly inside the store)
+// ------------------------------------------------------------------
+
 export const useRoomStore = create<RoomState>((set, get) => ({
+  socket: null,
   roomId: "lounge-cinema-88",
   roomName: "4K Sci-Fi & Cyberpunk Premiere",
   roomPasscode: "CYBER-4096",
@@ -267,12 +278,50 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   isScreenShareModalOpen: false,
   isMomentsGalleryOpen: false,
   isSettingsModalOpen: false,
-  isRightSidebarOpen: true,
+  isRightSidebarOpen: false,
   activeSidebarTab: "users",
 
   // Theme — white / light by default in room
   themeMode: "light",
   accentColor: "#F43F5E",
+
+  connectToRoom: () => {
+    const { socket, roomId } = get();
+    // Don't connect if we already have an active socket
+    if (socket) return;
+
+    const newSocket = new PartySocket({
+      host: "localhost:1999",
+      room: roomId,
+    });
+
+    newSocket.addEventListener("open", () => {
+      console.log("🟢 [Frontend] Connected to PartyKit server successfully!");
+    });
+
+    newSocket.addEventListener("message", (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type === "sync_presence") {
+          console.log(`👥 [Frontend] Presence Update! There are now ${data.count} users connected to the room.`);
+        } else {
+          console.log("📩 [Frontend] Message received from server:", data);
+        }
+      } catch (err) {
+        console.log("📩 [Frontend] Raw message received from server:", e.data);
+      }
+    });
+
+    set({ socket: newSocket });
+  },
+
+  disconnectFromRoom: () => {
+    const { socket } = get();
+    if (socket) {
+      socket.close();
+      set({ socket: null });
+    }
+  },
 
   toggleRightSidebar: () => set((state) => ({ isRightSidebarOpen: !state.isRightSidebarOpen })),
   setRightSidebarOpen: (open) => set({ isRightSidebarOpen: open }),
