@@ -3,13 +3,13 @@ import { VideoPreset } from "@/types";
 export const curatedVideoPresets: VideoPreset[] = [
   {
     id: "preset-cyberpunk",
-    title: "Cyberpunk 2077: Phantom Liberty",
+    title: "Costa Rica in 4K 60fps",
     category: "Trailer",
-    duration: "03:42",
-    channel: "CD PROJEKT RED",
+    duration: "05:14",
+    channel: "Jacob + Katie Schwarz",
     thumbnail: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop",
-    youtubeId: "qEv7T3M4qrg",
-    url: "https://www.youtube.com/watch?v=qEv7T3M4qrg",
+    youtubeId: "LXb3EKWsInQ",
+    url: "https://www.youtube.com/watch?v=LXb3EKWsInQ",
     description: "Official cinematic trailer for the spy-thriller expansion in Dogtown.",
     ambientColor: "rgba(244, 63, 94, 0.35)", // Rose/Red ambient
   },
