@@ -17,6 +17,7 @@ import {
   Copy,
   Check,
   Crown,
+  Link2,
 } from "lucide-react";
 import { useRoomStore } from "@/store/useRoomStore";
 import { useRoomTheme } from "@/hooks/useRoomTheme";
@@ -45,6 +46,9 @@ export function CinematicVideoPlayer() {
     queue,
     playQueueItem,
     setSettingsModalOpen,
+    isUrlBarOpen,
+    setIsUrlBarOpen,
+    setVideoUrl,
   } = useRoomStore();
 
   const host = participants.find((p) => p.role === "host");
@@ -55,6 +59,9 @@ export function CinematicVideoPlayer() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isNotchOpen, setIsNotchOpen] = useState(true);
   const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedUrl, setCopiedUrl] = useState(false);
+  const [inputUrl, setInputUrl] = useState("");
+  const [isEditingUrl, setIsEditingUrl] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const playerRef = useRef<any>(null);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -111,6 +118,17 @@ export function CinematicVideoPlayer() {
     navigator.clipboard.writeText(roomPasscode || roomId);
     setCopiedCode(true);
     setTimeout(() => setCopiedCode(false), 2000);
+  };
+
+  const handleCopyUrl = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const code = roomPasscode || roomId || "CYBER-4096";
+    const fullUrl = typeof window !== "undefined"
+      ? `${window.location.origin}/room/${code}`
+      : `https://nodeparty.app/room/${code}`;
+    navigator.clipboard.writeText(fullUrl);
+    setCopiedUrl(true);
+    setTimeout(() => setCopiedUrl(false), 2000);
   };
 
   const nextItem = queue.find((item) => !item.isPlaying) || queue[0];
@@ -245,20 +263,20 @@ export function CinematicVideoPlayer() {
             <svg
               className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.06)] block transition-all"
               style={{
-                width: "clamp(235px, 45vw, 460px)",
-                height: "clamp(36px, 5.4vw, 60px)",
+                width: "clamp(290px, 55vw, 560px)",
+                height: "clamp(38px, 5.4vw, 62px)",
               }}
-              viewBox="0 0 480 66"
+              viewBox="0 0 560 66"
               fill="none"
               preserveAspectRatio="none"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M 0 -2 L 0 0 C 25 0, 45 64, 70 64 L 410 64 C 435 64, 455 0, 480 0 L 480 -2 Z"
+                d="M 0 -2 L 0 0 C 25 0, 45 64, 70 64 L 490 64 C 515 64, 535 0, 560 0 L 560 -2 Z"
                 fill={t.isDark ? "#14110e" : "#ffffff"}
               />
               <path
-                d="M 0 0 C 25 0, 45 64, 70 64 L 410 64 C 435 64, 455 0, 480 0"
+                d="M 0 0 C 25 0, 45 64, 70 64 L 490 64 C 515 64, 535 0, 560 0"
                 stroke={t.border}
                 strokeWidth="1.5"
                 fill="none"
@@ -273,124 +291,249 @@ export function CinematicVideoPlayer() {
                 paddingTop: "clamp(1px, 0.3vw, 4px)",
               }}
             >
-              <div
-                className="rounded-full flex items-center font-semibold shadow-2xs transition-all whitespace-nowrap max-w-[94%]"
-                style={{
-                  backgroundColor: t.isDark ? "#1e1a14" : "#f0f2f6",
-                  color: t.text,
-                  border: `1px solid ${t.border}`,
-                  paddingTop: "clamp(3px, 0.6vw, 8px)",
-                  paddingBottom: "clamp(3px, 0.6vw, 8px)",
-                  paddingLeft: "clamp(8px, 1.8vw, 24px)",
-                  paddingRight: "clamp(6px, 1.5vw, 20px)",
-                  gap: "clamp(5px, 1vw, 13px)",
-                }}
-              >
-                {/* Code Name & Copy Button */}
-                <button
-                  onClick={handleCopyCode}
-                  className="flex items-center gap-1 sm:gap-1.5 cursor-pointer hover:opacity-85 transition-opacity select-none group/code whitespace-nowrap"
-                  title="Click to copy Room Code"
+              {isUrlBarOpen ? (
+                /* URL Capsule matching user mockup: [🔗 nodeparty.app/room/CYBER-4096 | 📋] */
+                <div
+                  className="rounded-full flex items-center font-semibold shadow-2xs transition-all whitespace-nowrap max-w-[94%] select-none animate-in fade-in zoom-in-95 duration-200"
+                  style={{
+                    backgroundColor: t.isDark ? "#1e1a14" : "#f0f2f6",
+                    color: t.text,
+                    border: `1px solid ${t.border}`,
+                    paddingTop: "clamp(3px, 0.6vw, 8px)",
+                    paddingBottom: "clamp(3px, 0.6vw, 8px)",
+                    paddingLeft: "clamp(10px, 1.8vw, 22px)",
+                    paddingRight: "clamp(10px, 1.8vw, 20px)",
+                    gap: "clamp(6px, 1.2vw, 14px)",
+                  }}
                 >
-                  <span
-                    className="font-semibold tracking-wider uppercase hidden min-[621px]:inline"
+                  {/* Link Icon */}
+                  <Link2
+                    className="shrink-0"
                     style={{
                       color: t.muted,
-                      fontSize: "clamp(8px, 0.9vw, 11px)",
+                      width: "clamp(12px, 1.2vw, 16px)",
+                      height: "clamp(12px, 1.2vw, 16px)",
                     }}
-                  >
-                    CODE:
-                  </span>
+                    strokeWidth={2.2}
+                  />
+
+                  {/* URL Text / Input */}
+                  {isEditingUrl ? (
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        if (inputUrl.trim()) {
+                          setVideoUrl(inputUrl.trim());
+                        }
+                        setIsEditingUrl(false);
+                      }}
+                      className="flex items-center"
+                    >
+                      <input
+                        type="text"
+                        autoFocus
+                        value={inputUrl}
+                        onChange={(e) => setInputUrl(e.target.value)}
+                        onBlur={() => setIsEditingUrl(false)}
+                        placeholder="Paste YouTube or video URL and press Enter..."
+                        className="bg-transparent border-none outline-none font-mono font-medium text-[clamp(10px,1.1vw,13px)] w-44 sm:w-60"
+                        style={{ color: t.text }}
+                      />
+                    </form>
+                  ) : (
+                    <div
+                      onClick={() => {
+                        setInputUrl(currentPreset.url || "");
+                        setIsEditingUrl(true);
+                      }}
+                      className="cursor-pointer flex items-center gap-0.5 tracking-tight font-medium hover:opacity-85 transition-opacity"
+                      title="Click to enter/paste a YouTube URL"
+                      style={{ fontSize: "clamp(10px, 1.1vw, 13px)" }}
+                    >
+                      <span style={{ color: t.muted }}>nodeparty.app/room/</span>
+                      <span className="font-bold font-mono" style={{ color: t.accent }}>
+                        {roomPasscode || roomId || "CYBER-4096"}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Divider */}
                   <span
-                    className="font-mono font-bold tracking-wider whitespace-nowrap"
+                    className="select-none font-light opacity-30 px-0.5"
                     style={{
-                      color: t.accent,
-                      fontSize: "clamp(10px, 1.1vw, 13px)",
+                      color: t.muted,
+                      fontSize: "clamp(10px, 1.1vw, 14px)",
                     }}
                   >
-                    {roomPasscode || roomId}
+                    |
                   </span>
-                  <span className="transition-colors ml-0.5 inline-flex items-center" style={{ color: t.muted }}>
-                    {copiedCode ? (
+
+                  {/* Copy Button */}
+                  <button
+                    onClick={handleCopyUrl}
+                    className="cursor-pointer hover:opacity-80 transition-opacity flex items-center shrink-0"
+                    title="Copy full room link"
+                  >
+                    {copiedUrl ? (
                       <Check
                         className="text-emerald-500 stroke-[2.5]"
                         style={{
-                          width: "clamp(10px, 1.1vw, 14px)",
-                          height: "clamp(10px, 1.1vw, 14px)",
+                          width: "clamp(11px, 1.1vw, 15px)",
+                          height: "clamp(11px, 1.1vw, 15px)",
                         }}
                       />
                     ) : (
                       <Copy
                         style={{
-                          width: "clamp(10px, 1.1vw, 14px)",
-                          height: "clamp(10px, 1.1vw, 14px)",
+                          color: t.muted,
+                          width: "clamp(11px, 1.1vw, 15px)",
+                          height: "clamp(11px, 1.1vw, 15px)",
                         }}
+                        strokeWidth={2.2}
                       />
                     )}
-                  </span>
-                </button>
+                  </button>
 
-                {/* Dot Separator */}
-                <span
-                  className="font-bold select-none"
-                  style={{
-                    color: t.border,
-                    fontSize: "clamp(8px, 0.9vw, 12px)",
-                  }}
-                >
-                  •
-                </span>
-
-                {/* Host Info */}
-                <div className="flex items-center gap-1 sm:gap-1.5 select-none whitespace-nowrap min-w-0 max-w-[75px] sm:max-w-[130px] md:max-w-[180px]">
-                  <Crown
-                    className="stroke-[2.2] shrink-0"
-                    style={{
-                      color: t.accent,
-                      width: "clamp(10px, 1.1vw, 14px)",
-                      height: "clamp(10px, 1.1vw, 14px)",
+                  {/* Close URL bar button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsUrlBarOpen(false);
                     }}
-                  />
-                  <span
-                    className="font-medium hidden min-[621px]:inline shrink-0"
-                    style={{
-                      color: t.muted,
-                      fontSize: "clamp(8px, 0.9vw, 11px)",
-                    }}
+                    className="p-0.5 sm:p-1 -mr-1 rounded-full transition-all cursor-pointer hover:opacity-80 shrink-0 ml-0.5"
+                    style={{ color: t.muted }}
+                    title="Close URL bar"
                   >
-                    Host:
-                  </span>
-                  <span
-                    className="font-bold truncate"
-                    title={hostName}
-                    style={{
-                      color: t.text,
-                      fontSize: "clamp(10px, 1.1vw, 13px)",
-                    }}
-                  >
-                    {hostName}
-                  </span>
+                    <ChevronUp
+                      className="stroke-[2.5]"
+                      style={{
+                        width: "clamp(10px, 1.1vw, 14px)",
+                        height: "clamp(10px, 1.1vw, 14px)",
+                      }}
+                    />
+                  </button>
                 </div>
-
-                {/* Toggle Button inside to Disappear/Collapse */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsNotchOpen(false);
+              ) : (
+                /* Default Room Code & Host Info Capsule */
+                <div
+                  className="rounded-full flex items-center font-semibold shadow-2xs transition-all whitespace-nowrap max-w-[94%] animate-in fade-in zoom-in-95 duration-200"
+                  style={{
+                    backgroundColor: t.isDark ? "#1e1a14" : "#f0f2f6",
+                    color: t.text,
+                    border: `1px solid ${t.border}`,
+                    paddingTop: "clamp(3px, 0.6vw, 8px)",
+                    paddingBottom: "clamp(3px, 0.6vw, 8px)",
+                    paddingLeft: "clamp(8px, 1.8vw, 24px)",
+                    paddingRight: "clamp(6px, 1.5vw, 20px)",
+                    gap: "clamp(5px, 1vw, 13px)",
                   }}
-                  className="p-0.5 sm:p-1 -mr-0.5 sm:-mr-1 rounded-full transition-all cursor-pointer hover:opacity-80 shrink-0 ml-0.5"
-                  style={{ color: t.muted }}
-                  title="Hide details"
                 >
-                  <ChevronUp
-                    className="stroke-[2.5]"
+                  {/* Code Name & Copy Button */}
+                  <button
+                    onClick={handleCopyCode}
+                    className="flex items-center gap-1 sm:gap-1.5 cursor-pointer hover:opacity-85 transition-opacity select-none group/code whitespace-nowrap"
+                    title="Click to copy Room Code"
+                  >
+                    <span
+                      className="font-semibold tracking-wider uppercase hidden min-[621px]:inline"
+                      style={{
+                        color: t.muted,
+                        fontSize: "clamp(8px, 0.9vw, 11px)",
+                      }}
+                    >
+                      CODE:
+                    </span>
+                    <span
+                      className="font-mono font-bold tracking-wider whitespace-nowrap"
+                      style={{
+                        color: t.accent,
+                        fontSize: "clamp(10px, 1.1vw, 13px)",
+                      }}
+                    >
+                      {roomPasscode || roomId}
+                    </span>
+                    <span className="transition-colors ml-0.5 inline-flex items-center" style={{ color: t.muted }}>
+                      {copiedCode ? (
+                        <Check
+                          className="text-emerald-500 stroke-[2.5]"
+                          style={{
+                            width: "clamp(10px, 1.1vw, 14px)",
+                            height: "clamp(10px, 1.1vw, 14px)",
+                          }}
+                        />
+                      ) : (
+                        <Copy
+                          style={{
+                            width: "clamp(10px, 1.1vw, 14px)",
+                            height: "clamp(10px, 1.1vw, 14px)",
+                          }}
+                        />
+                      )}
+                    </span>
+                  </button>
+
+                  {/* Dot Separator */}
+                  <span
+                    className="font-bold select-none"
                     style={{
-                      width: "clamp(10px, 1.1vw, 14px)",
-                      height: "clamp(10px, 1.1vw, 14px)",
+                      color: t.border,
+                      fontSize: "clamp(8px, 0.9vw, 12px)",
                     }}
-                  />
-                </button>
-              </div>
+                  >
+                    •
+                  </span>
+
+                  {/* Host Info */}
+                  <div className="flex items-center gap-1 sm:gap-1.5 select-none whitespace-nowrap min-w-0 max-w-[75px] sm:max-w-[130px] md:max-w-[180px]">
+                    <Crown
+                      className="stroke-[2.2] shrink-0"
+                      style={{
+                        color: t.accent,
+                        width: "clamp(10px, 1.1vw, 14px)",
+                        height: "clamp(10px, 1.1vw, 14px)",
+                      }}
+                    />
+                    <span
+                      className="font-medium hidden min-[621px]:inline shrink-0"
+                      style={{
+                        color: t.muted,
+                        fontSize: "clamp(8px, 0.9vw, 11px)",
+                      }}
+                    >
+                      Host:
+                    </span>
+                    <span
+                      className="font-bold truncate"
+                      title={hostName}
+                      style={{
+                        color: t.text,
+                        fontSize: "clamp(10px, 1.1vw, 13px)",
+                      }}
+                    >
+                      {hostName}
+                    </span>
+                  </div>
+
+                  {/* Toggle Button inside to Disappear/Collapse */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsNotchOpen(false);
+                    }}
+                    className="p-0.5 sm:p-1 -mr-0.5 sm:-mr-1 rounded-full transition-all cursor-pointer hover:opacity-80 shrink-0 ml-0.5"
+                    style={{ color: t.muted }}
+                    title="Hide details"
+                  >
+                    <ChevronUp
+                      className="stroke-[2.5]"
+                      style={{
+                        width: "clamp(10px, 1.1vw, 14px)",
+                        height: "clamp(10px, 1.1vw, 14px)",
+                      }}
+                    />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -406,15 +549,17 @@ export function CinematicVideoPlayer() {
           <div className="hidden sm:block pt-2 sm:pt-3 md:pt-3.5 transition-all duration-300 ease-out">
             <button
               onClick={handleBackToHome}
-              className="pointer-events-auto flex items-center gap-1 sm:gap-1.5 px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 rounded-full shadow-2xs transition-all text-xs sm:text-sm font-bold hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              className="pointer-events-auto flex items-center justify-center gap-1.5 w-8 h-8 min-[830px]:w-auto min-[830px]:h-auto min-[830px]:px-2.5 min-[1100px]:px-3.5 min-[830px]:py-1.5 rounded-full shadow-2xs transition-all text-xs font-semibold hover:scale-[1.03] active:scale-[0.97] cursor-pointer"
               style={{
                 backgroundColor: t.surface,
                 color: t.text,
                 border: `1px solid ${t.border}`,
               }}
+              title="Back to Home"
             >
-              <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.5]" style={{ color: t.muted }} />
-              <span>Back<span className="hidden sm:inline"> to Home</span></span>
+              <ChevronLeft className="w-3.5 h-3.5 min-[1100px]:w-4 min-[1100px]:h-4 stroke-[2.5]" style={{ color: t.muted }} />
+              <span className="hidden min-[830px]:inline min-[1100px]:hidden whitespace-nowrap">Back</span>
+              <span className="hidden min-[1100px]:inline whitespace-nowrap">Back to Home</span>
             </button>
           </div>
 

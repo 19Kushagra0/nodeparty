@@ -65,22 +65,22 @@ export function RoomClientView() {
             <div className="hidden lg:flex shrink-0 flex-col items-center justify-start h-full py-0.5 transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-right-2">
               {/* Sleek Collapsed Right Rail */}
               <div
-                className="w-12 sm:w-14 rounded-[28px] sm:rounded-[32px] p-2 py-4 flex flex-col items-center gap-3.5"
+                className="w-14 sm:w-16 lg:w-18 rounded-[28px] sm:rounded-[32px] p-2 sm:p-2.5 py-4 sm:py-5 flex flex-col items-center gap-3.5 sm:gap-4"
                 style={{ backgroundColor: t.surface, border: `1px solid ${t.border}` }}
               >
                 {/* Expand / Open Button */}
                 <button
                   onClick={toggleRightSidebar}
-                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer outline-none focus:outline-none"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all cursor-pointer outline-none focus:outline-none"
                   style={{ backgroundColor: t.surfaceHover, color: t.text, border: `1px solid ${t.border}` }}
                   title="Expand Sidebar"
                   aria-label="Expand Sidebar"
                 >
-                  <ChevronLeft className="w-4 h-4 text-zinc-700 stroke-[2.5]" />
+                  <ChevronLeft className="w-[18px] h-[18px] text-zinc-700 stroke-[2.5]" />
                 </button>
 
                 {/* Divider Line */}
-                <div className="w-6 h-[2px] rounded-full" style={{ backgroundColor: t.border }} />
+                <div className="w-8 sm:w-9 h-[2px] rounded-full my-1 sm:my-1.5" style={{ backgroundColor: t.border }} />
 
                 {/* Quick Chat Shortcut */}
                 <button
@@ -88,11 +88,11 @@ export function RoomClientView() {
                     setActiveSidebarTab("chat");
                     toggleRightSidebar();
                   }}
-                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer outline-none focus:outline-none"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all cursor-pointer outline-none focus:outline-none"
                   style={{ backgroundColor: t.surfaceHover, color: t.muted, border: `1px solid ${t.border}` }}
                   title="Open Chat"
                 >
-                  <MessageSquare className="w-4 h-4" />
+                  <MessageSquare className="w-[18px] h-[18px]" strokeWidth={2.1} />
                 </button>
 
                 {/* Quick React Shortcut */}
@@ -101,11 +101,11 @@ export function RoomClientView() {
                     setActiveSidebarTab("reactions");
                     toggleRightSidebar();
                   }}
-                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer outline-none focus:outline-none"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all cursor-pointer outline-none focus:outline-none"
                   style={{ backgroundColor: t.surfaceHover, color: t.muted, border: `1px solid ${t.border}` }}
                   title="Open Reactions"
                 >
-                  <Smile className="w-4 h-4" />
+                  <Smile className="w-[18px] h-[18px]" strokeWidth={2.1} />
                 </button>
 
                 {/* Quick Users Shortcut with Friends Count Badge */}
@@ -114,11 +114,11 @@ export function RoomClientView() {
                     setActiveSidebarTab("users");
                     toggleRightSidebar();
                   }}
-                  className="relative w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer outline-none focus:outline-none"
+                  className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all cursor-pointer outline-none focus:outline-none"
                   style={{ backgroundColor: t.surfaceHover, color: t.muted, border: `1px solid ${t.border}` }}
                   title={`Open Users (${friendsCount})`}
                 >
-                  <Users className="w-4 h-4" />
+                  <Users className="w-[18px] h-[18px]" strokeWidth={2.1} />
                   {friendsCount > 0 && (
                     <span
                       className="absolute -top-1 -right-1 px-1.5 py-0.2 text-[9px] font-bold rounded-full border shadow-2xs"
