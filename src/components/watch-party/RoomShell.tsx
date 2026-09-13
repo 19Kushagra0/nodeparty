@@ -25,7 +25,7 @@ export function RoomShell() {
           borderRadius: "clamp(16px, 3vw, 44px)",
           padding: "clamp(6px, 1.5vw, 16px)",
           gap: "clamp(8px, 1.5vw, 16px)",
-          backgroundColor: t.isDark ? "#14110e" : "rgba(255, 255, 255, 0.75)",
+          backgroundColor: t.isDark ? "#14110e" : "#ffffff",
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
           border: `1px solid ${t.border}`,

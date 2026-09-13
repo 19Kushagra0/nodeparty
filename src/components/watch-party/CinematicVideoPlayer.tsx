@@ -113,6 +113,19 @@ export function CinematicVideoPlayer() {
     };
   }, []);
 
+  // Listen to native fullscreen change events (e.g. Esc key or browser controls)
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+    };
+  }, []);
+
   const handleCopyCode = (e: React.MouseEvent) => {
     e.stopPropagation();
     navigator.clipboard.writeText(roomPasscode || roomId);
@@ -183,12 +196,14 @@ export function CinematicVideoPlayer() {
       {/* Machined Double-Bezel Container with pronounced organic rounded corners */}
       <div
         ref={browserContainerRef}
+        data-cinema-player="true"
         onMouseMove={handlePlayerMouseMove}
         onMouseEnter={handlePlayerMouseMove}
         onMouseLeave={handlePlayerMouseLeave}
-        className={`relative w-full h-full min-h-0 bg-black rounded-[32px] sm:rounded-[42px] lg:rounded-[48px] overflow-hidden select-none shadow-[0_12px_40px_rgba(0,0,0,0.22)] ${!showControls ? "cursor-none" : ""
-          }`}
-        style={{ border: `1px solid ${t.border}` }}
+        className={`relative w-full h-full min-h-0 bg-black overflow-hidden select-none transition-all duration-200 ${isFullscreen
+          ? "!rounded-none fixed inset-0 w-screen h-screen z-[9999]"
+          : "rounded-[32px] sm:rounded-[42px] lg:rounded-[48px]"
+          } ${!showControls ? "cursor-none" : ""}`}
       >
         {/* Active Content Background Poster / YouTube Player */}
         <div className="absolute inset-0 bg-black">
@@ -261,7 +276,7 @@ export function CinematicVideoPlayer() {
           <div className="pointer-events-auto absolute top-0 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-center animate-in fade-in slide-in-from-top-2 duration-300 cursor-default">
             {/* White/Dark Curved Notch Background attached seamlessly to top-0 */}
             <svg
-              className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.06)] block transition-all"
+              className="block transition-all"
               style={{
                 width: "clamp(290px, 55vw, 560px)",
                 height: "clamp(38px, 5.4vw, 62px)",
@@ -274,12 +289,6 @@ export function CinematicVideoPlayer() {
               <path
                 d="M 0 -2 L 0 0 C 25 0, 45 64, 70 64 L 490 64 C 515 64, 535 0, 560 0 L 560 -2 Z"
                 fill={t.isDark ? "#14110e" : "#ffffff"}
-              />
-              <path
-                d="M 0 0 C 25 0, 45 64, 70 64 L 490 64 C 515 64, 535 0, 560 0"
-                stroke={t.border}
-                strokeWidth="1.5"
-                fill="none"
               />
             </svg>
 
@@ -296,7 +305,7 @@ export function CinematicVideoPlayer() {
                 <div
                   className="rounded-full flex items-center font-semibold shadow-2xs transition-all whitespace-nowrap max-w-[94%] select-none animate-in fade-in zoom-in-95 duration-200"
                   style={{
-                    backgroundColor: t.isDark ? "#1e1a14" : "#f0f2f6",
+                    backgroundColor: t.isDark ? "#1e1a14" : "#ffffff",
                     color: t.text,
                     border: `1px solid ${t.border}`,
                     paddingTop: "clamp(3px, 0.6vw, 8px)",
@@ -418,7 +427,7 @@ export function CinematicVideoPlayer() {
                 <div
                   className="rounded-full flex items-center font-semibold shadow-2xs transition-all whitespace-nowrap max-w-[94%] animate-in fade-in zoom-in-95 duration-200"
                   style={{
-                    backgroundColor: t.isDark ? "#1e1a14" : "#f0f2f6",
+                    backgroundColor: t.isDark ? "#1e1a14" : "#ffffff",
                     color: t.text,
                     border: `1px solid ${t.border}`,
                     paddingTop: "clamp(3px, 0.6vw, 8px)",

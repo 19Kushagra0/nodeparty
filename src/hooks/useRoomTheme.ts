@@ -19,7 +19,7 @@ const DARK = {
 };
 
 const LIGHT = {
-  bg:           "#F9FAFB",
+  bg:           "#FFFFFF",
   surface:      "#FFFFFF",
   surfaceHover: "#F4F4F5",
   border:       "#E4E4E7",
