@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  Video as NavVideo,
   Settings,
   Mic,
   MicOff,
@@ -35,8 +34,6 @@ export function RoomSidebar() {
     isRightSidebarOpen,
     toggleRightSidebar,
     setActiveSidebarTab,
-    isUrlBarOpen,
-    toggleUrlBar,
   } = useRoomStore();
 
   const t = useRoomTheme();
@@ -63,11 +60,17 @@ export function RoomSidebar() {
             <Link
               href={targetRoomHref}
               onClick={() => setLayoutMode("cinema")}
-              className="relative p-2 sm:p-2.5 rounded-2xl transition-all cursor-pointer"
+              className="relative p-2 sm:p-2.5 rounded-2xl transition-all cursor-pointer hover:opacity-90 flex items-center justify-center"
               style={{ backgroundColor: isRoomPage ? t.surfaceHover : "transparent", color: isRoomPage ? t.accent : t.muted }}
-              title="Open Player Screen"
+              title="YouTube Watch Party Cinema"
             >
-              <NavVideo className="w-5 h-5" strokeWidth={2.25} />
+              <svg
+                className="w-5 h-5"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+              </svg>
               {isRoomPage && (
                 <div className="absolute -right-2 sm:-right-2.5 top-1/2 -translate-y-1/2 w-1 h-5 rounded-full" style={{ backgroundColor: t.accent }} />
               )}
@@ -97,25 +100,6 @@ export function RoomSidebar() {
               title="Share Screen"
             >
               <Tv className="w-[18px] h-[18px]" strokeWidth={2.1} />
-            </button>
-
-            <button
-              onClick={toggleUrlBar}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all cursor-pointer hover:opacity-90"
-              style={{
-                backgroundColor: isUrlBarOpen ? t.accent : t.surfaceHover,
-                color: isUrlBarOpen ? t.accentFg : t.muted,
-                border: `1px solid ${isUrlBarOpen ? t.accent : t.border}`,
-              }}
-              title={isUrlBarOpen ? "Close Watch Party URL Bar" : "YouTube Watch Party / URL Bar"}
-            >
-              <svg
-                className="w-[18px] h-[18px]"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-              </svg>
             </button>
           </nav>
 
