@@ -128,25 +128,13 @@ export function ScreenShareModal() {
           backgroundColor: t.surface,
         }}
       >
-        <div className="flex items-center gap-3">
-          <div
-            className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border"
-            style={{
-              backgroundColor: t.isDark ? `${t.accent}20` : "#fff1f2",
-              borderColor: t.isDark ? `${t.accent}40` : "#fecdd3",
-              color: t.accent,
-            }}
-          >
-            <Film className="w-5 h-5" />
-          </div>
-          <div>
-            <h2 className="text-lg sm:text-xl font-bold tracking-tight" style={{ color: t.text }}>
-              Change Stream or Share Screen
-            </h2>
-            <p className="text-xs sm:text-sm" style={{ color: t.muted }}>
-              Pick a video from tonight&apos;s queue, share your display, or paste any video link.
-            </p>
-          </div>
+        <div>
+          <h2 className="text-lg sm:text-xl font-bold tracking-tight" style={{ color: t.text }}>
+            Change Stream or Share Screen
+          </h2>
+          <p className="text-xs sm:text-sm mt-0.5" style={{ color: t.muted }}>
+            Pick a video from tonight&apos;s queue, share your display, or paste any video link.
+          </p>
         </div>
 
         <div className="flex items-center gap-3">
