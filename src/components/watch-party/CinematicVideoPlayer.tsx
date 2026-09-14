@@ -54,8 +54,6 @@ export function CinematicVideoPlayer() {
   const host = participants.find((p) => p.role === "host");
   const hostName = host ? host.name.replace(" (You)", "") : "Alex";
 
-  const [hoverTime, setHoverTime] = useState<number | null>(null);
-  const [hoverPosition, setHoverPosition] = useState<number>(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isNotchOpen, setIsNotchOpen] = useState(true);
   const [copiedCode, setCopiedCode] = useState(false);
@@ -81,6 +79,85 @@ export function CinematicVideoPlayer() {
       playerRef.current.pauseVideo();
     }
   }, [isPlaying]);
+
+  // Sync Zustand store volume/mute state to the actual YouTube player
+  useEffect(() => {
+    if (!playerRef.current || typeof playerRef.current.setVolume !== "function") return;
+    
+    console.log(`🔊 [YouTube] Applying Volume -> Muted: ${isMuted}, Volume: ${volume}`);
+    if (isMuted) {
+      playerRef.current.mute();
+      playerRef.current.setVolume(0);
+    } else {
+      if (playerRef.current.isMuted()) {
+        playerRef.current.unMute();
+      }
+      playerRef.current.setVolume(volume);
+    }
+  }, [volume, isMuted]);
+
+  // Sync play/pause to native player when it changes
+  useEffect(() => {
+    if (!playerRef.current || typeof playerRef.current.playVideo !== "function") return;
+    if (isPlaying) {
+      playerRef.current.playVideo();
+    } else {
+      playerRef.current.pauseVideo();
+    }
+  }, [isPlaying]);
+
+  // Periodic time polling and drift correction
+  useEffect(() => {
+    let tickCount = 0;
+    const interval = setInterval(() => {
+      if (!playerRef.current || typeof playerRef.current.getCurrentTime !== "function") return;
+
+      const actualTime = playerRef.current.getCurrentTime();
+      const state = useRoomStore.getState();
+      
+      // Update duration for all clients (Host & Guest)
+      const actualDuration = playerRef.current.getDuration();
+      if (actualDuration && actualDuration !== state.duration) {
+        state.setDuration(actualDuration);
+      }
+      
+      if (state.userRole === "host") {
+        state.setCurrentTime(actualTime);
+        
+        // Broadcast every 2 seconds (4 * 500ms) to keep guests in sync, even when paused
+        tickCount++;
+        if (tickCount % 4 === 0) {
+          state.broadcastPlaybackSync();
+        }
+      } else {
+        // Guest drift correction
+        state.setCurrentTime(actualTime); // Keep guest UI progress bar perfectly smooth
+        
+        if (!state.lastSyncTimestamp) return; // Wait for first sync packet
+        
+        const elapsedSinceSync = (Date.now() - state.lastSyncTimestamp) / 1000;
+        const expectedHostTime = state.hostSyncTime + (state.isPlaying ? elapsedSinceSync * state.playbackRate : 0);
+        const drift = actualTime - expectedHostTime;
+        
+        if (Math.abs(drift) > 1.5) {
+          console.log(`⏱️ Drift > 1.5s (${drift.toFixed(2)}s). Hard seeking to ${expectedHostTime.toFixed(2)}.`);
+          playerRef.current.seekTo(expectedHostTime, true);
+        } else if (state.isPlaying && Math.abs(drift) > 0.3) {
+          const targetRate = drift > 0 ? 0.95 : 1.05;
+          if (playerRef.current.getPlaybackRate() !== targetRate) {
+            console.log(`⏱️ Drift 0.3s-1.5s (${drift.toFixed(2)}s). Throttling rate to ${targetRate}.`);
+            playerRef.current.setPlaybackRate(targetRate);
+          }
+        } else {
+          if (playerRef.current.getPlaybackRate() !== state.playbackRate) {
+            playerRef.current.setPlaybackRate(state.playbackRate);
+          }
+        }
+      }
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handlePlayerMouseMove = () => {
     setShowControls(true);
@@ -159,18 +236,19 @@ export function CinematicVideoPlayer() {
   };
 
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    const state = useRoomStore.getState();
+    // In Host-Authored mode, only the host can scrub the timeline
+    if (state.userRole !== "host") return;
+
     const rect = e.currentTarget.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const percentage = Math.max(0, Math.min(1, clickX / rect.width));
-    seekTo(percentage * duration);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const percentage = Math.max(0, Math.min(1, mouseX / rect.width));
-    setHoverPosition(percentage * 100);
-    setHoverTime(percentage * duration);
+    const targetTime = percentage * duration;
+    
+    if (playerRef.current && typeof playerRef.current.seekTo === "function") {
+      playerRef.current.seekTo(targetTime, true);
+    }
+    seekTo(targetTime);
   };
 
   const formatTime = (secs: number) => {
@@ -224,6 +302,23 @@ export function CinematicVideoPlayer() {
               onReady={(e) => {
                 console.log("🎥 [YouTube] Player is READY! Saving player reference.");
                 playerRef.current = e.target;
+                
+                // Apply initial playback state
+                const state = useRoomStore.getState();
+                if (state.isPlaying) {
+                  e.target.playVideo();
+                } else {
+                  e.target.pauseVideo();
+                }
+                
+                // Apply initial volume state
+                if (state.isMuted) {
+                  e.target.mute();
+                  e.target.setVolume(0);
+                } else {
+                  e.target.unMute();
+                  e.target.setVolume(state.volume);
+                }
               }}
               onStateChange={(e) => {
                 const stateNames = {
@@ -636,10 +731,22 @@ export function CinematicVideoPlayer() {
           </div>
         )}
 
-        {/* Clickable Area for Play/Pause */}
+        {/* Clickable Area for Play/Pause or Autoplay Bypass */}
         <div
           className="absolute inset-0 z-0 cursor-pointer"
-          onClick={togglePlay}
+          onClick={() => {
+            const state = useRoomStore.getState();
+            if (state.userRole === "host") {
+              togglePlay();
+            } else {
+              // Guest clicked the video. If they are blocked by browser autoplay rules,
+              // this user interaction will unblock it and force it to play.
+              if (state.isPlaying && playerRef.current) {
+                console.log("▶️ [YouTube] Guest manually clicked video to bypass autoplay block.");
+                playerRef.current.playVideo();
+              }
+            }
+          }}
         />
 
         {/* Bottom Progress Bar & Controls */}
@@ -652,10 +759,8 @@ export function CinematicVideoPlayer() {
 
           {/* Progress Line */}
           <div
-            className="h-1.5 sm:h-2 w-full bg-white/20 rounded-full cursor-pointer relative group/scrubber overflow-hidden"
+            className="h-1.5 sm:h-2 w-full bg-white/20 rounded-full cursor-pointer relative overflow-hidden"
             onClick={handleSeek}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={() => setHoverTime(null)}
           >
             {/* Buffer / Loaded */}
             <div
@@ -671,16 +776,6 @@ export function CinematicVideoPlayer() {
                 boxShadow: `0 0 10px ${t.accent}80`,
               }}
             />
-
-            {/* Hover Time Tooltip */}
-            {hoverTime !== null && (
-              <div
-                style={{ left: `${hoverPosition}%` }}
-                className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 px-2 py-1 rounded bg-black/80 backdrop-blur text-white text-[10px] font-bold shadow-lg pointer-events-none opacity-0 group-hover/scrubber:opacity-100 transition-opacity z-10"
-              >
-                {formatTime(hoverTime)}
-              </div>
-            )}
           </div>
 
           {/* Bottom Actions Row */}
@@ -709,8 +804,11 @@ export function CinematicVideoPlayer() {
                   min="0"
                   max="100"
                   value={isMuted ? 0 : volume}
-                  onChange={(e) => setVolume(Number(e.target.value))}
-                  className="w-0 sm:w-20 opacity-0 group-hover/vol:w-20 group-hover/vol:opacity-100 sm:opacity-100 h-1.5 rounded-full cursor-pointer transition-all duration-300 appearance-none"
+                  onChange={(e) => {
+                    console.log(`🎚️ [UI] Slider dragged to: ${e.target.value}`);
+                    setVolume(Number(e.target.value));
+                  }}
+                  className="w-16 sm:w-20 opacity-100 h-1.5 rounded-full cursor-pointer transition-all duration-300 appearance-none"
                   style={{
                     background: `linear-gradient(to right, ${t.accent} 0%, ${t.accent} ${isMuted ? 0 : volume}%, rgba(255,255,255,0.25) ${isMuted ? 0 : volume}%, rgba(255,255,255,0.25) 100%)`,
                     accentColor: t.accent,
@@ -762,5 +860,6 @@ export function CinematicVideoPlayer() {
     </div>
   );
 }
+
 
 
