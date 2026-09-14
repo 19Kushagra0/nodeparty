@@ -46,6 +46,8 @@ interface RoomState {
   ambientGlow: boolean;
   syncDriftMs: number;
   isResyncing: boolean;
+  lastSyncTimestamp: number;
+  hostSyncTime: number;
 
   // Co-Browsing & Virtual Tabs
   openTabs: SharedTab[];
@@ -101,6 +103,7 @@ interface RoomState {
   toggleTheaterMode: () => void;
   toggleAmbientGlow: () => void;
   resyncWithHost: () => void;
+  broadcastPlaybackSync: () => void;
 
   // Co-Browsing Actions
   openNewTab: (tab: Omit<SharedTab, "id">) => void;
@@ -233,11 +236,11 @@ const initialMultiplayerCursors: MultiplayerCursor[] = [
 
 export const useRoomStore = create<RoomState>((set, get) => ({
   socket: null,
-  roomId: "lounge-cinema-88",
-  roomName: "4K Sci-Fi & Cyberpunk Premiere",
-  roomPasscode: "CYBER-4096",
+  roomId: typeof window !== "undefined" ? window.location.pathname.split("/").pop() || "lounge-cinema-88" : "lounge-cinema-88",
+  roomName: "Watch Party Stream",
+  roomPasscode: typeof window !== "undefined" ? window.location.pathname.split("/").pop()?.toUpperCase() || "CYBER-4096" : "CYBER-4096",
   privacyMode: "public",
-  userRole: "host",
+  userRole: (typeof window !== "undefined" && window.location.search.includes("guest")) ? "participant" : "host",
   participants: initialParticipants,
 
   // Call & Audio/Video
@@ -258,6 +261,8 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   ambientGlow: true,
   syncDriftMs: 14,
   isResyncing: false,
+  lastSyncTimestamp: 0,
+  hostSyncTime: 0,
 
   // Co-Browsing
   openTabs: initialTabs,
@@ -301,13 +306,37 @@ export const useRoomStore = create<RoomState>((set, get) => ({
 
     newSocket.addEventListener("open", () => {
       console.log("🟢 [Frontend] Connected to PartyKit server successfully!");
+      newSocket.send(JSON.stringify({
+        type: "identify",
+        role: get().userRole,
+        userId: get().participants.find(p => p.isMe)?.id
+      }));
     });
 
     newSocket.addEventListener("message", (e) => {
       try {
         const data = JSON.parse(e.data);
         if (data.type === "sync_presence") {
-          console.log(`👥 [Frontend] Presence Update! There are now ${data.count} users connected to the room.`);
+          console.log(`👥 [Frontend] Presence Update! There are now ${data.count} users connected to the room.`, data.participants);
+          // If you wanted to, you could update state.participants here based on data.participants
+        } else if (data.type === "sync_playback" && get().userRole !== "host") {
+          console.log("⏱️ [Frontend] Received authoritative playback sync:", data);
+          set({
+            isPlaying: data.isPlaying,
+            currentTime: data.currentTime,
+            hostSyncTime: data.currentTime,
+            playbackRate: data.playbackRate,
+            lastSyncTimestamp: Date.now(),
+          });
+        } else if (data.type === "chat_message") {
+          console.log("💬 [Frontend] Received chat message:", data.message);
+          set((state) => ({ messages: [...state.messages, data.message] }));
+        } else if (data.type === "reaction_burst") {
+          console.log("🎆 [Frontend] Received reaction burst:", data.burst);
+          set((state) => ({ reactions: [...state.reactions, data.burst] }));
+          setTimeout(() => {
+            set((state) => ({ reactions: state.reactions.filter(r => r.id !== data.burst.id) }));
+          }, 3000);
         } else {
           console.log("📩 [Frontend] Message received from server:", data);
         }
@@ -388,16 +417,30 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   },
 
   togglePlay: () => {
+    if (get().userRole !== "host") return;
     set((state) => ({ isPlaying: !state.isPlaying }));
+    get().broadcastPlaybackSync();
   },
 
-  setIsPlaying: (playing) => set({ isPlaying: playing }),
-  seekTo: (time) => set({ currentTime: Math.max(0, Math.min(time, get().duration)) }),
+  setIsPlaying: (playing) => {
+    if (get().userRole !== "host") return;
+    set({ isPlaying: playing });
+    get().broadcastPlaybackSync();
+  },
+  seekTo: (time) => {
+    if (get().userRole !== "host") return;
+    set({ currentTime: Math.max(0, Math.min(time, get().duration)) });
+    get().broadcastPlaybackSync();
+  },
   setCurrentTime: (time) => set({ currentTime: time }),
   setDuration: (duration) => set({ duration }),
   setVolume: (volume) => set({ volume, isMuted: volume === 0 }),
   toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
-  setPlaybackRate: (rate) => set({ playbackRate: rate }),
+  setPlaybackRate: (rate) => {
+    if (get().userRole !== "host") return;
+    set({ playbackRate: rate });
+    get().broadcastPlaybackSync();
+  },
   toggleTheaterMode: () => set((state) => ({ isTheaterMode: !state.isTheaterMode })),
   toggleAmbientGlow: () => set((state) => ({ ambientGlow: !state.ambientGlow })),
 
@@ -406,6 +449,18 @@ export const useRoomStore = create<RoomState>((set, get) => ({
     setTimeout(() => {
       set({ isResyncing: false, syncDriftMs: Math.floor(Math.random() * 8) + 4 });
     }, 800);
+  },
+
+  broadcastPlaybackSync: () => {
+    const { socket, userRole, isPlaying, currentTime, playbackRate } = get();
+    if (socket && userRole === "host") {
+      socket.send(JSON.stringify({
+        type: "sync_playback",
+        isPlaying,
+        currentTime,
+        playbackRate
+      }));
+    }
   },
 
   // Co-Browsing
@@ -562,6 +617,14 @@ export const useRoomStore = create<RoomState>((set, get) => ({
     set((state) => ({
       messages: [...state.messages, newMsg],
     }));
+
+    const socket = get().socket;
+    if (socket) {
+      socket.send(JSON.stringify({
+        type: "chat_message",
+        message: newMsg
+      }));
+    }
   },
 
   addMessageReaction: (messageId, emoji) => {
@@ -596,6 +659,14 @@ export const useRoomStore = create<RoomState>((set, get) => ({
     set((state) => ({
       reactions: [...state.reactions.slice(-15), newBurst],
     }));
+
+    const socket = get().socket;
+    if (socket) {
+      socket.send(JSON.stringify({
+        type: "reaction_burst",
+        burst: newBurst
+      }));
+    }
 
     setTimeout(() => {
       set((state) => ({

@@ -18,30 +18,30 @@ The frontend architecture, responsive 3-column UI, theme engine, and local state
 
 ---
 
-## 🟡 Phase 4: Watch Party Sync (Default Mode — In Progress)
+## 🟢 Phase 4: Watch Party Sync (Default Mode — COMPLETED)
 
 _Objective: Achieve rock-solid multi-browser synchronized YouTube playback and real-time chat before touching browser control._
 
-- [ ] **PartyKit WebSocket Signaling Server**:
+- [x] **PartyKit WebSocket Signaling Server**:
   - [x] Initialize a PartyKit server project or config within the workspace.
   - [x] Start the PartyKit development server and wire `partysocket` in `useRoomStore.ts` to establish a basic connection (User verifies `Connection opened` logs in terminal).
   - [x] Implement room connection handling (`onConnect`, `onMessage`, `onClose`) with room IDs and client presence.
   - [x] Add frontend logs for receiving participant updates (User opens two tabs to verify logs of users joining/leaving).
-- [ ] **Real YouTube IFrame Integration**:
+- [x] **Real YouTube IFrame Integration**:
   - [x] Replace the mock background poster in `CinematicVideoPlayer.tsx` with the `react-youtube` (`YT.Player`) component.
   - [x] Add `console.log` for player events (`onReady`, `onStateChange`) (User clicks play/pause and verifies logs).
   - [x] Bind local player events to the Zustand store.
-- [ ] **Authoritative Playback Synchronization**:
-  - [ ] Designate the room Host as the authoritative clock source.
-  - [ ] Broadcast timestamped playback clock packets (`play`, `pause`, `seekTo`).
-  - [ ] Add frontend logs on guest clients when a playback packet is received (User verifies packet arrival in second tab).
-  - [ ] Implement drift correction on non-host clients:
+- [x] **Authoritative Playback Synchronization**:
+  - [x] Designate the room Host as the authoritative clock source.
+  - [x] Broadcast timestamped playback clock packets (`play`, `pause`, `seekTo`).
+  - [x] Add frontend logs on guest clients when a playback packet is received (User verifies packet arrival in second tab).
+  - [x] Implement drift correction on non-host clients:
     - _Drift > 1.5s_: Hard seek to host position.
     - _Drift 0.3s–1.5s_: Smooth rate throttle (e.g., 0.95x or 1.05x) to catch up without audio pop.
-- [ ] **Real-Time Social Sync**:
-  - [ ] Broadcast chat messages and log them upon receipt across WebSocket.
-  - [ ] Broadcast floating emoji reaction bursts and log origin coordinates.
-  - [ ] Synchronize participant presence and role updates (Host, Moderator, Participant).
+- [x] **Real-Time Social Sync**:
+  - [x] Broadcast chat messages and log them upon receipt across WebSocket.
+  - [x] Broadcast floating emoji reaction bursts and log origin coordinates.
+  - [x] Synchronize participant presence and role updates (Host, Moderator, Participant).
 
 ---
 

@@ -128,24 +128,62 @@ export function ScreenShareModal() {
           backgroundColor: t.surface,
         }}
       >
+        <div>
+          <h2 className="text-lg sm:text-xl font-bold tracking-tight" style={{ color: t.text }}>
+            Change Stream or Share Screen
+          </h2>
+          <p className="text-xs sm:text-sm mt-0.5" style={{ color: t.muted }}>
+            Pick a video from tonight&apos;s queue, share your display, or paste any video link.
+          </p>
+        </div>
+
         <div className="flex items-center gap-3">
+          {/* Segmented Mode Switcher */}
           <div
-            className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border"
-            style={{
-              backgroundColor: t.isDark ? `${t.accent}20` : "#fff1f2",
-              borderColor: t.isDark ? `${t.accent}40` : "#fecdd3",
-              color: t.accent,
-            }}
+            className="hidden sm:flex items-center p-1 rounded-2xl border text-xs sm:text-sm font-medium"
+            style={{ backgroundColor: t.surfaceHover, borderColor: t.border }}
           >
-            <Film className="w-5 h-5" />
-          </div>
-          <div>
-            <h2 className="text-lg sm:text-xl font-bold tracking-tight" style={{ color: t.text }}>
-              Change Stream or Share Screen
-            </h2>
-            <p className="text-xs sm:text-sm" style={{ color: t.muted }}>
-              Pick a video from tonight&apos;s queue, share your display, or paste any video link.
-            </p>
+            <button
+              type="button"
+              onClick={() => setActiveCategory("presets")}
+              className="py-1.5 px-3.5 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5"
+              style={{
+                backgroundColor: activeCategory === "presets" ? t.surface : "transparent",
+                color: activeCategory === "presets" ? (t.isDark ? t.accent : t.text) : t.muted,
+                boxShadow: activeCategory === "presets" && !t.isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+              }}
+            >
+              <Film className="w-3.5 h-3.5" style={{ color: activeCategory === "presets" ? t.accent : t.muted }} />
+              <span>Featured</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveCategory("screen")}
+              className="py-1.5 px-3.5 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5"
+              style={{
+                backgroundColor: activeCategory === "screen" ? t.surface : "transparent",
+                color: activeCategory === "screen" ? (t.isDark ? t.accent : t.text) : t.muted,
+                boxShadow: activeCategory === "screen" && !t.isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+              }}
+            >
+              <Cast className="w-3.5 h-3.5" style={{ color: activeCategory === "screen" ? t.accent : t.muted }} />
+              <span>Screen Share</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveCategory("url")}
+              className="py-1.5 px-3.5 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5"
+              style={{
+                backgroundColor: activeCategory === "url" ? t.surface : "transparent",
+                color: activeCategory === "url" ? (t.isDark ? t.accent : t.text) : t.muted,
+                boxShadow: activeCategory === "url" && !t.isDark ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+              }}
+            >
+              <Globe className="w-3.5 h-3.5" style={{ color: activeCategory === "url" ? t.accent : t.muted }} />
+              <span>Paste Link</span>
+            </button>
           </div>
         </div>
 
