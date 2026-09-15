@@ -23,6 +23,19 @@ export function RoomShell({ roomId, isGuest }: { roomId?: string; isGuest?: bool
     }
   }, [roomId, isGuest]);
 
+  // Initialize Zustand store with the actual roomId from the URL on first render
+  const initialized = useRef(false);
+  if (!initialized.current) {
+    if (roomId) {
+      useRoomStore.setState({ 
+        roomId, 
+        roomPasscode: roomId.toUpperCase(),
+        userRole: isGuest ? "participant" : "host",
+      });
+    }
+    initialized.current = true;
+  }
+
   return (
     <div
       className="w-full flex flex-col justify-center items-center overflow-hidden relative transition-colors duration-300"
