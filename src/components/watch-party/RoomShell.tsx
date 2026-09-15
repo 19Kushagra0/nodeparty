@@ -1,12 +1,27 @@
 "use client";
 
+import { useRef } from "react";
 import { useRoomTheme } from "@/hooks/useRoomTheme";
+import { useRoomStore } from "@/store/useRoomStore";
 import { RoomSidebar } from "@/components/layout/RoomSidebar";
 import { RoomClientView } from "@/components/watch-party/RoomClientView";
 import { MobileBottomSheet } from "@/components/watch-party/MobileBottomSheet";
 
-export function RoomShell() {
+export function RoomShell({ roomId, isGuest }: { roomId?: string; isGuest?: boolean }) {
   const t = useRoomTheme();
+
+  // Initialize Zustand store with the actual roomId from the URL on first render
+  const initialized = useRef(false);
+  if (!initialized.current) {
+    if (roomId) {
+      useRoomStore.setState({ 
+        roomId, 
+        roomPasscode: roomId.toUpperCase(),
+        userRole: isGuest ? "participant" : "host",
+      });
+    }
+    initialized.current = true;
+  }
 
   return (
     <div

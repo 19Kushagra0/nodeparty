@@ -83,7 +83,7 @@ export function CinematicVideoPlayer() {
   // Sync Zustand store volume/mute state to the actual YouTube player
   useEffect(() => {
     if (!playerRef.current || typeof playerRef.current.setVolume !== "function") return;
-    
+
     console.log(`🔊 [YouTube] Applying Volume -> Muted: ${isMuted}, Volume: ${volume}`);
     if (isMuted) {
       playerRef.current.mute();
@@ -114,16 +114,16 @@ export function CinematicVideoPlayer() {
 
       const actualTime = playerRef.current.getCurrentTime();
       const state = useRoomStore.getState();
-      
+
       // Update duration for all clients (Host & Guest)
       const actualDuration = playerRef.current.getDuration();
       if (actualDuration && actualDuration !== state.duration) {
         state.setDuration(actualDuration);
       }
-      
+
       if (state.userRole === "host") {
         state.setCurrentTime(actualTime);
-        
+
         // Broadcast every 2 seconds (4 * 500ms) to keep guests in sync, even when paused
         tickCount++;
         if (tickCount % 4 === 0) {
@@ -132,13 +132,13 @@ export function CinematicVideoPlayer() {
       } else {
         // Guest drift correction
         state.setCurrentTime(actualTime); // Keep guest UI progress bar perfectly smooth
-        
+
         if (!state.lastSyncTimestamp) return; // Wait for first sync packet
-        
+
         const elapsedSinceSync = (Date.now() - state.lastSyncTimestamp) / 1000;
         const expectedHostTime = state.hostSyncTime + (state.isPlaying ? elapsedSinceSync * state.playbackRate : 0);
         const drift = actualTime - expectedHostTime;
-        
+
         if (Math.abs(drift) > 1.5) {
           console.log(`⏱️ Drift > 1.5s (${drift.toFixed(2)}s). Hard seeking to ${expectedHostTime.toFixed(2)}.`);
           playerRef.current.seekTo(expectedHostTime, true);
@@ -244,7 +244,7 @@ export function CinematicVideoPlayer() {
     const clickX = e.clientX - rect.left;
     const percentage = Math.max(0, Math.min(1, clickX / rect.width));
     const targetTime = percentage * duration;
-    
+
     if (playerRef.current && typeof playerRef.current.seekTo === "function") {
       playerRef.current.seekTo(targetTime, true);
     }
@@ -302,7 +302,7 @@ export function CinematicVideoPlayer() {
               onReady={(e) => {
                 console.log("🎥 [YouTube] Player is READY! Saving player reference.");
                 playerRef.current = e.target;
-                
+
                 // Apply initial playback state
                 const state = useRoomStore.getState();
                 if (state.isPlaying) {
@@ -310,7 +310,7 @@ export function CinematicVideoPlayer() {
                 } else {
                   e.target.pauseVideo();
                 }
-                
+
                 // Apply initial volume state
                 if (state.isMuted) {
                   e.target.mute();

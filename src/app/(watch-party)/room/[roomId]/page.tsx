@@ -4,11 +4,14 @@ interface RoomPageProps {
   params: Promise<{
     roomId: string;
   }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function RoomPage({ params }: RoomPageProps) {
-  await params;
+export default async function RoomPage({ params, searchParams }: RoomPageProps) {
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+  const isGuest = resolvedSearchParams?.guest !== undefined;
 
-  return <RoomShell />;
+  return <RoomShell roomId={resolvedParams.roomId} isGuest={isGuest} />;
 }
 

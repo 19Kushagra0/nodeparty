@@ -45,13 +45,15 @@ _Objective: Achieve rock-solid multi-browser synchronized YouTube playback and r
 
 ---
 
-## 🟡 Phase 5A: Collaborative Browser Mode — Tab Screen Sharing (Visual Feed)
+## 🟡 Phase 5A: Discord-style "Watch Together" (Native YouTube Search & Queue)
 
-_Objective: Stream host tab video feed to guests over WebRTC._
+_Objective: Allow users to search, browse, and queue YouTube videos directly inside the app, identical to Discord's Watch Together activity._
 
-- [ ] Implement `navigator.mediaDevices.getDisplayMedia({ video: { displaySurface: "browser" }, audio: true })` triggered from [`ScreenShareModal.tsx`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/ScreenShareModal.tsx).
-- [ ] Utilize the PartyKit signaling server to exchange WebRTC SDP offers, answers, and ICE candidates between Host and Guests.
-- [ ] Render the incoming `MediaStream` video track in place of the YouTube player on guest screens.
+- [ ] Implement a YouTube Data API integration (or a server-side proxy/scraper) to search for videos.
+- [ ] Build a "Search YouTube" interface inside `ScreenShareModal` or a dedicated side-panel.
+- [ ] Display rich video results (thumbnails, titles, channel names, duration) in a grid/list.
+- [ ] Build a Shared Room Queue so the Host (and optionally Guests) can queue upcoming videos.
+- [ ] When a search result is clicked, broadcast `change_video` to all peers to instantly sync playback without leaving the app.
 
 ---
 
