@@ -22,9 +22,11 @@ import {
   Radio,
   Check,
   ChevronRight,
+  ListVideo,
 } from "lucide-react";
 import { useRoomStore } from "@/store/useRoomStore";
 import { useRoomTheme } from "@/hooks/useRoomTheme";
+import { YoutubeUpNextQueue } from "@/components/watch-party/youtube/YoutubeUpNextQueue";
 
 // Web Audio sound FX synthesizer for clean sound feedback
 function playSoundFX(type: string) {
@@ -123,6 +125,7 @@ export function ParticipantSidebar() {
   const {
     participants,
     messages,
+    queue,
     sendMessage,
     triggerReaction,
     setInviteModalOpen,
@@ -228,6 +231,19 @@ export function ParticipantSidebar() {
           >
             <Users className="w-3.5 h-3.5" />
             <span>Users</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("queue")}
+            className={`flex-1 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 outline-none focus:outline-none focus-visible:outline-none select-none border`}
+            style={{
+              backgroundColor: activeTab === "queue" ? (t.isDark ? "#221d17" : t.surface) : "transparent",
+              color: activeTab === "queue" ? (t.isDark ? t.accent : t.text) : t.muted,
+              borderColor: activeTab === "queue" ? (t.isDark ? t.borderHover : t.border) : "transparent",
+            }}
+            title={`Shared Queue (${queue.length})`}
+          >
+            <ListVideo className="w-3.5 h-3.5" />
+            <span>Queue</span>
           </button>
         </div>
 
@@ -373,6 +389,8 @@ export function ParticipantSidebar() {
             </div>
           </div>
         </div>
+      ) : activeTab === "queue" ? (
+        <YoutubeUpNextQueue />
       ) : (
         /* Users / Friends View (Full Box Video with Title, Mic, & Name) */
         <div className="flex-1 min-h-0 overflow-y-auto space-y-3 pr-1 pb-2">

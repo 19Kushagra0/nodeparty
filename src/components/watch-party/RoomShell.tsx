@@ -1,18 +1,19 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect } from "react";
 import { useRoomTheme } from "@/hooks/useRoomTheme";
 import { useRoomStore } from "@/store/useRoomStore";
 import { RoomSidebar } from "@/components/layout/RoomSidebar";
 import { RoomClientView } from "@/components/watch-party/RoomClientView";
+import { YoutubeWorkspaceView } from "@/components/watch-party/YoutubeWorkspaceView";
 import { MobileBottomSheet } from "@/components/watch-party/MobileBottomSheet";
 
 export function RoomShell({ roomId, isGuest }: { roomId?: string; isGuest?: boolean }) {
   const t = useRoomTheme();
+  const activeWorkspace = useRoomStore((state) => state.activeWorkspace);
 
-  // Initialize Zustand store with the actual roomId from the URL on first render
-  const initialized = useRef(false);
-  if (!initialized.current) {
+  // Sync the actual roomId from the URL to the global store after initial hydration
+  useEffect(() => {
     if (roomId) {
       useRoomStore.setState({ 
         roomId, 
@@ -20,8 +21,7 @@ export function RoomShell({ roomId, isGuest }: { roomId?: string; isGuest?: bool
         userRole: isGuest ? "participant" : "host",
       });
     }
-    initialized.current = true;
-  }
+  }, [roomId, isGuest]);
 
   return (
     <div
@@ -54,7 +54,7 @@ export function RoomShell({ roomId, isGuest }: { roomId?: string; isGuest?: bool
 
         {/* Columns 2 & 3: Player Column + Chat Column */}
         <div className="flex-1 min-w-0 h-full relative z-10 overflow-hidden">
-          <RoomClientView />
+          {activeWorkspace === "youtube" ? <YoutubeWorkspaceView /> : <RoomClientView />}
         </div>
       </div>
 

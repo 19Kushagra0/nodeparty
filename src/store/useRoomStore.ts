@@ -76,6 +76,10 @@ interface RoomState {
   setIsUrlBarOpen: (open: boolean) => void;
   toggleUrlBar: () => void;
 
+  // Active Workspace Mode ("general" | "youtube")
+  activeWorkspace: "general" | "youtube";
+  setActiveWorkspace: (workspace: "general" | "youtube") => void;
+
   // Theme
   themeMode: "light" | "dark";
   accentColor: string;
@@ -289,6 +293,9 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   isRightSidebarOpen: false,
   activeSidebarTab: "users",
   isUrlBarOpen: false,
+
+  // Workspace
+  activeWorkspace: "general",
 
   // Theme — white / light by default in room
   themeMode: "light",
@@ -799,6 +806,7 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   setMomentsGalleryOpen: (open) => set({ isMomentsGalleryOpen: open }),
   setSettingsModalOpen: (open) => set({ isSettingsModalOpen: open }),
   setActiveSidebarTab: (tab) => set({ activeSidebarTab: tab }),
+  setActiveWorkspace: (workspace) => set({ activeWorkspace: workspace }),
   setIsUrlBarOpen: (open) => set({ isUrlBarOpen: open }),
   toggleUrlBar: () => set((state) => ({ isUrlBarOpen: !state.isUrlBarOpen })),
   setThemeMode: (mode) => set({

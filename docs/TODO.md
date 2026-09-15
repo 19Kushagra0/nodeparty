@@ -45,15 +45,36 @@ _Objective: Achieve rock-solid multi-browser synchronized YouTube playback and r
 
 ---
 
-## 🟡 Phase 5A: Discord-style "Watch Together" (Native YouTube Search & Queue)
+## 🟡 Phase 5A: Discord-style "Watch Together" (Native YouTube Experience)
 
-_Objective: Allow users to search, browse, and queue YouTube videos directly inside the app, identical to Discord's Watch Together activity._
+_Objective: Transform the watch room into a unified, collaborative YouTube browsing environment. Discovery, searching, and watching are concurrent parts of the same experience. Users can explore YouTube together without disrupting the synchronized playback._
 
-- [ ] Implement a YouTube Data API integration (or a server-side proxy/scraper) to search for videos.
-- [ ] Build a "Search YouTube" interface inside `ScreenShareModal` or a dedicated side-panel.
-- [ ] Display rich video results (thumbnails, titles, channel names, duration) in a grid/list.
-- [ ] Build a Shared Room Queue so the Host (and optionally Guests) can queue upcoming videos.
-- [ ] When a search result is clicked, broadcast `change_video` to all peers to instantly sync playback without leaving the app.
+### Step 1: YouTube Mode UI Architecture
+- [x] Add `activeWorkspace: "general" | "youtube"` to `useRoomStore.ts`.
+- [x] Wire the `RoomSidebar` buttons to switch between workspaces (YouTube button enters YouTube Mode; Screen Share button enters General Mode).
+- [x] Create `<YoutubeWorkspaceView />` as the top-level container for the YouTube experience.
+- [x] Update `<RoomShell />` to conditionally render `<YoutubeWorkspaceView />` or `<RoomClientView />` based on the active workspace.
+- [x] Scaffold the basic layout of the YouTube Workspace (Search header, Main content area, Player area, Discovery Grid) in `YoutubeWorkspaceView.tsx`.
+- [x] Ensure the right-side Chat (`ParticipantSidebar`) remains accessible in both modes.
+
+### Step 2: Data & Functionality
+- [ ] **Direct URL Pill Bar Enter Feature**:
+  - [ ] Support entering/pasting any YouTube video or shorts URL (`youtube.com/watch?v=...`, `youtu.be/...`, `youtube.com/shorts/...`) into the floating URL pill bar; pressing **Enter** parses the video ID, immediately updates the active stream, and broadcasts playback sync to everyone in the room.
+  - [ ] When entering general website URLs (in Screen Share / Old UI mode), open in the Shared Virtual Browser Tab.
+- [ ] **Data Fetching Architecture Evaluation**:
+  - [ ] Evaluate and select a data-fetching approach for YouTube metadata (Official YouTube Data API, proxy, or alternative compatible data sources).
+  - [ ] Implement a reliable, rate-limit-conscious backend route/proxy to fetch Home Feeds, Search Results, and Related Videos.
+- [ ] **Concurrent Browsing & Discovery**:
+  - [ ] Build a native YouTube-style Home Feed and Search interface that is continuously accessible.
+  - [ ] Build high-quality Video Card components (thumbnail, title, channel, duration).
+  - [ ] Ensure the UI allows users to browse and search for new content *while* a synchronized video is actively playing, without disrupting playback.
+- [ ] **Playback Integration & Queueing Actions**:
+  - [ ] **Watch Now**: Selecting a video immediately changes the shared active video for everyone and synchronizes it via the `react-youtube` Phase 4 sync engine.
+  - [ ] **Add to Queue**: Selecting a video adds it to the shared room queue *without* interrupting the currently playing video.
+  - [ ] Build a "Related Videos" feed dynamically populated based on the active video.
+- [ ] **Collaborative Queue Management**:
+  - [ ] Broadcast queue additions/reorders via PartyKit so the Up Next list perfectly syncs for everyone.
+  - [ ] Auto-play the next queued video when the current one finishes.
 
 ---
 
