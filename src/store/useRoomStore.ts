@@ -240,7 +240,7 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   roomName: "Watch Party Stream",
   roomPasscode: "CYBER-4096",
   privacyMode: "public",
-  userRole: "host",
+  userRole: (typeof window !== "undefined" && window.location.search.includes("guest")) ? "participant" : "host",
   participants: initialParticipants,
 
   // Call & Audio/Video
