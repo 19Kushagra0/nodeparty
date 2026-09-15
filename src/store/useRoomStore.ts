@@ -236,9 +236,9 @@ const initialMultiplayerCursors: MultiplayerCursor[] = [
 
 export const useRoomStore = create<RoomState>((set, get) => ({
   socket: null,
-  roomId: typeof window !== "undefined" ? window.location.pathname.split("/").pop() || "lounge-cinema-88" : "lounge-cinema-88",
+  roomId: "lounge-cinema-88",
   roomName: "Watch Party Stream",
-  roomPasscode: typeof window !== "undefined" ? window.location.pathname.split("/").pop()?.toUpperCase() || "CYBER-4096" : "CYBER-4096",
+  roomPasscode: "CYBER-4096",
   privacyMode: "public",
   userRole: (typeof window !== "undefined" && window.location.search.includes("guest")) ? "participant" : "host",
   participants: initialParticipants,
