@@ -38,9 +38,8 @@ export function YoutubeSearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search YouTube or paste video URL (Press Enter)..."
-          className={`w-full pl-4 sm:pl-0 py-2.5 sm:py-2.5 bg-transparent text-xs sm:text-sm outline-none placeholder:text-zinc-500 font-medium ${
-            isUrl ? "pr-28" : "pr-16 sm:pr-28"
-          }`}
+          className={`w-full pl-4 sm:pl-0 py-2.5 sm:py-2.5 bg-transparent text-xs sm:text-sm outline-none placeholder:text-zinc-500 font-medium ${isUrl ? "pr-28" : "pr-16 sm:pr-28"
+            }`}
           style={{ color: t.text }}
         />
 

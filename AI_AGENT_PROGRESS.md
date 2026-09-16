@@ -50,14 +50,14 @@ This document tracks our implementation progress. You can copy this summary to p
 
 ## 🟡 Up Next: Real-Time Sync & Control Roadmap
 
-### Phase 4: Watch Party Sync (In Progress)
-- [ ] Initialize PartyKit WebSocket signaling server.
-- [ ] Connect `react-youtube` (`YT.Player`) inside `CinematicVideoPlayer`.
-- [ ] Implement authoritative host clock drift correction (play, pause, seek, playbackRate).
-- [ ] Sync live chat, floating reactions, and soundboard triggers over WebSocket channels.
+### Phase 4: Watch Party Sync (Completed)
+- [x] Initialize PartyKit WebSocket signaling server.
+- [x] Connect `react-youtube` (`YT.Player`) inside `CinematicVideoPlayer`.
+- [x] Implement authoritative host clock drift correction (play, pause, seek, playbackRate).
+- [x] Sync live chat, floating reactions, and soundboard triggers over WebSocket channels.
 - [ ] Verify multi-client sync across two real browser windows.
 
-### Phase 5A: Screen Sharing (Visual Feed)
+### Phase 5A: Screen Sharing (Visual Feed) (Next Step)
 - [ ] Implement `getDisplayMedia` tab capture.
 - [ ] WebRTC P2P video streaming to guests via PartyKit signaling.
 
