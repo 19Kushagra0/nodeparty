@@ -155,10 +155,10 @@ export function YoutubeDiscoveryGrid() {
                   </div>
                 </div>
               </div>
-              
+
               {/* Three Dot Menu */}
-              <button 
-                className="opacity-0 group-hover:opacity-100 p-1 -mt-1 -mr-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors shrink-0 cursor-pointer" 
+              <button
+                className="opacity-0 group-hover:opacity-100 p-1 -mt-1 -mr-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors shrink-0 cursor-pointer"
                 style={{ color: t.text }}
                 onClick={(e) => e.stopPropagation()}
               >
