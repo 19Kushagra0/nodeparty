@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Inter, Outfit, Space_Mono } from "next/font/google";
+import { Inter, Space_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 
 const inter = Inter({
@@ -8,11 +9,6 @@ const inter = Inter({
   display: "swap",
 });
 
-const outfitSans = Outfit({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 const spaceMono = Space_Mono({
   weight: ["400", "700"],
@@ -34,7 +30,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${outfitSans.variable} ${spaceMono.variable} h-full antialiased dark`}
+      className={`${inter.variable} ${GeistSans.variable} ${spaceMono.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col bg-[#0c0a07] text-[#f2e9d6]" suppressHydrationWarning>
         {children}
