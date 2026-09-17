@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { useRoomStore } from "@/store/useRoomStore";
 import { useRoomTheme } from "@/hooks/useRoomTheme";
-import { MultiplayerCursors } from "./MultiplayerCursors";
 import { GridStageView } from "./GridStageView";
 
 export function CinematicMeetStage() {
@@ -143,9 +142,6 @@ export function CinematicMeetStage() {
             </div>
           ))}
         </div>
-
-        {/* Interactive Screen Share Overlay */}
-        <MultiplayerCursors containerRef={browserContainerRef} />
 
         {/* Center Dipped Notch & Modal Capsule */}
         {isNotchOpen && (
