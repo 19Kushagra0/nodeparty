@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRoomStore } from "@/store/useRoomStore";
-import { CinematicVideoPlayer } from "@/components/watch-party/CinematicVideoPlayer";
+import { CinematicMeetStage } from "@/components/watch-party/CinematicMeetStage";
 import { GridStageView } from "@/components/watch-party/GridStageView";
 import { ParticipantSidebar } from "@/components/watch-party/ParticipantSidebar";
 import { ScreenShareModal } from "@/components/watch-party/ScreenShareModal";
@@ -48,7 +48,7 @@ export function RoomClientView() {
         <div className="flex-1 min-w-0 flex flex-col h-full min-h-0 transition-all duration-300">
           <div className="flex-1 min-h-0 relative w-full overflow-hidden flex flex-col">
             {layoutMode === "cinema" ? (
-              <CinematicVideoPlayer />
+              <CinematicMeetStage />
             ) : (
               <GridStageView />
             )}
