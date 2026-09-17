@@ -12,9 +12,50 @@ import type {
   MultiplayerCursor,
   SharedTab,
   CapturedMoment,
+  YoutubeVideoMetadataInfo,
 } from "@/types";
 import { initialParticipants, initialMessages, initialQueue } from "@/data/mockParticipants";
 import { curatedVideoPresets } from "@/data/mockPresets";
+
+export function parseYoutubeId(url: string): string | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+
+  // Raw 11-char ID
+  if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) {
+    return trimmed;
+  }
+
+  // Matches watch?v=, youtu.be/, shorts/, embed/, live/
+  const regExp = /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|v\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = trimmed.match(regExp);
+  if (match && match[1]) {
+    return match[1];
+  }
+
+  try {
+    const parsed = new URL(trimmed.startsWith("http") ? trimmed : `https://${trimmed}`);
+    if (parsed.hostname.includes("youtube.com")) {
+      const v = parsed.searchParams.get("v");
+      if (v && /^[a-zA-Z0-9_-]{11}$/.test(v)) return v;
+      const parts = parsed.pathname.split("/").filter(Boolean);
+      if (["shorts", "embed", "v", "live"].includes(parts[0]) && parts[1]) {
+        const id = parts[1].substring(0, 11);
+        if (/^[a-zA-Z0-9_-]{11}$/.test(id)) return id;
+      }
+    } else if (parsed.hostname.includes("youtu.be")) {
+      const parts = parsed.pathname.split("/").filter(Boolean);
+      if (parts[0]) {
+        const id = parts[0].substring(0, 11);
+        if (/^[a-zA-Z0-9_-]{11}$/.test(id)) return id;
+      }
+    }
+  } catch {
+    // Ignore invalid URL
+  }
+
+  return null;
+}
 
 interface RoomState {
   // Identity & Room Meta
@@ -48,6 +89,11 @@ interface RoomState {
   isResyncing: boolean;
   lastSyncTimestamp: number;
   hostSyncTime: number;
+
+  // Real-Time YouTube Metadata
+  activeVideoMetadata: YoutubeVideoMetadataInfo | null;
+  isLoadingMetadata: boolean;
+  fetchVideoMetadata: (videoId: string) => Promise<void>;
 
   // Co-Browsing & Virtual Tabs
   openTabs: SharedTab[];
@@ -268,6 +314,10 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   lastSyncTimestamp: 0,
   hostSyncTime: 0,
 
+  // Real-Time YouTube Metadata
+  activeVideoMetadata: null,
+  isLoadingMetadata: false,
+
   // Co-Browsing
   openTabs: initialTabs,
   activeTabId: "tab-yt",
@@ -344,6 +394,46 @@ export const useRoomStore = create<RoomState>((set, get) => ({
           setTimeout(() => {
             set((state) => ({ reactions: state.reactions.filter(r => r.id !== data.burst.id) }));
           }, 3000);
+        } else if (data.type === "change_video") {
+          console.log("🎬 [Frontend] Received video change from peer:", data);
+          const ytId = parseYoutubeId(data.url);
+          const incomingPreset: VideoPreset = data.preset || {
+            id: "custom-" + (ytId || Date.now()),
+            title: ytId ? "YouTube Video" : (data.url.replace(/^https?:\/\//i, "").split("/")[0] || "Web Browser"),
+            category: ytId ? "YouTube" : "Web",
+            duration: "00:00",
+            channel: ytId ? "YouTube" : "Web Browser",
+            thumbnail: ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop",
+            youtubeId: ytId || "dQw4w9WgXcQ",
+            url: data.url,
+            description: "Direct stream source synchronized across all party viewers.",
+            ambientColor: ytId ? "rgba(244, 63, 94, 0.35)" : "rgba(59, 130, 246, 0.35)",
+          };
+
+          set((state) => {
+            const updatedTabs = state.openTabs.map((tab) =>
+              tab.id === state.activeTabId
+                ? {
+                    ...tab,
+                    url: data.url,
+                    title: incomingPreset.title,
+                    thumbnail: incomingPreset.thumbnail,
+                    type: (ytId ? "video" : "browser") as "video" | "browser",
+                  }
+                : tab
+            );
+            return {
+              videoUrl: data.url,
+              currentPreset: incomingPreset,
+              currentTime: 0,
+              isPlaying: true,
+              openTabs: updatedTabs,
+            };
+          });
+
+          if (ytId) {
+            get().fetchVideoMetadata(ytId);
+          }
         } else {
           console.log("📩 [Frontend] Message received from server:", data);
         }
@@ -392,27 +482,57 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   setLayoutMode: (mode) => set({ layoutMode: mode }),
 
   setVideoUrl: (url, preset) => {
-    const selectedPreset = preset || curatedVideoPresets.find((p) => p.url === url) || {
-      id: "custom-" + Date.now(),
-      title: "Custom Stream Source",
-      category: "YouTube Live",
-      duration: "04:30",
-      channel: "External Feed",
-      thumbnail: "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1200&auto=format&fit=crop",
-      youtubeId: url.includes("v=") ? url.split("v=")[1].split("&")[0] : "dQw4w9WgXcQ",
-      url: url,
-      description: "Direct stream source synchronized across all party viewers.",
-      ambientColor: "rgba(244, 63, 94, 0.35)",
-    };
+    const trimmed = url.trim();
+    const youtubeId = parseYoutubeId(trimmed);
+
+    let selectedPreset: VideoPreset;
+    let isBrowser = false;
+
+    if (youtubeId) {
+      selectedPreset = preset || curatedVideoPresets.find((p) => p.youtubeId === youtubeId || p.url === trimmed) || {
+        id: "custom-" + youtubeId,
+        title: "YouTube Video",
+        category: "YouTube Live",
+        duration: "04:30",
+        channel: "External Feed",
+        thumbnail: `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`,
+        youtubeId: youtubeId,
+        url: trimmed.startsWith("http") ? trimmed : `https://www.youtube.com/watch?v=${youtubeId}`,
+        description: "Direct stream source synchronized across all party viewers.",
+        ambientColor: "rgba(244, 63, 94, 0.35)",
+      };
+    } else {
+      isBrowser = true;
+      const cleanUrl = trimmed.startsWith("http") ? trimmed : `https://${trimmed}`;
+      const domain = cleanUrl.replace(/^https?:\/\//i, "").split("/")[0] || "Browser";
+      selectedPreset = preset || {
+        id: "browser-" + Date.now(),
+        title: domain,
+        category: "Web Browser",
+        duration: "Live",
+        channel: domain,
+        thumbnail: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop",
+        youtubeId: "dQw4w9WgXcQ",
+        url: cleanUrl,
+        description: `Shared virtual browser session at ${cleanUrl}`,
+        ambientColor: "rgba(59, 130, 246, 0.35)",
+      };
+    }
 
     set((state) => {
       const updatedTabs = state.openTabs.map((tab) =>
         tab.id === state.activeTabId
-          ? { ...tab, url, title: selectedPreset.title, thumbnail: selectedPreset.thumbnail }
+          ? {
+              ...tab,
+              url: selectedPreset.url,
+              title: selectedPreset.title,
+              thumbnail: selectedPreset.thumbnail,
+              type: (isBrowser ? "browser" : "video") as "browser" | "video",
+            }
           : tab
       );
       return {
-        videoUrl: url,
+        videoUrl: selectedPreset.url,
         currentPreset: selectedPreset,
         currentTime: 0,
         isPlaying: true,
@@ -420,7 +540,49 @@ export const useRoomStore = create<RoomState>((set, get) => ({
       };
     });
 
-    get().sendMessage(`🎬 Now watching: ${selectedPreset.title}`);
+    const socket = get().socket;
+    if (socket) {
+      socket.send(JSON.stringify({
+        type: "change_video",
+        url: selectedPreset.url,
+        preset: selectedPreset,
+        isBrowser,
+      }));
+    }
+
+    get().sendMessage(isBrowser ? `🌐 Navigated to: ${selectedPreset.url}` : `🎬 Now watching: ${selectedPreset.title}`);
+
+    if (youtubeId) {
+      get().fetchVideoMetadata(youtubeId);
+    }
+  },
+
+  fetchVideoMetadata: async (videoId: string) => {
+    if (!videoId) return;
+    set({ isLoadingMetadata: true });
+    try {
+      const res = await fetch(`/api/youtube/video?videoId=${encodeURIComponent(videoId)}`);
+      if (res.ok) {
+        const data: YoutubeVideoMetadataInfo = await res.json();
+        set((state) => ({
+          activeVideoMetadata: data,
+          isLoadingMetadata: false,
+          currentPreset: {
+            ...state.currentPreset,
+            title: data.title || state.currentPreset.title,
+            channel: data.channel?.name || state.currentPreset.channel,
+            thumbnail: data.thumbnail || state.currentPreset.thumbnail,
+            duration: data.durationFormatted || state.currentPreset.duration,
+            description: data.description || state.currentPreset.description,
+          },
+        }));
+      } else {
+        set({ isLoadingMetadata: false });
+      }
+    } catch (err) {
+      console.error("Error fetching video metadata:", err);
+      set({ isLoadingMetadata: false });
+    }
   },
 
   togglePlay: () => {
@@ -746,7 +908,7 @@ export const useRoomStore = create<RoomState>((set, get) => ({
           duration: item.duration,
           channel: item.channel,
           thumbnail: item.thumbnail,
-          youtubeId: item.url.includes("v=") ? item.url.split("v=")[1].split("&")[0] : "dQw4w9WgXcQ",
+          youtubeId: parseYoutubeId(item.url) || "dQw4w9WgXcQ",
           ambientColor: "rgba(244, 63, 94, 0.35)",
           url: item.url,
         },

@@ -5,7 +5,7 @@ import { Plus, Film } from "@/icons";
 import { useRoomStore } from "@/store/useRoomStore";
 
 export function Navbar() {
-  const { setCreateModalOpen } = useRoomStore();
+  const setCreateModalOpen = useRoomStore((state) => state.setCreateModalOpen);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[#27211a] bg-[#0c0a07]/90 backdrop-blur-xl transition-all">

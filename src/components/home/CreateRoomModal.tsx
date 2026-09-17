@@ -8,11 +8,9 @@ import { PrivacyMode } from "@/types";
 
 export function CreateRoomModal() {
   const router = useRouter();
-  const {
-    isCreateModalOpen,
-    setCreateModalOpen,
-    setRoomName,
-  } = useRoomStore();
+  const isCreateModalOpen = useRoomStore((state) => state.isCreateModalOpen);
+  const setCreateModalOpen = useRoomStore((state) => state.setCreateModalOpen);
+  const setRoomName = useRoomStore((state) => state.setRoomName);
 
   const [partyName, setPartyName] = useState("Cyberpunk Midnight Screening 🍿");
   const [privacy, setPrivacy] = useState<PrivacyMode>("public");
