@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRoomTheme } from "@/hooks/useRoomTheme";
 import { useRoomStore } from "@/store/useRoomStore";
 import { RoomSidebar } from "@/components/layout/RoomSidebar";

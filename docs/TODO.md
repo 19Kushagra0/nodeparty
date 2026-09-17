@@ -60,21 +60,21 @@ _Objective: Transform the watch room into a unified, collaborative YouTube brows
 
 ### Step 2: Data & Functionality
 
-- [ ] **Direct URL Pill Bar Enter Feature**:
+1. [ ] **Direct URL Pill Bar Enter Feature**:
   - [ ] Support entering/pasting any YouTube video or shorts URL (`youtube.com/watch?v=...`, `youtu.be/...`, `youtube.com/shorts/...`) into the floating URL pill bar; pressing **Enter** parses the video ID, immediately updates the active stream, and broadcasts playback sync to everyone in the room.
   - [ ] When entering general website URLs (in Screen Share / Old UI mode), open in the Shared Virtual Browser Tab.
-- [ ] **Data Fetching Architecture Evaluation**:
+2. [ ] **Data Fetching Architecture Evaluation**:
   - [ ] Evaluate and select a data-fetching approach for YouTube metadata (Official YouTube Data API, proxy, or alternative compatible data sources).
   - [ ] Implement a reliable, rate-limit-conscious backend route/proxy to fetch Home Feeds, Search Results, and Related Videos.
-- [ ] **Concurrent Browsing & Discovery**:
+3. [ ] **Concurrent Browsing & Discovery**:
   - [ ] Build a native YouTube-style Home Feed and Search interface that is continuously accessible.
   - [ ] Build high-quality Video Card components (thumbnail, title, channel, duration).
   - [ ] Ensure the UI allows users to browse and search for new content _while_ a synchronized video is actively playing, without disrupting playback.
-- [ ] **Playback Integration & Queueing Actions**:
+4. [ ] **Playback Integration & Queueing Actions**:
   - [ ] **Watch Now**: Selecting a video immediately changes the shared active video for everyone and synchronizes it via the `react-youtube` Phase 4 sync engine.
   - [ ] **Add to Queue**: Selecting a video adds it to the shared room queue _without_ interrupting the currently playing video.
   - [ ] Build a "Related Videos" feed dynamically populated based on the active video.
-- [ ] **Collaborative Queue Management**:
+5. [ ] **Collaborative Queue Management**:
   - [ ] Broadcast queue additions/reorders via PartyKit so the Up Next list perfectly syncs for everyone.
   - [ ] Auto-play the next queued video when the current one finishes.
 
