@@ -66,13 +66,13 @@ _Objective: Transform the watch room into a unified, collaborative YouTube brows
 2. [x] **Data Fetching Architecture Evaluation & Live Player Integration**:
   - [x] Evaluated and implemented server-side route handler `/api/youtube/video` leveraging `youtube-sr` for live metadata (title, channel, views, subscribers, upload date, description) without CORS limits.
   - [x] Embedded real `<YouTube />` player (`react-youtube`) into `YoutubeWorkspaceView`, replacing the static placeholder with live video playback and state synchronization.
-3. [ ] **Concurrent Browsing & Discovery**:
-  - [ ] Build a native YouTube-style Home Feed and Search interface that is continuously accessible.
-  - [ ] Build high-quality Video Card components (thumbnail, title, channel, duration).
-  - [ ] Ensure the UI allows users to browse and search for new content _while_ a synchronized video is actively playing, without disrupting playback.
+3. [x] **Concurrent Browsing & Discovery**:
+  - [x] Build a native YouTube-style Home Feed and Search interface that is continuously accessible.
+  - [x] Build high-quality Video Card components (thumbnail, title, channel, duration).
+  - [x] Ensure the UI allows users to browse and search for new content _while_ a synchronized video is actively playing, without disrupting playback.
 4. [ ] **Playback Integration & Queueing Actions**:
-  - [ ] **Watch Now**: Selecting a video immediately changes the shared active video for everyone and synchronizes it via the `react-youtube` Phase 4 sync engine.
-  - [ ] **Add to Queue**: Selecting a video adds it to the shared room queue _without_ interrupting the currently playing video.
+  - [x] **Watch Now**: Selecting a video immediately changes the shared active video for everyone and synchronizes it via the `react-youtube` Phase 4 sync engine.
+  - [x] **Add to Queue**: Selecting a video adds it to the shared room queue _without_ interrupting the currently playing video.
   - [ ] Build a "Related Videos" feed dynamically populated based on the active video.
 5. [ ] **Collaborative Queue Management**:
   - [ ] Broadcast queue additions/reorders via PartyKit so the Up Next list perfectly syncs for everyone.

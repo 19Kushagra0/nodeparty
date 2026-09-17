@@ -135,3 +135,22 @@ export interface YoutubeVideoMetadataInfo {
   likes?: number;
   isFallback?: boolean;
 }
+
+export interface YoutubeSearchResult {
+  id: string;
+  title: string;
+  channel: {
+    name: string;
+    id?: string;
+    url?: string;
+    icon?: string;
+    verified?: boolean;
+  };
+  thumbnail: string;
+  duration: string;
+  views: string;
+  uploadedAt?: string;
+  url: string;
+  description?: string;
+}
+

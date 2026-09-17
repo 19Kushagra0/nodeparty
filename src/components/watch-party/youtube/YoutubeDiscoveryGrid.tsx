@@ -1,173 +1,275 @@
 "use client";
 
-import { CheckCircle2, MoreVertical } from "lucide-react";
 import { useRoomTheme } from "@/hooks/useRoomTheme";
+import { useRoomStore } from "@/store/useRoomStore";
+import { YoutubeVideoCard } from "@/components/watch-party/youtube/YoutubeVideoCard";
+import type { YoutubeSearchResult } from "@/types";
+import { Sparkles, Compass, X, AlertCircle } from "lucide-react";
 
-interface MockVideo {
-  id: string;
-  title: string;
-  channel: string;
-  avatar: string;
-  thumbnail: string;
-  duration: string;
-  views: string;
-  uploadedAt: string;
-}
-
-const MOCK_VIDEOS: MockVideo[] = [
+const CURATED_DISCOVERY_VIDEOS: YoutubeSearchResult[] = [
   {
-    id: "v1",
-    title: "synthwave radio - chill beats to relax / study / code to",
-    channel: "Lofi Girl",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=80",
-    thumbnail: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=640&auto=format&fit=crop&q=80",
+    id: "jfKfPfyJRdk",
+    title: "lofi hip hop radio - beats to relax/study to",
+    channel: {
+      name: "Lofi Girl",
+      icon: "https://yt3.googleusercontent.com/w2kP2b3JgJgEeVZ6PqP=s88-c-k-c0x00ffffff-no-rj",
+      verified: true,
+    },
+    thumbnail: "https://i.ytimg.com/vi/jfKfPfyJRdk/hq720.jpg",
     duration: "LIVE",
-    views: "24.1K watching",
+    views: "34.5K watching",
     uploadedAt: "Streaming now",
+    url: "https://www.youtube.com/watch?v=jfKfPfyJRdk",
   },
   {
-    id: "v2",
-    title: "Building a Full-Stack Realtime Web App in 2026",
-    channel: "DevSphere",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=80",
-    thumbnail: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=640&auto=format&fit=crop&q=80",
-    duration: "24:18",
-    views: "184K views",
-    uploadedAt: "3 days ago",
+    id: "qEv7T3M4qrg",
+    title: "Cyberpunk 2077: Phantom Liberty — Official Cinematic Trailer",
+    channel: {
+      name: "Cyberpunk 2077",
+      icon: "https://yt3.ggpht.com/LNNs3oKwnUBT2UzjHhnfjVjwpIk85jv3bya5u80biOS5Wst24PhTR9Upb_3avEBet6dYU5KdNw=s68-c-k-c0x00ffffff-no-rj",
+      verified: true,
+    },
+    thumbnail: "https://i.ytimg.com/vi/qEv7T3M4qrg/hq720.jpg",
+    duration: "4:07",
+    views: "18.2M views",
+    uploadedAt: "1 year ago",
+    url: "https://www.youtube.com/watch?v=qEv7T3M4qrg",
   },
   {
-    id: "v3",
-    title: "Cyberpunk 2077: Phantom Liberty 4K Ultra Graphics Showcase",
-    channel: "GameMatrix",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&auto=format&fit=crop&q=80",
-    thumbnail: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=640&auto=format&fit=crop&q=80",
-    duration: "18:42",
-    views: "512K views",
-    uploadedAt: "1 week ago",
+    id: "5qap5aO4i9A",
+    title: "Lofi Beats to Chill / Study / Relax To ☕ Late Night Chill Session",
+    channel: {
+      name: "ChilledCow Vibes",
+      icon: "",
+      verified: false,
+    },
+    thumbnail: "https://i.ytimg.com/vi/5qap5aO4i9A/hq720.jpg",
+    duration: "1:45:20",
+    views: "4.8M views",
+    uploadedAt: "2 months ago",
+    url: "https://www.youtube.com/watch?v=5qap5aO4i9A",
   },
   {
-    id: "v4",
-    title: "Deep House Sunset Session & Chillout Mix",
-    channel: "Soundwave Collective",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&auto=format&fit=crop&q=80",
-    thumbnail: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=640&auto=format&fit=crop&q=80",
-    duration: "1:02:15",
-    views: "920K views",
-    uploadedAt: "2 weeks ago",
+    id: "kJQP7kiw5Fk",
+    title: "Luis Fonsi - Despacito ft. Daddy Yankee (4K Ultra Remaster)",
+    channel: {
+      name: "Luis Fonsi",
+      icon: "",
+      verified: true,
+    },
+    thumbnail: "https://i.ytimg.com/vi/kJQP7kiw5Fk/hq720.jpg",
+    duration: "4:42",
+    views: "8.4B views",
+    uploadedAt: "7 years ago",
+    url: "https://www.youtube.com/watch?v=kJQP7kiw5Fk",
   },
   {
-    id: "v5",
-    title: "The Future of Artificial Intelligence & Robotics",
-    channel: "FutureTech Lab",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&auto=format&fit=crop&q=80",
-    thumbnail: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=640&auto=format&fit=crop&q=80",
-    duration: "32:10",
-    views: "340K views",
-    uploadedAt: "4 days ago",
+    id: "dQw4w9WgXcQ",
+    title: "Rick Astley - Never Gonna Give You Up (Official Music Video)",
+    channel: {
+      name: "Rick Astley",
+      icon: "",
+      verified: true,
+    },
+    thumbnail: "https://i.ytimg.com/vi/dQw4w9WgXcQ/hq720.jpg",
+    duration: "3:33",
+    views: "1.5B views",
+    uploadedAt: "14 years ago",
+    url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   },
   {
-    id: "v6",
-    title: "Top 10 Insane Esports Plays of the Year",
-    channel: "Highlight Reel",
-    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=80&auto=format&fit=crop&q=80",
-    thumbnail: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=640&auto=format&fit=crop&q=80",
-    duration: "14:05",
-    views: "1.2M views",
-    uploadedAt: "2 weeks ago",
+    id: "kqtD5dpn9C8",
+    title: "Coldplay - Hymn For The Weekend (Official Video)",
+    channel: {
+      name: "Coldplay",
+      icon: "",
+      verified: true,
+    },
+    thumbnail: "https://i.ytimg.com/vi/kqtD5dpn9C8/hq720.jpg",
+    duration: "4:26",
+    views: "2.1B views",
+    uploadedAt: "8 years ago",
+    url: "https://www.youtube.com/watch?v=kqtD5dpn9C8",
   },
 ];
 
-export function YoutubeDiscoveryGrid() {
-  const t = useRoomTheme();
-
+function VideoCardSkeleton() {
   return (
-    <div className="w-full px-4 sm:px-6 pt-3 pb-8 flex flex-col gap-4">
-      {/* Section Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-sm sm:text-base font-semibold tracking-tight" style={{ color: t.text }}>
-            Recommended & Trending
-          </h2>
-          <p className="text-xs" style={{ color: t.muted }}>
-            Browse videos to play next without interrupting the room
-          </p>
+    <div className="flex flex-col gap-3 rounded-2xl p-2 animate-pulse">
+      <div className="aspect-video w-full rounded-xl bg-zinc-300/40 dark:bg-zinc-800/60" />
+      <div className="flex items-start gap-3 px-0.5">
+        <div className="w-9 h-9 rounded-full bg-zinc-300/40 dark:bg-zinc-800/60 shrink-0 mt-0.5" />
+        <div className="flex-1 space-y-2">
+          <div className="h-4 bg-zinc-300/40 dark:bg-zinc-800/60 rounded w-5/6" />
+          <div className="h-3 bg-zinc-300/30 dark:bg-zinc-800/50 rounded w-1/2" />
         </div>
       </div>
+    </div>
+  );
+}
+
+export function YoutubeDiscoveryGrid() {
+  const t = useRoomTheme();
+  const searchQuery = useRoomStore((state) => state.searchQuery);
+  const searchResults = useRoomStore((state) => state.searchResults);
+  const isSearching = useRoomStore((state) => state.isSearching);
+  const searchError = useRoomStore((state) => state.searchError);
+  const clearSearch = useRoomStore((state) => state.clearSearch);
+
+  const isSearchActive = searchQuery.trim().length > 0;
+  const videosToDisplay = isSearchActive ? searchResults : CURATED_DISCOVERY_VIDEOS;
+
+  return (
+    <div className="w-full px-4 sm:px-6 pt-2 pb-10 flex flex-col gap-4">
+      {/* Section Header */}
+      <div className="flex items-center justify-between border-b pb-3" style={{ borderColor: t.border }}>
+        <div className="flex items-center gap-2.5">
+          {isSearchActive ? (
+            <div
+              className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+              style={{
+                backgroundColor: t.isDark ? "#241f1a" : "#e4e4e7",
+                color: t.accent,
+              }}
+            >
+              <Compass className="w-4 h-4" />
+            </div>
+          ) : (
+            <div
+              className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+              style={{
+                backgroundColor: t.isDark ? "#241f1a" : "#e4e4e7",
+                color: t.accent,
+              }}
+            >
+              <Sparkles className="w-4 h-4" />
+            </div>
+          )}
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm sm:text-base font-semibold tracking-tight" style={{ color: t.text }}>
+                {isSearchActive ? `Search Results for "${searchQuery}"` : "Recommended & Trending"}
+              </h2>
+              {isSearchActive && !isSearching && (
+                <span
+                  className="px-2 py-0.5 rounded-full text-xs font-medium"
+                  style={{
+                    backgroundColor: t.isDark ? "#241f1a" : "#e4e4e7",
+                    color: t.muted,
+                  }}
+                >
+                  {searchResults.length}
+                </span>
+              )}
+            </div>
+            <p className="text-xs" style={{ color: t.muted }}>
+              {isSearchActive
+                ? "Browse and watch now or add to queue without interrupting playback"
+                : "Discover videos to queue or watch together"}
+            </p>
+          </div>
+        </div>
+
+        {/* Clear Search Filter Button */}
+        {isSearchActive && (
+          <button
+            type="button"
+            onClick={clearSearch}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold cursor-pointer hover:opacity-80 active:scale-95 transition-all"
+            style={{
+              backgroundColor: t.isDark ? "#241f1a" : "#f0f0f2",
+              color: t.text,
+              border: `1px solid ${t.border}`,
+            }}
+            title="Reset to recommended videos"
+          >
+            <X className="w-3.5 h-3.5" />
+            <span>Clear Search</span>
+          </button>
+        )}
+      </div>
+
+      {/* Loading Skeleton View */}
+      {isSearching && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-6 mt-1">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <VideoCardSkeleton key={`skeleton-${i}`} />
+          ))}
+        </div>
+      )}
+
+      {/* Error View */}
+      {!isSearching && searchError && (
+        <div
+          className="w-full py-12 px-4 rounded-2xl flex flex-col items-center justify-center text-center gap-3 mt-2"
+          style={{
+            backgroundColor: t.isDark ? "#1f1814" : "#fdf2f2",
+            border: `1px solid ${t.border}`,
+          }}
+        >
+          <AlertCircle className="w-8 h-8 text-rose-500" />
+          <div>
+            <h3 className="text-sm font-semibold" style={{ color: t.text }}>
+              Unable to complete search
+            </h3>
+            <p className="text-xs mt-1 max-w-sm" style={{ color: t.muted }}>
+              {searchError}. You can try another search term or paste a direct YouTube link into the search bar.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={clearSearch}
+            className="mt-2 px-4 py-1.5 rounded-xl text-xs font-semibold cursor-pointer hover:opacity-90 active:scale-95 transition-all"
+            style={{
+              backgroundColor: t.accent,
+              color: t.accentFg,
+            }}
+          >
+            Back to Recommended
+          </button>
+        </div>
+      )}
+
+      {/* Empty Results View */}
+      {!isSearching && !searchError && isSearchActive && searchResults.length === 0 && (
+        <div
+          className="w-full py-16 px-4 rounded-2xl flex flex-col items-center justify-center text-center gap-3 mt-2"
+          style={{
+            backgroundColor: t.isDark ? "#171411" : "#f9f9fb",
+            border: `1px solid ${t.border}`,
+          }}
+        >
+          <Compass className="w-8 h-8 text-zinc-400 stroke-1" />
+          <div>
+            <h3 className="text-sm font-semibold" style={{ color: t.text }}>
+              No videos found
+            </h3>
+            <p className="text-xs mt-1 max-w-sm" style={{ color: t.muted }}>
+              We couldn&apos;t find any YouTube videos matching &ldquo;{searchQuery}&rdquo;. Try different keywords or paste a direct link.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={clearSearch}
+            className="mt-2 px-4 py-1.5 rounded-xl text-xs font-semibold cursor-pointer hover:opacity-90 active:scale-95 transition-all"
+            style={{
+              backgroundColor: t.accent,
+              color: t.accentFg,
+            }}
+          >
+            Clear Search
+          </button>
+        </div>
+      )}
 
       {/* Video Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-8 mt-2">
-        {MOCK_VIDEOS.map((video) => (
-          <div
-            key={video.id}
-            className="group flex flex-col gap-3 cursor-pointer"
-          >
-            {/* Thumbnail Box */}
-            <div className="relative aspect-video w-full overflow-hidden bg-zinc-900 rounded-xl">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={video.thumbnail}
-                alt={video.title}
-                className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
-              />
-
-              {/* Duration Badge */}
-              <div
-                className="absolute bottom-1.5 right-1.5 px-1 rounded text-[12px] font-medium font-mono tracking-tight flex items-center gap-1 shadow-sm"
-                style={{
-                  backgroundColor: video.duration === "LIVE" ? "#cc0000" : "rgba(0, 0, 0, 0.8)",
-                  color: "#ffffff",
-                }}
-              >
-                {video.duration === "LIVE" && <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />}
-                {video.duration}
-              </div>
-            </div>
-
-            {/* Video Details */}
-            <div className="flex items-start gap-3">
-              {/* Channel Avatar */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={video.avatar}
-                alt={video.channel}
-                className="w-9 h-9 rounded-full object-cover shrink-0 mt-0.5"
-              />
-
-              {/* Text Info */}
-              <div className="flex-1 min-w-0 pr-2">
-                <h3
-                  className="text-[16px] font-semibold line-clamp-2 leading-tight"
-                  style={{ color: t.text }}
-                  title={video.title}
-                >
-                  {video.title}
-                </h3>
-
-                <div className="flex flex-col mt-1 text-[14px] leading-snug" style={{ color: t.muted }}>
-                  <div className="flex items-center gap-1 hover:text-white transition-colors">
-                    <span className="truncate">{video.channel}</span>
-                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span>{video.views}</span>
-                    <span>•</span>
-                    <span>{video.uploadedAt}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Three Dot Menu */}
-              <button
-                className="opacity-0 group-hover:opacity-100 p-1 -mt-1 -mr-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors shrink-0 cursor-pointer"
-                style={{ color: t.text }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <MoreVertical className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+      {!isSearching && !searchError && videosToDisplay.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-6 mt-1">
+          {videosToDisplay.map((video) => (
+            <YoutubeVideoCard key={video.id} video={video} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
