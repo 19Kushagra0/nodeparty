@@ -114,3 +114,24 @@ export interface CapturedMoment {
   likes: number;
   hasLiked?: boolean;
 }
+
+export interface YoutubeVideoMetadataInfo {
+  id: string;
+  title: string;
+  description: string;
+  durationFormatted: string;
+  duration: number;
+  uploadedAt?: string;
+  views: number;
+  thumbnail: string;
+  channel: {
+    name: string;
+    id?: string;
+    url?: string;
+    icon?: string;
+    subscribers?: string;
+    verified?: boolean;
+  };
+  likes?: number;
+  isFallback?: boolean;
+}

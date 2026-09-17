@@ -9,7 +9,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 When the user provides a step or task:
 1. **Do not write code or execute changes immediately.**
-2. Explain what the step is about in plain English.
+2. Explain what the step is about in plain English, and create a corresponding markdown document in `docs/` (e.g. `docs/STEP_<N>_<NAME>.md`) capturing the big picture and feature breakdown of each sub-step.
 3. Provide a detailed list of the files that will be modified during this step.
 4. Explicitly ask the user for permission to proceed (e.g., "Ready to proceed?").
 5. **Wait for the user's explicit authorization** before taking any coding action.

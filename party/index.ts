@@ -46,8 +46,8 @@ export default class Server implements Party.Server {
         }
       }
 
-      if (data.type === "chat_message" || data.type === "reaction_burst") {
-        // Anyone can chat and react
+      if (data.type === "chat_message" || data.type === "reaction_burst" || data.type === "change_video") {
+        // Anyone can chat, react, or change video
         this.room.broadcast(message, [sender.id]);
       }
 

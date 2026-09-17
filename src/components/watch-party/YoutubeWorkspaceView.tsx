@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRoomStore } from "@/store/useRoomStore";
+import { useRoomStore, parseYoutubeId } from "@/store/useRoomStore";
 import { ParticipantSidebar } from "@/components/watch-party/ParticipantSidebar";
 import { ScreenShareModal } from "@/components/watch-party/ScreenShareModal";
 import { CapturedMomentsModal } from "@/components/watch-party/CapturedMomentsModal";
@@ -10,6 +10,7 @@ import { SettingsModal } from "@/components/watch-party/SettingsModal";
 import { ChevronLeft, MessageSquare, Smile, Users } from "lucide-react";
 import { useRoomTheme } from "@/hooks/useRoomTheme";
 import { YoutubeSearchHeader } from "@/components/watch-party/youtube/YoutubeSearchHeader";
+import { YoutubePlayer } from "@/components/watch-party/youtube/YoutubePlayer";
 import { YoutubePlayerPlaceholder } from "@/components/watch-party/youtube/YoutubePlayerPlaceholder";
 import { YoutubeDiscoveryGrid } from "@/components/watch-party/youtube/YoutubeDiscoveryGrid";
 import { WorkspaceNotch } from "@/components/watch-party/WorkspaceNotch";
@@ -29,12 +30,28 @@ export function YoutubeWorkspaceView() {
     participants,
     connectToRoom,
     disconnectFromRoom,
+    videoUrl,
+    currentPreset,
+    fetchVideoMetadata,
+    activeVideoMetadata,
   } = useRoomStore();
+
+  const activeVideoId =
+    parseYoutubeId(videoUrl) ||
+    currentPreset?.youtubeId ||
+    parseYoutubeId(currentPreset?.url || "");
 
   useEffect(() => {
     connectToRoom();
     return () => disconnectFromRoom();
   }, [connectToRoom, disconnectFromRoom]);
+
+  // Fetch real metadata on initial room load if not yet populated
+  useEffect(() => {
+    if (activeVideoId && (!activeVideoMetadata || activeVideoMetadata.id !== activeVideoId)) {
+      fetchVideoMetadata(activeVideoId);
+    }
+  }, [activeVideoId, activeVideoMetadata, fetchVideoMetadata]);
 
   const t = useRoomTheme();
 
@@ -72,7 +89,7 @@ export function YoutubeWorkspaceView() {
 
             {/* Scrollable Stage Area: Player Stage & Concurrent Discovery Grid */}
             <div className="flex-1 w-full min-h-0 overflow-y-auto overflow-x-hidden flex flex-col">
-              <YoutubePlayerPlaceholder />
+              {activeVideoId ? <YoutubePlayer /> : <YoutubePlayerPlaceholder />}
               <YoutubeVideoMetadata />
               <YoutubeDiscoveryGrid />
             </div>

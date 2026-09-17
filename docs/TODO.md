@@ -60,12 +60,12 @@ _Objective: Transform the watch room into a unified, collaborative YouTube brows
 
 ### Step 2: Data & Functionality
 
-1. [ ] **Direct URL Pill Bar Enter Feature**:
-  - [ ] Support entering/pasting any YouTube video or shorts URL (`youtube.com/watch?v=...`, `youtu.be/...`, `youtube.com/shorts/...`) into the floating URL pill bar; pressing **Enter** parses the video ID, immediately updates the active stream, and broadcasts playback sync to everyone in the room.
-  - [ ] When entering general website URLs (in Screen Share / Old UI mode), open in the Shared Virtual Browser Tab.
-2. [ ] **Data Fetching Architecture Evaluation**:
-  - [ ] Evaluate and select a data-fetching approach for YouTube metadata (Official YouTube Data API, proxy, or alternative compatible data sources).
-  - [ ] Implement a reliable, rate-limit-conscious backend route/proxy to fetch Home Feeds, Search Results, and Related Videos.
+1. [x] **Direct URL Pill Bar Enter Feature**:
+  - [x] Support entering/pasting any YouTube video or shorts URL (`youtube.com/watch?v=...`, `youtu.be/...`, `youtube.com/shorts/...`) into the floating URL pill bar; pressing **Enter** parses the video ID, immediately updates the active stream, and broadcasts playback sync to everyone in the room.
+  - [x] When entering general website URLs (in Screen Share / Old UI mode), open in the Shared Virtual Browser Tab.
+2. [x] **Data Fetching Architecture Evaluation & Live Player Integration**:
+  - [x] Evaluated and implemented server-side route handler `/api/youtube/video` leveraging `youtube-sr` for live metadata (title, channel, views, subscribers, upload date, description) without CORS limits.
+  - [x] Embedded real `<YouTube />` player (`react-youtube`) into `YoutubeWorkspaceView`, replacing the static placeholder with live video playback and state synchronization.
 3. [ ] **Concurrent Browsing & Discovery**:
   - [ ] Build a native YouTube-style Home Feed and Search interface that is continuously accessible.
   - [ ] Build high-quality Video Card components (thumbnail, title, channel, duration).

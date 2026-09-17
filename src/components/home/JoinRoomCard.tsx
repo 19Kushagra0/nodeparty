@@ -7,7 +7,7 @@ import { useRoomStore } from "@/store/useRoomStore";
 
 export default function JoinRoomCard() {
   const router = useRouter();
-  const { setCreateModalOpen } = useRoomStore();
+  const setCreateModalOpen = useRoomStore((state) => state.setCreateModalOpen);
   const [activeTab, setActiveTab] = useState<"quick" | "code">("quick");
   const [roomIdInput, setRoomIdInput] = useState("");
   const [isJoining, setIsJoining] = useState(false);
