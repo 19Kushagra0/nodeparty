@@ -13,6 +13,7 @@ import type {
   SharedTab,
   CapturedMoment,
   YoutubeVideoMetadataInfo,
+  YoutubeSearchResult,
 } from "@/types";
 import { initialParticipants, initialMessages, initialQueue } from "@/data/mockParticipants";
 import { curatedVideoPresets } from "@/data/mockPresets";
@@ -94,6 +95,15 @@ interface RoomState {
   activeVideoMetadata: YoutubeVideoMetadataInfo | null;
   isLoadingMetadata: boolean;
   fetchVideoMetadata: (videoId: string) => Promise<void>;
+
+  // YouTube Discovery & Concurrent Browsing
+  searchQuery: string;
+  searchResults: YoutubeSearchResult[];
+  isSearching: boolean;
+  searchError: string | null;
+  setSearchQuery: (query: string) => void;
+  searchYoutube: (query: string) => Promise<void>;
+  clearSearch: () => void;
 
   // Co-Browsing & Virtual Tabs
   openTabs: SharedTab[];
@@ -317,6 +327,12 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   // Real-Time YouTube Metadata
   activeVideoMetadata: null,
   isLoadingMetadata: false,
+
+  // YouTube Discovery & Concurrent Browsing
+  searchQuery: "",
+  searchResults: [],
+  isSearching: false,
+  searchError: null,
 
   // Co-Browsing
   openTabs: initialTabs,
@@ -582,6 +598,42 @@ export const useRoomStore = create<RoomState>((set, get) => ({
     } catch (err) {
       console.error("Error fetching video metadata:", err);
       set({ isLoadingMetadata: false });
+    }
+  },
+
+  setSearchQuery: (query) => set({ searchQuery: query }),
+
+  clearSearch: () => set({ searchQuery: "", searchResults: [], searchError: null }),
+
+  searchYoutube: async (query: string) => {
+    const trimmed = query.trim();
+    if (!trimmed) {
+      set({ searchResults: [], isSearching: false, searchError: null });
+      return;
+    }
+    set({ isSearching: true, searchQuery: trimmed, searchError: null });
+    try {
+      const res = await fetch(`/api/youtube/search?q=${encodeURIComponent(trimmed)}`);
+      if (res.ok) {
+        const data = await res.json();
+        set({
+          searchResults: data.results || [],
+          isSearching: false,
+          searchError: null,
+        });
+      } else {
+        const err = await res.json().catch(() => ({}));
+        set({
+          isSearching: false,
+          searchError: err.error || "Failed to find videos",
+        });
+      }
+    } catch (err: any) {
+      console.error("Error searching YouTube:", err);
+      set({
+        isSearching: false,
+        searchError: "Network error while searching",
+      });
     }
   },
 

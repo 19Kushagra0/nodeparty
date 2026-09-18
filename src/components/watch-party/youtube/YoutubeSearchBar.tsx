@@ -1,13 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Link2, X } from "lucide-react";
+import { Search, Link2, X, Loader2 } from "lucide-react";
 import { useRoomTheme } from "@/hooks/useRoomTheme";
 import { useRoomStore } from "@/store/useRoomStore";
 
 export function YoutubeSearchBar() {
   const t = useRoomTheme();
   const setVideoUrl = useRoomStore((state) => state.setVideoUrl);
+  const searchYoutube = useRoomStore((state) => state.searchYoutube);
+  const clearSearch = useRoomStore((state) => state.clearSearch);
+  const isSearching = useRoomStore((state) => state.isSearching);
   const [query, setQuery] = useState("");
 
   const isUrl =
@@ -20,8 +23,18 @@ export function YoutubeSearchBar() {
     if (e) e.preventDefault();
     const trimmed = query.trim();
     if (!trimmed) return;
-    setVideoUrl(trimmed);
+
+    if (isUrl) {
+      setVideoUrl(trimmed);
+      setQuery("");
+    } else {
+      searchYoutube(trimmed);
+    }
+  };
+
+  const handleClear = () => {
     setQuery("");
+    clearSearch();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -40,7 +53,9 @@ export function YoutubeSearchBar() {
         }}
       >
         <div className="hidden sm:flex pl-4 pr-2 items-center pointer-events-none">
-          {isUrl ? (
+          {isSearching ? (
+            <Loader2 className="w-4 h-4 animate-spin text-amber-500" />
+          ) : isUrl ? (
             <Link2
               className="w-4 h-4 transition-colors animate-pulse"
               style={{ color: t.accent }}
@@ -56,7 +71,7 @@ export function YoutubeSearchBar() {
           onKeyDown={handleKeyDown}
           placeholder="Search YouTube or paste video URL (Press Enter)..."
           className={`w-full pl-4 sm:pl-0 py-2.5 sm:py-2.5 bg-transparent text-xs sm:text-sm outline-none placeholder:text-zinc-500 font-medium ${
-            isUrl ? "pr-28" : "pr-16 sm:pr-28"
+            isUrl ? "pr-28" : "pr-20 sm:pr-32"
           }`}
           style={{ color: t.text }}
         />
@@ -64,8 +79,10 @@ export function YoutubeSearchBar() {
         <div className="absolute right-2.5 flex items-center gap-1.5">
           {query.length > 0 && (
             <button
-              onClick={() => setQuery("")}
+              type="button"
+              onClick={handleClear}
               className="p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+              title="Clear search"
             >
               <X className="w-4 h-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors" />
             </button>
@@ -75,7 +92,7 @@ export function YoutubeSearchBar() {
             <button
               type="button"
               onClick={() => handleSubmit()}
-              className="px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase shadow-sm cursor-pointer hover:opacity-90 active:scale-95 transition-all"
+              className="px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase shadow-sm cursor-pointer hover:opacity-90 active:scale-95 transition-all"
               style={{
                 backgroundColor: t.accent,
                 color: t.accentFg,
@@ -89,24 +106,36 @@ export function YoutubeSearchBar() {
               <button
                 type="button"
                 onClick={() => handleSubmit()}
-                className="hidden sm:flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-mono font-semibold cursor-pointer hover:opacity-80 active:scale-95 transition-all"
+                disabled={isSearching}
+                className="hidden sm:flex items-center gap-1 px-3 py-1 rounded-full text-xs font-mono font-semibold cursor-pointer hover:opacity-80 active:scale-95 transition-all disabled:opacity-50"
                 style={{
                   backgroundColor: t.isDark ? "#241f1a" : "#f0f0f2",
                   color: t.muted,
                 }}
-                title="Press Enter to stream"
+                title="Press Enter to search"
               >
-                <span>⏎</span>
-                <span>Enter</span>
+                {isSearching ? (
+                  <span>Searching...</span>
+                ) : (
+                  <>
+                    <span>⏎</span>
+                    <span>Search</span>
+                  </>
+                )}
               </button>
               <button
                 type="button"
                 onClick={() => handleSubmit()}
-                className="flex sm:hidden p-2 rounded-full transition-all cursor-pointer hover:opacity-80 active:opacity-60"
+                disabled={isSearching}
+                className="flex sm:hidden p-2 rounded-full transition-all cursor-pointer hover:opacity-80 active:opacity-60 disabled:opacity-50"
                 style={{ backgroundColor: t.isDark ? "#241f1a" : "#f0f0f2" }}
-                title="Search / Play"
+                title="Search"
               >
-                <Search className="w-3.5 h-3.5" style={{ color: t.muted }} />
+                {isSearching ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-500" />
+                ) : (
+                  <Search className="w-3.5 h-3.5" style={{ color: t.muted }} />
+                )}
               </button>
             </>
           )}
