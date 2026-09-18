@@ -22,7 +22,7 @@ export async function GET(request: Request) {
 
   try {
     const videos = await YouTube.search(query.trim(), {
-      limit: 18,
+      limit: 12,
       type: "video",
       safeSearch: false,
     });

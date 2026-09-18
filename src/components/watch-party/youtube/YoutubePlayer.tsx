@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubeProps } from "react-youtube";
 import { useRoomStore, parseYoutubeId } from "@/store/useRoomStore";
 import { useRoomTheme } from "@/hooks/useRoomTheme";
-import { AlertCircle, RefreshCw } from "lucide-react";
+import { AlertCircle, RefreshCw, SkipForward } from "lucide-react";
 
 export function YoutubePlayer() {
   const t = useRoomTheme();
@@ -19,6 +19,9 @@ export function YoutubePlayer() {
     setCurrentTime,
     broadcastPlaybackSync,
     userRole,
+    queue,
+    playQueueItem,
+    removeFromQueue,
   } = useRoomStore();
 
   const [isMounted, setIsMounted] = useState(false);
@@ -144,6 +147,19 @@ export function YoutubePlayer() {
     }
   };
 
+  const handleSkipToNext = () => {
+    const activeQueueItem = queue.find((q) => q.isPlaying);
+    if (activeQueueItem) {
+      removeFromQueue(activeQueueItem.id);
+    }
+    const unplayed = queue.filter((q) => !q.isPlaying);
+    if (unplayed.length > 0) {
+      playQueueItem(unplayed[0].id);
+    }
+  };
+
+  const hasNext = queue.filter((q) => !q.isPlaying).length > 0;
+
   const opts: YouTubeProps["opts"] = {
     width: "100%",
     height: "100%",
@@ -188,14 +204,26 @@ export function YoutubePlayer() {
           <p className="text-xs sm:text-sm max-w-md mb-4" style={{ color: t.muted }}>
             {errorMessage || "This video cannot be played directly inside the embedded player."}
           </p>
-          <a
-            href={`https://www.youtube.com/watch?v=${videoId}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-4 py-2 rounded-full text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white transition-all shadow-sm flex items-center gap-1.5"
-          >
-            Watch directly on YouTube
-          </a>
+          <div className="flex items-center gap-3">
+            <a
+              href={`https://www.youtube.com/watch?v=${videoId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-full text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white transition-all shadow-sm flex items-center gap-1.5"
+            >
+              Watch directly on YouTube
+            </a>
+            {hasNext && (
+              <button
+                onClick={handleSkipToNext}
+                className="px-4 py-2 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/20 transition-all shadow-sm flex items-center gap-1.5"
+                style={{ color: t.text }}
+              >
+                <SkipForward className="w-3.5 h-3.5" />
+                Skip to Next
+              </button>
+            )}
+          </div>
         </div>
       </div>
     );

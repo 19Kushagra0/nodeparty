@@ -124,27 +124,6 @@ export function YoutubeDiscoveryGrid() {
       {/* Section Header */}
       <div className="flex items-center justify-between border-b pb-3" style={{ borderColor: t.border }}>
         <div className="flex items-center gap-2.5">
-          {isSearchActive ? (
-            <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-              style={{
-                backgroundColor: t.isDark ? "#241f1a" : "#e4e4e7",
-                color: t.accent,
-              }}
-            >
-              <Compass className="w-4 h-4" />
-            </div>
-          ) : (
-            <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-              style={{
-                backgroundColor: t.isDark ? "#241f1a" : "#e4e4e7",
-                color: t.accent,
-              }}
-            >
-              <Sparkles className="w-4 h-4" />
-            </div>
-          )}
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-sm sm:text-base font-semibold tracking-tight" style={{ color: t.text }}>
@@ -200,29 +179,23 @@ export function YoutubeDiscoveryGrid() {
 
       {/* Error View */}
       {!isSearching && searchError && (
-        <div
-          className="w-full py-12 px-4 rounded-2xl flex flex-col items-center justify-center text-center gap-3 mt-2"
-          style={{
-            backgroundColor: t.isDark ? "#1f1814" : "#fdf2f2",
-            border: `1px solid ${t.border}`,
-          }}
-        >
-          <AlertCircle className="w-8 h-8 text-rose-500" />
-          <div>
-            <h3 className="text-sm font-semibold" style={{ color: t.text }}>
+        <div className="w-full py-20 px-4 flex flex-col items-center justify-center text-center gap-4 mt-2">
+          <AlertCircle className="w-12 h-12 stroke-1 text-zinc-400" />
+          <div className="space-y-1.5">
+            <h3 className="text-base font-medium" style={{ color: t.text }}>
               Unable to complete search
             </h3>
-            <p className="text-xs mt-1 max-w-sm" style={{ color: t.muted }}>
+            <p className="text-sm max-w-sm" style={{ color: t.muted }}>
               {searchError}. You can try another search term or paste a direct YouTube link into the search bar.
             </p>
           </div>
           <button
             type="button"
             onClick={clearSearch}
-            className="mt-2 px-4 py-1.5 rounded-xl text-xs font-semibold cursor-pointer hover:opacity-90 active:scale-95 transition-all"
+            className="mt-2 px-5 py-2 rounded-full text-sm font-medium cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all"
             style={{
-              backgroundColor: t.accent,
-              color: t.accentFg,
+              color: t.text,
+              border: `1px solid ${t.border}`,
             }}
           >
             Back to Recommended
@@ -232,29 +205,23 @@ export function YoutubeDiscoveryGrid() {
 
       {/* Empty Results View */}
       {!isSearching && !searchError && isSearchActive && searchResults.length === 0 && (
-        <div
-          className="w-full py-16 px-4 rounded-2xl flex flex-col items-center justify-center text-center gap-3 mt-2"
-          style={{
-            backgroundColor: t.isDark ? "#171411" : "#f9f9fb",
-            border: `1px solid ${t.border}`,
-          }}
-        >
-          <Compass className="w-8 h-8 text-zinc-400 stroke-1" />
-          <div>
-            <h3 className="text-sm font-semibold" style={{ color: t.text }}>
+        <div className="w-full py-20 px-4 flex flex-col items-center justify-center text-center gap-4 mt-2">
+          <Compass className="w-12 h-12 stroke-1 text-zinc-400" />
+          <div className="space-y-1.5">
+            <h3 className="text-base font-medium" style={{ color: t.text }}>
               No videos found
             </h3>
-            <p className="text-xs mt-1 max-w-sm" style={{ color: t.muted }}>
+            <p className="text-sm max-w-sm" style={{ color: t.muted }}>
               We couldn&apos;t find any YouTube videos matching &ldquo;{searchQuery}&rdquo;. Try different keywords or paste a direct link.
             </p>
           </div>
           <button
             type="button"
             onClick={clearSearch}
-            className="mt-2 px-4 py-1.5 rounded-xl text-xs font-semibold cursor-pointer hover:opacity-90 active:scale-95 transition-all"
+            className="mt-2 px-5 py-2 rounded-full text-sm font-medium cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all"
             style={{
-              backgroundColor: t.accent,
-              color: t.accentFg,
+              color: t.text,
+              border: `1px solid ${t.border}`,
             }}
           >
             Clear Search
