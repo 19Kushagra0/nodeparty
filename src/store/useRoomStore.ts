@@ -104,6 +104,9 @@ interface RoomState {
   setSearchQuery: (query: string) => void;
   searchYoutube: (query: string) => Promise<void>;
   clearSearch: () => void;
+  relatedVideos: YoutubeSearchResult[];
+  isFetchingRelated: boolean;
+  fetchRelatedVideos: (title: string) => Promise<void>;
 
   // Co-Browsing & Virtual Tabs
   openTabs: SharedTab[];
@@ -333,6 +336,8 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   searchResults: [],
   isSearching: false,
   searchError: null,
+  relatedVideos: [],
+  isFetchingRelated: false,
 
   // Co-Browsing
   openTabs: initialTabs,
@@ -391,7 +396,13 @@ export const useRoomStore = create<RoomState>((set, get) => ({
         const data = JSON.parse(e.data);
         if (data.type === "sync_presence") {
           console.log(`👥 [Frontend] Presence Update! There are now ${data.count} users connected to the room.`, data.participants);
-          // If you wanted to, you could update state.participants here based on data.participants
+          // If host, proactively broadcast current queue to ensure newcomers have latest queue
+          if (get().userRole === "host" && get().socket && data.count > 1) {
+            get().socket?.send(JSON.stringify({
+              type: "sync_queue",
+              queue: get().queue,
+            }));
+          }
         } else if (data.type === "sync_playback" && get().userRole !== "host") {
           console.log("⏱️ [Frontend] Received authoritative playback sync:", data);
           set({
@@ -401,6 +412,11 @@ export const useRoomStore = create<RoomState>((set, get) => ({
             playbackRate: data.playbackRate,
             lastSyncTimestamp: Date.now(),
           });
+        } else if (data.type === "sync_queue") {
+          console.log("📑 [Frontend] Received queue sync from peer:", data.queue);
+          if (Array.isArray(data.queue)) {
+            set({ queue: data.queue });
+          }
         } else if (data.type === "chat_message") {
           console.log("💬 [Frontend] Received chat message:", data.message);
           set((state) => ({ messages: [...state.messages, data.message] }));
@@ -634,6 +650,30 @@ export const useRoomStore = create<RoomState>((set, get) => ({
         isSearching: false,
         searchError: "Network error while searching",
       });
+    }
+  },
+
+  fetchRelatedVideos: async (title: string) => {
+    const trimmed = title.trim();
+    if (!trimmed) {
+      set({ relatedVideos: [], isFetchingRelated: false });
+      return;
+    }
+    set({ isFetchingRelated: true });
+    try {
+      const res = await fetch(`/api/youtube/search?q=${encodeURIComponent(trimmed)}`);
+      if (res.ok) {
+        const data = await res.json();
+        set({
+          relatedVideos: data.results || [],
+          isFetchingRelated: false,
+        });
+      } else {
+        set({ isFetchingRelated: false });
+      }
+    } catch (err) {
+      console.error("Error fetching related videos:", err);
+      set({ isFetchingRelated: false });
     }
   },
 
@@ -897,25 +937,38 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   },
 
   addToQueue: (item) => {
+    const currentUser = get().participants.find((p) => p.isMe);
+    const addedByName = currentUser ? `${currentUser.name} (You)` : "Alex (You)";
     const newQueueItem: QueueItem = {
       id: "queue-" + Date.now(),
       ...item,
-      addedBy: "Alex (You)",
+      addedBy: addedByName,
       votes: 1,
       hasVoted: true,
       isPlaying: false,
     };
+    let updatedQueue: QueueItem[] = [];
     set((state) => {
       const playing = state.queue.filter((q) => q.isPlaying);
       const unplayed = [...state.queue.filter((q) => !q.isPlaying), newQueueItem].sort(
         (a, b) => b.votes - a.votes
       );
-      return { queue: [...playing, ...unplayed] };
+      updatedQueue = [...playing, ...unplayed];
+      return { queue: updatedQueue };
     });
     get().sendMessage(`➕ Added to Up-Next queue: ${item.title}`);
+
+    const socket = get().socket;
+    if (socket) {
+      socket.send(JSON.stringify({
+        type: "sync_queue",
+        queue: updatedQueue,
+      }));
+    }
   },
 
   voteQueueItem: (queueId) => {
+    let updatedQueue: QueueItem[] = [];
     set((state) => {
       const updated = state.queue.map((q) => {
         if (q.id === queueId) {
@@ -932,14 +985,38 @@ export const useRoomStore = create<RoomState>((set, get) => ({
       // The currently playing track stays pinned at top, while other queued tracks auto-sort by highest votes
       const playing = updated.filter((q) => q.isPlaying);
       const unplayed = updated.filter((q) => !q.isPlaying).sort((a, b) => b.votes - a.votes);
+      updatedQueue = [...playing, ...unplayed];
 
-      return { queue: [...playing, ...unplayed] };
+      return { queue: updatedQueue };
     });
+
+    const socket = get().socket;
+    if (socket) {
+      socket.send(JSON.stringify({
+        type: "sync_queue",
+        queue: updatedQueue,
+      }));
+    }
   },
 
   playQueueItem: (queueId) => {
     const item = get().queue.find((q) => q.id === queueId);
     if (!item) return;
+
+    let updatedQueue: QueueItem[] = [];
+    const ytId = parseYoutubeId(item.url) || "dQw4w9WgXcQ";
+    const preset: VideoPreset = {
+      id: item.id,
+      title: item.title,
+      description: "Now playing from communal lounge queue.",
+      category: "Queue Selection",
+      duration: item.duration,
+      channel: item.channel,
+      thumbnail: item.thumbnail,
+      youtubeId: ytId,
+      ambientColor: "rgba(244, 63, 94, 0.35)",
+      url: item.url,
+    };
 
     set((state) => {
       const updated = state.queue.map((q) => ({
@@ -948,33 +1025,65 @@ export const useRoomStore = create<RoomState>((set, get) => ({
       }));
       const playing = updated.filter((q) => q.isPlaying);
       const unplayed = updated.filter((q) => !q.isPlaying).sort((a, b) => b.votes - a.votes);
+      updatedQueue = [...playing, ...unplayed];
+
+      const updatedTabs = state.openTabs.map((tab) =>
+        tab.id === state.activeTabId
+          ? {
+              ...tab,
+              url: item.url,
+              title: item.title,
+              thumbnail: item.thumbnail,
+              type: "video" as "video" | "browser",
+            }
+          : tab
+      );
 
       return {
-        queue: [...playing, ...unplayed],
+        queue: updatedQueue,
         videoUrl: item.url,
-        currentPreset: {
-          id: item.id,
-          title: item.title,
-          description: "Now playing from communal lounge queue.",
-          category: "Queue Selection",
-          duration: item.duration,
-          channel: item.channel,
-          thumbnail: item.thumbnail,
-          youtubeId: parseYoutubeId(item.url) || "dQw4w9WgXcQ",
-          ambientColor: "rgba(244, 63, 94, 0.35)",
-          url: item.url,
-        },
+        currentPreset: preset,
         isPlaying: true,
         currentTime: 0,
+        openTabs: updatedTabs,
       };
     });
+
     get().sendMessage(`▶️ Now playing from queue: ${item.title}`);
+
+    const socket = get().socket;
+    if (socket) {
+      socket.send(JSON.stringify({
+        type: "change_video",
+        url: item.url,
+        preset,
+        isBrowser: false,
+      }));
+      socket.send(JSON.stringify({
+        type: "sync_queue",
+        queue: updatedQueue,
+      }));
+    }
+
+    if (ytId) {
+      get().fetchVideoMetadata(ytId);
+    }
   },
 
   removeFromQueue: (queueId) => {
-    set((state) => ({
-      queue: state.queue.filter((q) => q.id !== queueId),
-    }));
+    let updatedQueue: QueueItem[] = [];
+    set((state) => {
+      updatedQueue = state.queue.filter((q) => q.id !== queueId);
+      return { queue: updatedQueue };
+    });
+
+    const socket = get().socket;
+    if (socket) {
+      socket.send(JSON.stringify({
+        type: "sync_queue",
+        queue: updatedQueue,
+      }));
+    }
   },
 
   changeParticipantRole: (targetId, newRole) => {
