@@ -70,13 +70,13 @@ _Objective: Transform the watch room into a unified, collaborative YouTube brows
   - [x] Build a native YouTube-style Home Feed and Search interface that is continuously accessible.
   - [x] Build high-quality Video Card components (thumbnail, title, channel, duration).
   - [x] Ensure the UI allows users to browse and search for new content _while_ a synchronized video is actively playing, without disrupting playback.
-4. [ ] **Playback Integration & Queueing Actions**:
+4. [x] **Playback Integration & Queueing Actions**:
   - [x] **Watch Now**: Selecting a video immediately changes the shared active video for everyone and synchronizes it via the `react-youtube` Phase 4 sync engine.
   - [x] **Add to Queue**: Selecting a video adds it to the shared room queue _without_ interrupting the currently playing video.
-  - [ ] Build a "Related Videos" feed dynamically populated based on the active video.
-5. [ ] **Collaborative Queue Management**:
-  - [ ] Broadcast queue additions/reorders via PartyKit so the Up Next list perfectly syncs for everyone.
-  - [ ] Auto-play the next queued video when the current one finishes.
+  - [x] Build a "Related Videos" feed dynamically populated based on the active video.
+5. [x] **Collaborative Queue Management**:
+  - [x] Broadcast queue additions/reorders via PartyKit so the Up Next list perfectly syncs for everyone.
+  - [x] Auto-play the next queued video when the current one finishes.
 
 ---
 

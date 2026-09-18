@@ -46,8 +46,8 @@ export default class Server implements Party.Server {
         }
       }
 
-      if (data.type === "chat_message" || data.type === "reaction_burst" || data.type === "change_video") {
-        // Anyone can chat, react, or change video
+      if (data.type === "chat_message" || data.type === "reaction_burst" || data.type === "change_video" || data.type === "sync_queue") {
+        // Anyone can chat, react, change video, or sync queue
         this.room.broadcast(message, [sender.id]);
       }
 

@@ -34,6 +34,7 @@ export function YoutubeWorkspaceView() {
     currentPreset,
     fetchVideoMetadata,
     activeVideoMetadata,
+    fetchRelatedVideos,
   } = useRoomStore();
 
   const activeVideoId =
@@ -52,6 +53,14 @@ export function YoutubeWorkspaceView() {
       fetchVideoMetadata(activeVideoId);
     }
   }, [activeVideoId, activeVideoMetadata, fetchVideoMetadata]);
+
+  // Dynamically fetch related videos whenever the active video title changes
+  useEffect(() => {
+    const videoTitle = activeVideoMetadata?.title || currentPreset?.title;
+    if (videoTitle && videoTitle !== "YouTube Video") {
+      fetchRelatedVideos(videoTitle);
+    }
+  }, [activeVideoMetadata?.title, currentPreset?.title, fetchRelatedVideos]);
 
   const t = useRoomTheme();
 

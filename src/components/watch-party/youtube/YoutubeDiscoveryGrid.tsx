@@ -1,7 +1,7 @@
 "use client";
 
 import { useRoomTheme } from "@/hooks/useRoomTheme";
-import { useRoomStore } from "@/store/useRoomStore";
+import { useRoomStore, parseYoutubeId } from "@/store/useRoomStore";
 import { YoutubeVideoCard } from "@/components/watch-party/youtube/YoutubeVideoCard";
 import type { YoutubeSearchResult } from "@/types";
 import { Sparkles, Compass, X, AlertCircle } from "lucide-react";
@@ -115,19 +115,51 @@ export function YoutubeDiscoveryGrid() {
   const isSearching = useRoomStore((state) => state.isSearching);
   const searchError = useRoomStore((state) => state.searchError);
   const clearSearch = useRoomStore((state) => state.clearSearch);
+  const relatedVideos = useRoomStore((state) => state.relatedVideos);
+  const isFetchingRelated = useRoomStore((state) => state.isFetchingRelated);
+  const videoUrl = useRoomStore((state) => state.videoUrl);
+  const currentPreset = useRoomStore((state) => state.currentPreset);
+
+  const activeVideoId =
+    parseYoutubeId(videoUrl) ||
+    currentPreset?.youtubeId ||
+    parseYoutubeId(currentPreset?.url || "") ||
+    "";
 
   const isSearchActive = searchQuery.trim().length > 0;
-  const videosToDisplay = isSearchActive ? searchResults : CURATED_DISCOVERY_VIDEOS;
+  
+  // Filter out the currently active video from related videos so it doesn't duplicate what's currently playing
+  const filteredRelated = relatedVideos.filter((v) => v.id !== activeVideoId);
+  const isRelatedActive = !isSearchActive && filteredRelated.length > 0;
+
+  const videosToDisplay = isSearchActive
+    ? searchResults
+    : isRelatedActive
+    ? filteredRelated
+    : CURATED_DISCOVERY_VIDEOS;
+
+  const isLoading = isSearching || (!isSearchActive && isFetchingRelated && filteredRelated.length === 0);
+
+  let headerTitle = "Recommended & Trending";
+  let headerSubtitle = "Discover videos to queue or watch together";
+
+  if (isSearchActive) {
+    headerTitle = `Search Results for "${searchQuery}"`;
+    headerSubtitle = "Browse and watch now or add to queue without interrupting playback";
+  } else if (isRelatedActive) {
+    headerTitle = "Up Next / Related Videos";
+    headerSubtitle = "Videos related to what you're watching right now";
+  }
 
   return (
-    <div className="w-full px-4 sm:px-6 pt-2 pb-10 flex flex-col gap-4">
+    <div id="youtube-discovery-grid" className="w-full px-4 sm:px-6 pt-2 pb-10 flex flex-col gap-4">
       {/* Section Header */}
       <div className="flex items-center justify-between border-b pb-3" style={{ borderColor: t.border }}>
         <div className="flex items-center gap-2.5">
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-sm sm:text-base font-semibold tracking-tight" style={{ color: t.text }}>
-                {isSearchActive ? `Search Results for "${searchQuery}"` : "Recommended & Trending"}
+                {headerTitle}
               </h2>
               {isSearchActive && !isSearching && (
                 <span
@@ -140,11 +172,20 @@ export function YoutubeDiscoveryGrid() {
                   {searchResults.length}
                 </span>
               )}
+              {isRelatedActive && !isLoading && (
+                <span
+                  className="px-2 py-0.5 rounded-full text-xs font-medium"
+                  style={{
+                    backgroundColor: t.isDark ? "#241f1a" : "#e4e4e7",
+                    color: t.muted,
+                  }}
+                >
+                  {filteredRelated.length}
+                </span>
+              )}
             </div>
             <p className="text-xs" style={{ color: t.muted }}>
-              {isSearchActive
-                ? "Browse and watch now or add to queue without interrupting playback"
-                : "Discover videos to queue or watch together"}
+              {headerSubtitle}
             </p>
           </div>
         </div>
@@ -169,7 +210,7 @@ export function YoutubeDiscoveryGrid() {
       </div>
 
       {/* Loading Skeleton View */}
-      {isSearching && (
+      {isLoading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-6 mt-1">
           {Array.from({ length: 6 }).map((_, i) => (
             <VideoCardSkeleton key={`skeleton-${i}`} />
@@ -178,7 +219,7 @@ export function YoutubeDiscoveryGrid() {
       )}
 
       {/* Error View */}
-      {!isSearching && searchError && (
+      {!isLoading && searchError && isSearchActive && (
         <div className="w-full py-20 px-4 flex flex-col items-center justify-center text-center gap-4 mt-2">
           <AlertCircle className="w-12 h-12 stroke-1 text-zinc-400" />
           <div className="space-y-1.5">
@@ -204,7 +245,7 @@ export function YoutubeDiscoveryGrid() {
       )}
 
       {/* Empty Results View */}
-      {!isSearching && !searchError && isSearchActive && searchResults.length === 0 && (
+      {!isLoading && !searchError && isSearchActive && searchResults.length === 0 && (
         <div className="w-full py-20 px-4 flex flex-col items-center justify-center text-center gap-4 mt-2">
           <Compass className="w-12 h-12 stroke-1 text-zinc-400" />
           <div className="space-y-1.5">
@@ -230,7 +271,7 @@ export function YoutubeDiscoveryGrid() {
       )}
 
       {/* Video Cards Grid */}
-      {!isSearching && !searchError && videosToDisplay.length > 0 && (
+      {!isLoading && (!isSearchActive || !searchError) && videosToDisplay.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-6 mt-1">
           {videosToDisplay.map((video) => (
             <YoutubeVideoCard key={video.id} video={video} />
