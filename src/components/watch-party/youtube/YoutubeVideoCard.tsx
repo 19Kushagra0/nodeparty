@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Play, ListPlus, Check, CheckCircle2 } from "lucide-react";
+import { ListPlus, Check, CheckCircle2 } from "lucide-react";
 import type { YoutubeSearchResult } from "@/types";
 import { useRoomTheme } from "@/hooks/useRoomTheme";
 import { useRoomStore } from "@/store/useRoomStore";
@@ -39,7 +39,10 @@ export function YoutubeVideoCard({ video }: YoutubeVideoCardProps) {
   const isLive = video.duration.toUpperCase() === "LIVE";
 
   return (
-    <div className="group relative flex flex-col gap-3 rounded-2xl p-2 transition-all duration-200 hover:bg-black/[0.03] dark:hover:bg-white/[0.04]">
+    <div 
+      className="group relative flex flex-col gap-3 rounded-2xl p-2 transition-all duration-200 hover:bg-black/[0.03] dark:hover:bg-white/[0.04] cursor-pointer"
+      onClick={handleWatchNow}
+    >
       {/* Thumbnail Container */}
       <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-zinc-900 shadow-sm">
         {/* Thumbnail Image */}
@@ -63,42 +66,20 @@ export function YoutubeVideoCard({ video }: YoutubeVideoCardProps) {
           {video.duration}
         </div>
 
-        {/* Hover Action Overlay */}
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center gap-2 p-3 backdrop-blur-[2px]">
-          <button
-            onClick={handleWatchNow}
-            type="button"
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider shadow-lg cursor-pointer transform translate-y-1 group-hover:translate-y-0 transition-all duration-200 hover:scale-105 active:scale-95"
-            style={{
-              backgroundColor: t.accent,
-              color: t.accentFg,
-            }}
-            title="Switch stream to this video now"
-          >
-            <Play className="w-3.5 h-3.5 fill-current" />
-            <span>Watch Now</span>
-          </button>
-
-          <button
-            onClick={handleAddToQueue}
-            type="button"
-            disabled={justAdded}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold backdrop-blur-md bg-white/20 hover:bg-white/30 text-white shadow-lg cursor-pointer transform translate-y-1 group-hover:translate-y-0 transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-80"
-            title="Add to shared party queue"
-          >
-            {justAdded ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-emerald-300">Queued</span>
-              </>
-            ) : (
-              <>
-                <ListPlus className="w-3.5 h-3.5" />
-                <span>Queue</span>
-              </>
-            )}
-          </button>
-        </div>
+        {/* Top Right Queue Button */}
+        <button
+          onClick={handleAddToQueue}
+          type="button"
+          disabled={justAdded}
+          className="absolute top-2 right-2 p-1.5 rounded bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-black/80 disabled:opacity-80 z-10 cursor-pointer"
+          title="Add to queue"
+        >
+          {justAdded ? (
+            <Check className="w-4 h-4 text-emerald-400" />
+          ) : (
+            <ListPlus className="w-4 h-4" />
+          )}
+        </button>
       </div>
 
       {/* Video Details */}
