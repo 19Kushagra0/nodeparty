@@ -76,7 +76,7 @@ _Objective: Transform the watch room into a unified, collaborative YouTube brows
   - [x] Build a "Related Videos" feed dynamically populated based on the active video.
 5. [x] **Collaborative Queue Management**:
   - [x] Broadcast queue additions/reorders via PartyKit so the Up Next list perfectly syncs for everyone.
-  - [x] Auto-play the next queued video when the current one finishes.
+  - [x] Auto-play the next queued video when the current ![alt text](image.png)one finishes.
 
 ---
 
