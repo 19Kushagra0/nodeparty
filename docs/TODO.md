@@ -89,6 +89,8 @@ _Objective: Transform the watch room into a unified, collaborative YouTube brows
   - [x] Replaced external homepage navigation on the `< NodeParty` header button with internal reset to the "Recommended & Trending" discovery feed (clearing active video and search query, smoothly scrolling to top).
 11. [x] **Subtle Search Bar Bottom Margin**:
   - [x] Added `mb-2.5 sm:mb-3 pb-1.5` to the search bar container in `YoutubeWorkspaceView.tsx` to prevent it from sitting flush against the video grid or player cards below.
+12. [x] **Remove Noisy Related Videos Header Text**:
+  - [x] Removed the "Up Next / Related Videos", "29 of 29" pill counter, and explanatory subtitle from `YoutubeDiscoveryGrid.tsx` when watching a video, allowing related recommendations to flow seamlessly beneath the player like native YouTube.
 
 ---
 

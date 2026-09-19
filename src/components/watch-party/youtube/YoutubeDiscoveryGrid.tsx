@@ -368,85 +368,36 @@ export function YoutubeDiscoveryGrid() {
     (!isSearchActive && isFetchingRelated && filteredRelated.length === 0) ||
     (!isSearchActive && !isRelatedActive && isFetchingRecommended && recommendedVideos.length === 0);
 
-  let headerTitle = "Recommended & Trending";
-  let headerSubtitle = "Discover videos to queue or watch together";
-
-  if (isSearchActive) {
-    headerTitle = `Search Results for "${searchQuery}"`;
-    headerSubtitle = "Browse and watch now or add to queue without interrupting playback";
-  } else if (isRelatedActive) {
-    headerTitle = "Up Next / Related Videos";
-    headerSubtitle = "Videos related to what you're watching right now";
-  }
-
   return (
     <div id="youtube-discovery-grid" className="w-full px-4 sm:px-6 pt-2 pb-10 flex flex-col gap-4">
-      {/* Section Header */}
-      <div className="flex items-center justify-between border-b pb-3" style={{ borderColor: t.border }}>
-        <div className="flex items-center gap-2.5">
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-sm sm:text-base font-semibold tracking-tight" style={{ color: t.text }}>
-                {headerTitle}
-              </h2>
-              {isSearchActive && !isSearching && (
-                <span
-                  className="px-2 py-0.5 rounded-full text-xs font-medium"
-                  style={{
-                    backgroundColor: t.isDark ? "#241f1a" : "#e4e4e7",
-                    color: t.muted,
-                  }}
-                >
-                  {visibleVideos.length} of {searchResults.length}
-                </span>
-              )}
-              {isRelatedActive && !isLoading && (
-                <span
-                  className="px-2 py-0.5 rounded-full text-xs font-medium"
-                  style={{
-                    backgroundColor: t.isDark ? "#241f1a" : "#e4e4e7",
-                    color: t.muted,
-                  }}
-                >
-                  {visibleVideos.length} of {filteredRelated.length}
-                </span>
-              )}
-              {!isSearchActive && !isRelatedActive && !isLoading && (
-                <span
-                  className="px-2 py-0.5 rounded-full text-xs font-medium"
-                  style={{
-                    backgroundColor: t.isDark ? "#241f1a" : "#e4e4e7",
-                    color: t.muted,
-                  }}
-                >
-                  {visibleVideos.length} of {videosToDisplay.length}
-                </span>
-              )}
-            </div>
-            <p className="text-xs" style={{ color: t.muted }}>
-              {headerSubtitle}
-            </p>
+      {/* Section Header (hidden for Related Videos under active player to match native YouTube) */}
+      {!isRelatedActive && (
+        <div className="flex items-center justify-between border-b pb-3" style={{ borderColor: t.border }}>
+          <div className="flex items-center gap-2.5">
+            <h2 className="text-sm sm:text-base font-semibold tracking-tight" style={{ color: t.text }}>
+              {isSearchActive ? `Search Results for "${searchQuery}"` : "Recommended & Trending"}
+            </h2>
           </div>
-        </div>
 
-        {/* Clear Search Filter Button */}
-        {isSearchActive && (
-          <button
-            type="button"
-            onClick={clearSearch}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold cursor-pointer hover:opacity-80 active:scale-95 transition-all"
-            style={{
-              backgroundColor: t.isDark ? "#241f1a" : "#f0f0f2",
-              color: t.text,
-              border: `1px solid ${t.border}`,
-            }}
-            title="Reset to recommended videos"
-          >
-            <X className="w-3.5 h-3.5" />
-            <span>Clear Search</span>
-          </button>
-        )}
-      </div>
+          {/* Clear Search Filter Button */}
+          {isSearchActive && (
+            <button
+              type="button"
+              onClick={clearSearch}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold cursor-pointer hover:opacity-80 active:scale-95 transition-all"
+              style={{
+                backgroundColor: t.isDark ? "#241f1a" : "#f0f0f2",
+                color: t.text,
+                border: `1px solid ${t.border}`,
+              }}
+              title="Reset to recommended videos"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Clear Search</span>
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Loading Skeleton View */}
       {isLoading && (
