@@ -6,6 +6,10 @@ import { Plus, MoreHorizontal } from "lucide-react";
 export function MediaInfoCard() {
   const { currentPreset } = useRoomStore();
 
+  if (!currentPreset) {
+    return null;
+  }
+
   return (
     <div className="h-full flex bg-white/70 backdrop-blur-md border border-white rounded-[20px] sm:rounded-[24px] p-3 sm:p-3.5 gap-3 sm:gap-4 items-center shadow-xs">
       {/* Poster Thumbnail */}

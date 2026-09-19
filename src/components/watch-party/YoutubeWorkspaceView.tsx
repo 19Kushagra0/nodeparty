@@ -98,8 +98,12 @@ export function YoutubeWorkspaceView() {
 
             {/* Scrollable Stage Area: Player Stage & Concurrent Discovery Grid */}
             <div className="flex-1 w-full min-h-0 overflow-y-auto overflow-x-hidden flex flex-col">
-              {activeVideoId ? <YoutubePlayer /> : <YoutubePlayerPlaceholder />}
-              <YoutubeVideoMetadata />
+              {activeVideoId ? (
+                <>
+                  <YoutubePlayer />
+                  <YoutubeVideoMetadata />
+                </>
+              ) : null}
               <YoutubeDiscoveryGrid />
             </div>
           </div>

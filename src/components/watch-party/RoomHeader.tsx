@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -102,20 +102,22 @@ export function RoomHeader() {
 
       {/* Right: Now Watching & Room Count */}
       <div className="flex items-center gap-2.5 shrink-0">
-        <div
-          className="hidden sm:flex items-center gap-2.5 rounded-full pr-3 p-1 cursor-pointer hover:opacity-90 transition-opacity max-w-[260px]"
-          style={{ backgroundColor: `${t.surface}e6`, border: `1px solid ${t.border}` }}
-        >
-          <div className="w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ backgroundColor: t.surfaceHover }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={currentPreset.thumbnail} alt="Now Watching" className="w-full h-full object-cover" />
+        {currentPreset && (
+          <div
+            className="hidden sm:flex items-center gap-2.5 rounded-full pr-3 p-1 cursor-pointer hover:opacity-90 transition-opacity max-w-[260px]"
+            style={{ backgroundColor: `${t.surface}e6`, border: `1px solid ${t.border}` }}
+          >
+            <div className="w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ backgroundColor: t.surfaceHover }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={currentPreset.thumbnail} alt="Now Watching" className="w-full h-full object-cover" />
+            </div>
+            <div className="flex flex-col min-w-0">
+              <span className="text-[9px] font-semibold leading-none" style={{ color: t.muted }}>Now Watching</span>
+              <span className="text-xs font-bold leading-tight truncate" style={{ color: t.text }}>{currentPreset.title}</span>
+            </div>
+            <ChevronRight className="w-3.5 h-3.5 shrink-0 ml-0.5" style={{ color: t.muted }} />
           </div>
-          <div className="flex flex-col min-w-0">
-            <span className="text-[9px] font-semibold leading-none" style={{ color: t.muted }}>Now Watching</span>
-            <span className="text-xs font-bold leading-tight truncate" style={{ color: t.text }}>{currentPreset.title}</span>
-          </div>
-          <ChevronRight className="w-3.5 h-3.5 shrink-0 ml-0.5" style={{ color: t.muted }} />
-        </div>
+        )}
 
         <div
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shrink-0"

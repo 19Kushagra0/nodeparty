@@ -77,7 +77,7 @@ interface RoomState {
 
   // Video & Playback
   videoUrl: string;
-  currentPreset: VideoPreset;
+  currentPreset: VideoPreset | null;
   isPlaying: boolean;
   currentTime: number;
   duration: number;
@@ -211,7 +211,7 @@ const initialTabs: SharedTab[] = [
   {
     id: "tab-yt",
     title: "YouTube 4K Cinema",
-    url: "https://www.youtube.com/watch?v=qEv7T3M4qrg",
+    url: "",
     type: "video",
     thumbnail: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop",
   },
@@ -312,11 +312,11 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   layoutMode: "cinema",
 
   // Video initial state
-  videoUrl: curatedVideoPresets[0].url,
-  currentPreset: curatedVideoPresets[0],
-  isPlaying: true,
-  currentTime: 42,
-  duration: 222, // 3:42
+  videoUrl: "",
+  currentPreset: null,
+  isPlaying: false,
+  currentTime: 0,
+  duration: 0,
   volume: 85,
   isMuted: false,
   playbackRate: 1,
@@ -599,14 +599,27 @@ export const useRoomStore = create<RoomState>((set, get) => ({
         set((state) => ({
           activeVideoMetadata: data,
           isLoadingMetadata: false,
-          currentPreset: {
-            ...state.currentPreset,
-            title: data.title || state.currentPreset.title,
-            channel: data.channel?.name || state.currentPreset.channel,
-            thumbnail: data.thumbnail || state.currentPreset.thumbnail,
-            duration: data.durationFormatted || state.currentPreset.duration,
-            description: data.description || state.currentPreset.description,
-          },
+          currentPreset: state.currentPreset
+            ? {
+                ...state.currentPreset,
+                title: data.title || state.currentPreset.title,
+                channel: data.channel?.name || state.currentPreset.channel,
+                thumbnail: data.thumbnail || state.currentPreset.thumbnail,
+                duration: data.durationFormatted || state.currentPreset.duration,
+                description: data.description || state.currentPreset.description,
+              }
+            : {
+                id: "custom-" + videoId,
+                title: data.title || "YouTube Video",
+                category: "YouTube",
+                duration: data.durationFormatted || "00:00",
+                channel: data.channel?.name || "YouTube",
+                thumbnail: data.thumbnail || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+                youtubeId: videoId,
+                url: `https://www.youtube.com/watch?v=${videoId}`,
+                description: data.description || "",
+                ambientColor: "rgba(244, 63, 94, 0.35)",
+              },
         }));
       } else {
         set({ isLoadingMetadata: false });
@@ -811,9 +824,9 @@ export const useRoomStore = create<RoomState>((set, get) => ({
 
     const newMoment: CapturedMoment = {
       id: "moment-" + Date.now(),
-      title: title || `${current.title.split("—")[0].trim()} Live Snapshot`,
+      title: title || (current?.title ? `${current.title.split("—")[0].trim()} Live Snapshot` : "Live Party Snapshot"),
       timestamp: timeStr,
-      imageUrl: current.thumbnail,
+      imageUrl: current?.thumbnail || "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop",
       capturedBy: "Alex (You)",
       userAvatarBg: "from-rose-500 to-pink-600",
       likes: 1,
