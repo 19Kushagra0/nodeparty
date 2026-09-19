@@ -107,6 +107,12 @@ interface RoomState {
   relatedVideos: YoutubeSearchResult[];
   isFetchingRelated: boolean;
   fetchRelatedVideos: (title: string) => Promise<void>;
+  recommendedVideos: YoutubeSearchResult[];
+  isFetchingRecommended: boolean;
+  fetchRecommendedVideos: () => Promise<void>;
+  isFetchingMore: boolean;
+  loadMoreVideos: () => Promise<void>;
+  resetToRecommendations: () => void;
 
   // Co-Browsing & Virtual Tabs
   openTabs: SharedTab[];
@@ -338,6 +344,9 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   searchError: null,
   relatedVideos: [],
   isFetchingRelated: false,
+  recommendedVideos: [],
+  isFetchingRecommended: false,
+  isFetchingMore: false,
 
   // Co-Browsing
   openTabs: initialTabs,
@@ -569,6 +578,9 @@ export const useRoomStore = create<RoomState>((set, get) => ({
         currentTime: 0,
         isPlaying: true,
         openTabs: updatedTabs,
+        searchQuery: "",
+        searchResults: [],
+        searchError: null,
       };
     });
 
@@ -634,6 +646,31 @@ export const useRoomStore = create<RoomState>((set, get) => ({
 
   clearSearch: () => set({ searchQuery: "", searchResults: [], searchError: null }),
 
+  resetToRecommendations: () => {
+    set((state) => {
+      const updatedTabs = state.openTabs.map((tab) =>
+        tab.id === state.activeTabId
+          ? {
+              ...tab,
+              url: "",
+              title: "YouTube Discovery",
+              thumbnail: "",
+            }
+          : tab
+      );
+      return {
+        videoUrl: "",
+        currentPreset: null,
+        activeVideoMetadata: null,
+        isPlaying: false,
+        searchQuery: "",
+        searchResults: [],
+        searchError: null,
+        openTabs: updatedTabs,
+      };
+    });
+  },
+
   searchYoutube: async (query: string) => {
     const trimmed = query.trim();
     if (!trimmed) {
@@ -687,6 +724,67 @@ export const useRoomStore = create<RoomState>((set, get) => ({
     } catch (err) {
       console.error("Error fetching related videos:", err);
       set({ isFetchingRelated: false });
+    }
+  },
+
+  fetchRecommendedVideos: async () => {
+    if (get().recommendedVideos.length > 0 || get().isFetchingRecommended) return;
+    set({ isFetchingRecommended: true });
+    try {
+      const res = await fetch(`/api/youtube/search?q=trending%20videos`);
+      if (res.ok) {
+        const data = await res.json();
+        set({
+          recommendedVideos: data.results || [],
+          isFetchingRecommended: false,
+        });
+      } else {
+        set({ isFetchingRecommended: false });
+      }
+    } catch (err) {
+      console.error("Error fetching recommended videos:", err);
+      set({ isFetchingRecommended: false });
+    }
+  },
+
+  loadMoreVideos: async () => {
+    const state = get();
+    if (state.isFetchingMore) return;
+    set({ isFetchingMore: true });
+
+    try {
+      if (state.searchQuery.trim() !== "") {
+        const page = Math.floor(state.searchResults.length / 20) + 1;
+        const res = await fetch(`/api/youtube/search?q=${encodeURIComponent(state.searchQuery + " part " + page)}`);
+        if (res.ok) {
+          const data = await res.json();
+          const existingIds = new Set(state.searchResults.map((v) => v.id));
+          const newVideos = (data.results || []).filter((v: any) => !existingIds.has(v.id));
+          set({ searchResults: [...state.searchResults, ...newVideos] });
+        }
+      } else if (state.relatedVideos.length > 0) {
+        const lastTitle = state.relatedVideos[state.relatedVideos.length - 1]?.title || "music";
+        const res = await fetch(`/api/youtube/search?q=${encodeURIComponent(lastTitle + " similar")}`);
+        if (res.ok) {
+          const data = await res.json();
+          const existingIds = new Set(state.relatedVideos.map((v) => v.id));
+          const newVideos = (data.results || []).filter((v: any) => !existingIds.has(v.id));
+          set({ relatedVideos: [...state.relatedVideos, ...newVideos] });
+        }
+      } else {
+        const page = Math.floor(state.recommendedVideos.length / 20) + 1;
+        const res = await fetch(`/api/youtube/search?q=${encodeURIComponent("trending videos mix " + page)}`);
+        if (res.ok) {
+          const data = await res.json();
+          const existingIds = new Set(state.recommendedVideos.map((v) => v.id));
+          const newVideos = (data.results || []).filter((v: any) => !existingIds.has(v.id));
+          set({ recommendedVideos: [...state.recommendedVideos, ...newVideos] });
+        }
+      }
+    } catch (err) {
+      console.error("Error loading more videos:", err);
+    } finally {
+      set({ isFetchingMore: false });
     }
   },
 

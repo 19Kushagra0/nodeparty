@@ -190,12 +190,12 @@ export function ParticipantSidebar() {
       {/* Clean Header & Navigation */}
       <div className="flex items-center justify-between mb-3 px-0.5 shrink-0 gap-2">
         <div
-          className="flex-1 min-w-0 flex gap-1 p-1 rounded-full"
+          className="flex-1 min-w-0 flex gap-0.5 sm:gap-1 p-1 rounded-full"
           style={{ backgroundColor: t.surfaceHover, border: `1px solid ${t.border}` }}
         >
           <button
             onClick={() => setActiveTab("chat")}
-            className={`flex-1 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 outline-none focus:outline-none focus-visible:outline-none select-none border`}
+            className={`flex-1 py-1.5 sm:py-2 px-1 rounded-full text-[11px] sm:text-xs font-semibold tracking-tight transition-all cursor-pointer flex items-center justify-center gap-1 outline-none focus:outline-none select-none border whitespace-nowrap`}
             style={{
               backgroundColor: activeTab === "chat" ? (t.isDark ? "#221d17" : t.surface) : "transparent",
               color: activeTab === "chat" ? (t.isDark ? t.accent : t.text) : t.muted,
@@ -203,12 +203,12 @@ export function ParticipantSidebar() {
             }}
             title="Room Chat"
           >
-            <MessageSquare className="w-3.5 h-3.5" />
+            <MessageSquare className="w-3.5 h-3.5 shrink-0" />
             <span>Chat</span>
           </button>
           <button
             onClick={() => setActiveTab("reactions")}
-            className={`flex-1 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 outline-none focus:outline-none focus-visible:outline-none select-none border`}
+            className={`flex-1 py-1.5 sm:py-2 px-1 rounded-full text-[11px] sm:text-xs font-semibold tracking-tight transition-all cursor-pointer flex items-center justify-center gap-1 outline-none focus:outline-none select-none border whitespace-nowrap`}
             style={{
               backgroundColor: activeTab === "reactions" ? (t.isDark ? "#221d17" : t.surface) : "transparent",
               color: activeTab === "reactions" ? (t.isDark ? t.accent : t.text) : t.muted,
@@ -216,12 +216,12 @@ export function ParticipantSidebar() {
             }}
             title="Reactions & Soundboard"
           >
-            <Smile className="w-3.5 h-3.5" />
+            <Smile className="w-3.5 h-3.5 shrink-0" />
             <span>React</span>
           </button>
           <button
             onClick={() => setActiveTab("users")}
-            className={`flex-1 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 outline-none focus:outline-none focus-visible:outline-none select-none border`}
+            className={`flex-1 py-1.5 sm:py-2 px-1 rounded-full text-[11px] sm:text-xs font-semibold tracking-tight transition-all cursor-pointer flex items-center justify-center gap-1 outline-none focus:outline-none select-none border whitespace-nowrap`}
             style={{
               backgroundColor: activeTab === "users" ? (t.isDark ? "#221d17" : t.surface) : "transparent",
               color: activeTab === "users" ? (t.isDark ? t.accent : t.text) : t.muted,
@@ -229,12 +229,12 @@ export function ParticipantSidebar() {
             }}
             title={`View Users (${friends.length})`}
           >
-            <Users className="w-3.5 h-3.5" />
+            <Users className="w-3.5 h-3.5 shrink-0" />
             <span>Users</span>
           </button>
           <button
             onClick={() => setActiveTab("queue")}
-            className={`flex-1 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1 outline-none focus:outline-none focus-visible:outline-none select-none border`}
+            className={`flex-1 py-1.5 sm:py-2 px-1 rounded-full text-[11px] sm:text-xs font-semibold tracking-tight transition-all cursor-pointer flex items-center justify-center gap-1 outline-none focus:outline-none select-none border whitespace-nowrap`}
             style={{
               backgroundColor: activeTab === "queue" ? (t.isDark ? "#221d17" : t.surface) : "transparent",
               color: activeTab === "queue" ? (t.isDark ? t.accent : t.text) : t.muted,
@@ -242,7 +242,7 @@ export function ParticipantSidebar() {
             }}
             title={`Shared Queue (${queue.length})`}
           >
-            <ListVideo className="w-3.5 h-3.5" />
+            <ListVideo className="w-3.5 h-3.5 shrink-0" />
             <span>Queue</span>
           </button>
         </div>

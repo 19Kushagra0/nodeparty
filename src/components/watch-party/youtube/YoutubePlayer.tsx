@@ -191,46 +191,62 @@ export function YoutubePlayer() {
   };
 
   const onError: YouTubeProps["onError"] = (event) => {
-    console.error("[YoutubePlayer] Playback error code:", event.data);
-    setHasError(true);
-    // YouTube Error codes: 2 (invalid param), 5 (HTML5 error), 100 (not found/private), 101/150 (embed disabled)
-    let msg = "Playback on other websites has been disabled by the video owner.";
-    if (event.data === 101 || event.data === 150) {
-      msg = "Playback on other websites has been disabled by the video owner.";
-    } else if (event.data === 100) {
-      msg = "This video is unavailable, deleted, or marked private.";
-    }
-    setErrorMessage(msg);
+    try {
+      const errCode = event?.data;
+      console.warn("[YoutubePlayer] Playback code:", errCode);
+      setHasError(true);
 
-    // Broadcast room notification to chat
-    const currentTitle = currentPreset?.title || "Video";
-    sendMessage(`⚠️ "${currentTitle}" cannot be played (embedding disabled by owner).`);
+      // YouTube Error codes: 2 (invalid param), 5 (HTML5 error), 100 (not found/private), 101/150 (embed disabled)
+      let msg = "Playback on other websites has been disabled by the video owner.";
+      if (errCode === 101 || errCode === 150) {
+        msg = "Playback on other websites has been disabled by the video owner.";
+      } else if (errCode === 100) {
+        msg = "This video is unavailable, deleted, or marked private.";
+      }
+      setErrorMessage(msg);
 
-    // Check if there are upcoming videos in the queue to auto-skip to
-    const upcomingQueue = queue.filter((q) => !q.isPlaying);
-    if (upcomingQueue.length > 0) {
-      setSkipCountdown(5);
-      if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
-      countdownTimerRef.current = setInterval(() => {
-        setSkipCountdown((prev) => {
-          if (prev === null) return null;
-          if (prev <= 1) {
-            if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
-            countdownTimerRef.current = null;
-            if (userRole === "host") {
-              handleSkipToNext();
+      // Broadcast room notification to chat safely
+      try {
+        const currentTitle = currentPreset?.title || "Video";
+        if (typeof sendMessage === "function") {
+          sendMessage(`⚠️ "${currentTitle}" cannot be played (embedding disabled by owner).`);
+        }
+      } catch {
+        // Chat broadcast error shouldn't impact player
+      }
+
+      // Check if there are upcoming videos in the queue to auto-skip to
+      const upcomingQueue = (queue || []).filter((q) => !q?.isPlaying);
+      if (upcomingQueue.length > 0) {
+        setSkipCountdown(5);
+        if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+        countdownTimerRef.current = setInterval(() => {
+          setSkipCountdown((prev) => {
+            if (prev === null) return null;
+            if (prev <= 1) {
+              if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+              countdownTimerRef.current = null;
+              if (userRole === "host") {
+                try {
+                  handleSkipToNext();
+                } catch {
+                  // Ignore
+                }
+              }
+              return 0;
             }
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+            return prev - 1;
+          });
+        }, 1000);
+      }
+    } catch (handlerErr) {
+      console.warn("[YoutubePlayer] Handled error in player error handler:", handlerErr);
+      setHasError(true);
+      setErrorMessage("Playback on other websites has been disabled by the video owner.");
     }
   };
 
-
-
-  const hasNext = queue.filter((q) => !q.isPlaying).length > 0;
+  const hasNext = (queue || []).filter((q) => !q?.isPlaying).length > 0;
 
   const opts: YouTubeProps["opts"] = {
     width: "100%",
@@ -252,7 +268,7 @@ export function YoutubePlayer() {
 
   if (!isMounted) {
     return (
-      <div className="w-full px-4 sm:px-6 pt-4 sm:pt-5 pb-2 shrink-0">
+      <div className="w-full px-4 sm:px-6 pt-2 sm:pt-2.5 pb-2 shrink-0">
         <div
           className="relative w-full aspect-video max-h-[480px] lg:max-h-[540px] xl:max-h-[600px] mx-auto rounded-2xl sm:rounded-3xl overflow-hidden border shadow-lg bg-black/90 flex items-center justify-center animate-pulse"
           style={{ borderColor: t.border }}
@@ -269,7 +285,7 @@ export function YoutubePlayer() {
     const thumbnail = currentPreset?.thumbnail;
 
     return (
-      <div className="w-full px-4 sm:px-6 pt-4 sm:pt-5 pb-2 shrink-0">
+      <div className="w-full px-4 sm:px-6 pt-2 sm:pt-2.5 pb-2 shrink-0">
         <div
           className="relative w-full aspect-video max-h-[480px] lg:max-h-[540px] xl:max-h-[600px] mx-auto rounded-2xl sm:rounded-3xl overflow-hidden border shadow-xl bg-black flex flex-col items-center justify-center p-6 text-center select-none"
           style={{ borderColor: t.border }}
@@ -374,7 +390,7 @@ export function YoutubePlayer() {
                   <Compass className="w-3.5 h-3.5" />
                   Explore Recommendations
                 </button>
-                {relatedVideos.length > 0 && (
+                {relatedVideos && relatedVideos.length > 0 && relatedVideos[0]?.url && (
                   <button
                     type="button"
                     onClick={() => setVideoUrl(relatedVideos[0].url)}
@@ -393,7 +409,7 @@ export function YoutubePlayer() {
   }
 
   return (
-    <div className="w-full px-4 sm:px-6 pt-4 sm:pt-5 pb-2 shrink-0">
+    <div className="w-full px-4 sm:px-6 pt-2 sm:pt-2.5 pb-2 shrink-0">
       <div
         className="relative w-full aspect-video max-h-[480px] lg:max-h-[540px] xl:max-h-[600px] mx-auto rounded-2xl sm:rounded-3xl overflow-hidden border shadow-xl bg-black transition-all duration-300 group"
         style={{ borderColor: t.border }}
