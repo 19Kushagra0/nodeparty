@@ -80,7 +80,23 @@ _Objective: Transform the watch room into a unified, collaborative YouTube brows
 
 ---
 
-## 🟡 Phase 5B: Collaborative Browser Mode — Telemetry & Remote Cursors
+## 🟡 Phase 5B: Meet-Style Video Conference & Screen Share Pinning
+
+_Objective: Transform the empty GridStageView into a fully functional dynamic grid for face-to-face video chat and screen share pinning._
+
+- [ ] **Dynamic Video Grid** (`GridStageView.tsx`):
+  - [ ] Render a responsive CSS grid that automatically adjusts layout (1x1, 1x2, 2x2) based on the number of active participants.
+  - [ ] Display participant video feeds (or avatars if video is off) with nameplates and mic indicators.
+- [ ] **Max Participants Control**:
+  - [ ] Add a UI control for desktop viewports to set the maximum number of visible grid participants.
+- [ ] **Screen Share & Pinning**:
+  - [ ] Implement manual pinning logic in `useRoomStore.ts`.
+  - [ ] When a feed/screen share is pinned, give it the main stage focus.
+  - [ ] Ensure non-pinned participants gracefully move to the right-hand `ParticipantSidebar` "Users" tab.
+
+---
+
+## 🟡 Phase 5C: Collaborative Browser Mode — Telemetry & Remote Cursors
 
 _Objective: Accurately map and broadcast mouse positions without injecting clicks._
 

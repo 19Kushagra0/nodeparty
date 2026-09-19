@@ -107,7 +107,7 @@ export function VideoPlayer() {
             Presets:
           </span>
           {curatedVideoPresets.map((preset) => {
-            const isActive = currentPreset.id === preset.id;
+            const isActive = currentPreset?.id === preset.id;
             return (
               <button
                 key={preset.id}
@@ -157,7 +157,7 @@ export function VideoPlayer() {
       {/* Main Cinema Viewport with Dynamic Ambient Lighting */}
       <div className="relative w-full">
         {/* Dynamic Ambient Glow Canvas */}
-        {ambientGlow && (
+        {ambientGlow && currentPreset && (
           <div
             className="cinema-glow"
             style={{
@@ -171,12 +171,18 @@ export function VideoPlayer() {
           className="relative aspect-video w-full bg-black border border-white/[0.1] rounded-3xl overflow-hidden shadow-2xl group flex flex-col justify-between select-none"
         >
           {/* Active Cinema Video Poster / Feed */}
-          <div
-            className="absolute inset-0 bg-cover bg-center transition-all duration-700"
-            style={{ backgroundImage: `url('${currentPreset.thumbnail}')` }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-black/60" />
-          </div>
+          {currentPreset?.thumbnail ? (
+            <div
+              className="absolute inset-0 bg-cover bg-center transition-all duration-700"
+              style={{ backgroundImage: `url('${currentPreset.thumbnail}')` }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-black/60" />
+            </div>
+          ) : (
+            <div className="absolute inset-0 bg-zinc-950 flex items-center justify-center text-zinc-500 text-sm">
+              No video selected
+            </div>
+          )}
 
           {/* Floating Emoji Reactions Stream */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
@@ -209,11 +215,11 @@ export function VideoPlayer() {
                   4K HDR • 60 FPS
                 </span>
                 <span className="text-zinc-400 text-xs font-mono hidden sm:inline">
-                  {currentPreset.channel}
+                  {currentPreset?.channel || "Live Feed"}
                 </span>
               </div>
               <h2 className="text-sm sm:text-lg font-black text-white drop-shadow-md truncate">
-                {currentPreset.title}
+                {currentPreset?.title || "No video selected"}
               </h2>
             </div>
 

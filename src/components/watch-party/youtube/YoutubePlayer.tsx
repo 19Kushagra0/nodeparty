@@ -236,7 +236,7 @@ export function YoutubePlayer() {
     width: "100%",
     height: "100%",
     playerVars: {
-      autoplay: 1,
+      autoplay: 0,
       controls: 1,
       modestbranding: 1,
       rel: 0,
@@ -245,6 +245,10 @@ export function YoutubePlayer() {
       origin: typeof window !== "undefined" ? window.location.origin : undefined,
     },
   };
+
+  if (!videoId) {
+    return null;
+  }
 
   if (!isMounted) {
     return (

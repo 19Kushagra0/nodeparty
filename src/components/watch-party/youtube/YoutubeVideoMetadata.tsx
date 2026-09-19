@@ -12,7 +12,7 @@ import {
   Check,
 } from "lucide-react";
 import { useRoomTheme } from "@/hooks/useRoomTheme";
-import { useRoomStore } from "@/store/useRoomStore";
+import { useRoomStore, parseYoutubeId } from "@/store/useRoomStore";
 
 function formatViews(views?: number): string {
   if (!views) return "Live stream";
@@ -23,7 +23,12 @@ function formatViews(views?: number): string {
 
 export function YoutubeVideoMetadata() {
   const t = useRoomTheme();
-  const { activeVideoMetadata, isLoadingMetadata, currentPreset } = useRoomStore();
+  const { activeVideoMetadata, isLoadingMetadata, currentPreset, videoUrl } = useRoomStore();
+
+  const activeVideoId =
+    parseYoutubeId(videoUrl) ||
+    currentPreset?.youtubeId ||
+    parseYoutubeId(currentPreset?.url || "");
 
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [likeState, setLikeState] = useState<"none" | "liked" | "disliked">("none");
@@ -69,6 +74,10 @@ export function YoutubeVideoMetadata() {
       setTimeout(() => setCopiedLink(false), 2000);
     }
   };
+
+  if (!activeVideoId) {
+    return null;
+  }
 
   const formattedLikes =
     likeCount >= 1000

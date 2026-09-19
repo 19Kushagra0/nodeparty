@@ -285,7 +285,7 @@ export function CinematicVideoPlayer() {
       >
         {/* Active Content Background Poster / YouTube Player */}
         <div className="absolute inset-0 bg-black">
-          {currentPreset.youtubeId ? (
+          {currentPreset?.youtubeId ? (
             <YouTube
               videoId={currentPreset.youtubeId}
               opts={{
@@ -335,11 +335,15 @@ export function CinematicVideoPlayer() {
               className="absolute inset-0 w-full h-full pointer-events-none" // Disabled so custom UI overlay handles clicks
               iframeClassName="w-full h-full scale-[1.2]" // Scale up slightly to hide youtube branding/bars
             />
-          ) : (
+          ) : currentPreset?.thumbnail ? (
             <div
               className="absolute inset-0 bg-cover bg-center transition-opacity duration-700"
               style={{ backgroundImage: `url('${currentPreset.thumbnail}')` }}
             />
+          ) : (
+            <div className="absolute inset-0 bg-zinc-950 flex items-center justify-center text-zinc-500 text-xs sm:text-sm">
+              No video selected
+            </div>
           )}
         </div>
 
@@ -447,7 +451,7 @@ export function CinematicVideoPlayer() {
                   ) : (
                     <div
                       onClick={() => {
-                        setInputUrl(currentPreset.url || "");
+                        setInputUrl(currentPreset?.url || "");
                         setIsEditingUrl(true);
                       }}
                       className="cursor-pointer flex items-center gap-0.5 tracking-tight font-medium hover:opacity-85 transition-opacity"
