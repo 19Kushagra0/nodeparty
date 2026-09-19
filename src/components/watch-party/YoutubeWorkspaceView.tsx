@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRoomStore, parseYoutubeId } from "@/store/useRoomStore";
 import { ParticipantSidebar } from "@/components/watch-party/ParticipantSidebar";
 import { ScreenShareModal } from "@/components/watch-party/ScreenShareModal";
@@ -18,6 +18,7 @@ import { YoutubeSearchBar } from "@/components/watch-party/youtube/YoutubeSearch
 import { YoutubeVideoMetadata } from "@/components/watch-party/youtube/YoutubeVideoMetadata";
 
 import { RoomDetailsPill } from "@/components/watch-party/RoomDetailsPill";
+import { RoomBrandButton } from "@/components/watch-party/RoomBrandButton";
 
 export function YoutubeWorkspaceView() {
   const {
@@ -41,6 +42,9 @@ export function YoutubeWorkspaceView() {
     parseYoutubeId(videoUrl) ||
     currentPreset?.youtubeId ||
     parseYoutubeId(currentPreset?.url || "");
+
+  const searchQuery = useRoomStore((state) => state.searchQuery);
+  const isSearchActive = searchQuery.trim().length > 0;
 
   useEffect(() => {
     connectToRoom();
@@ -66,6 +70,22 @@ export function YoutubeWorkspaceView() {
 
   const friendsCount = participants.filter((p) => !p.isMe).length;
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const resetToRecommendations = useRoomStore((state) => state.resetToRecommendations);
+
+  const handleBrandClick = () => {
+    resetToRecommendations();
+    scrollContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Automatically scroll stage to top whenever a new video is opened or cleared
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [activeVideoId, videoUrl]);
+
   return (
     <>
       {/* Shutter Camera Flash Animation Overlay */}
@@ -85,20 +105,46 @@ export function YoutubeWorkspaceView() {
               border: `1px solid ${t.border}`,
             }}
           >
-            {/* Room Details dynamic island notch */}
-            <WorkspaceNotch>
-              <RoomDetailsPill />
-            </WorkspaceNotch>
+            {/* Top-Left Header Brand & Back Button */}
+            <div
+              className={`absolute top-2.5 sm:top-3.5 left-4 sm:left-6 z-[110] flex items-center pointer-events-auto transition-all duration-300 ease-in-out ${
+                isRightSidebarOpen
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 -translate-y-12 pointer-events-none"
+              }`}
+            >
+              <RoomBrandButton onClick={handleBrandClick} />
+            </div>
 
-            <div className="w-full flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-[76px] pb-2 mb-[10px] relative z-10">
+            {/* Room Details dynamic island notch */}
+            <div
+              className={`transition-all duration-300 ease-in-out ${
+                isRightSidebarOpen
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 -translate-y-12 pointer-events-none"
+              }`}
+            >
+              <WorkspaceNotch>
+                <RoomDetailsPill />
+              </WorkspaceNotch>
+            </div>
+
+            <div
+              className={`w-full flex items-center justify-center px-4 sm:px-6 lg:px-8 pb-1.5 mb-2.5 sm:mb-3 relative z-10 transition-all duration-300 ease-in-out ${
+                isRightSidebarOpen ? "pt-[76px]" : "pt-3.5 sm:pt-4"
+              }`}
+            >
                <div className="w-full">
                  <YoutubeSearchBar />
                </div>
             </div>
 
             {/* Scrollable Stage Area: Player Stage & Concurrent Discovery Grid */}
-            <div className="flex-1 w-full min-h-0 overflow-y-auto overflow-x-hidden flex flex-col">
-              {activeVideoId ? (
+            <div
+              ref={scrollContainerRef}
+              className="flex-1 w-full min-h-0 overflow-y-auto overflow-x-hidden flex flex-col"
+            >
+              {activeVideoId && !isSearchActive ? (
                 <>
                   <YoutubePlayer />
                   <YoutubeVideoMetadata />

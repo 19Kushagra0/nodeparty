@@ -1,13 +1,5 @@
 import { NextResponse } from "next/server";
-import YouTube from "youtube-sr";
-
-function formatViews(views: number | undefined): string {
-  if (typeof views !== "number" || isNaN(views)) return "0 views";
-  if (views >= 1_000_000_000) return `${(views / 1_000_000_000).toFixed(1).replace(/\.0$/, "")}B views`;
-  if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1).replace(/\.0$/, "")}M views`;
-  if (views >= 1_000) return `${(views / 1_000).toFixed(1).replace(/\.0$/, "")}K views`;
-  return `${views} views`;
-}
+import { search } from "youtube-ext";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -21,22 +13,13 @@ export async function GET(request: Request) {
   }
 
   try {
-    const videos = await YouTube.search(query.trim(), {
-      limit: 12,
-      type: "video",
-      safeSearch: false,
-    });
+    const searchRes = await search(query.trim());
+    const videos = searchRes.videos || [];
 
-    const mapped = (videos || []).map((v) => {
-      const channelIcon =
-        typeof v.channel?.icon === "string"
-          ? v.channel.icon
-          : (v.channel?.icon as any)?.url || "";
+    const mapped = videos.map((v) => {
+      const channelIcon = ""; // youtube-ext doesn't provide channel icons in basic search
 
-      const durationFormatted =
-        v.durationFormatted ||
-        (v as any).duration_formatted ||
-        (v.live ? "LIVE" : "00:00");
+      const durationFormatted = v.duration?.text || "00:00";
 
       return {
         id: v.id || "",
@@ -46,16 +29,16 @@ export async function GET(request: Request) {
           id: v.channel?.id || "",
           url: v.channel?.url || "",
           icon: channelIcon,
-          verified: !!(v.channel as any)?.verified,
+          verified: false,
         },
         thumbnail:
-          v.thumbnail?.url ||
+          v.thumbnails?.[v.thumbnails.length - 1]?.url ||
           (v.id ? `https://img.youtube.com/vi/${v.id}/hqdefault.jpg` : ""),
         duration: durationFormatted,
-        views: formatViews(v.views),
-        uploadedAt: v.uploadedAt || "",
+        views: v.views?.text || "0 views",
+        uploadedAt: v.published?.pretty || "",
         url: v.url || (v.id ? `https://www.youtube.com/watch?v=${v.id}` : ""),
-        description: v.description || "",
+        description: "",
       };
     });
 

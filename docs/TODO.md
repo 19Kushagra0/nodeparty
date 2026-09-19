@@ -77,6 +77,20 @@ _Objective: Transform the watch room into a unified, collaborative YouTube brows
 5. [x] **Collaborative Queue Management**:
   - [x] Broadcast queue additions/reorders via PartyKit so the Up Next list perfectly syncs for everyone.
   - [x] Auto-play the next queued video when the current ![alt text](image.png)one finishes.
+6. [x] **Infinite Scroll & Progressive Load More**:
+  - [x] Implemented client-side progressive pagination with `IntersectionObserver` on search results and initial discovery feed, unlocking items 12 at a time while protecting against YouTube rate-limits.
+7. [x] **Queue Tab Redesign (YouTube Typography & Anti-AI Slop)**:
+  - [x] Replaced AI-slop patterns (pink borders, uppercase labels, dashed empty boxes, pinging badges) with authentic YouTube playlist aesthetics (500-weight 2-line clamped titles, muted channel metadata, corner thumbnail timestamps, and a solid modern empty state with discovery jump button).
+8. [x] **Infinite Scroll Loader (Native YouTube Circular Spinner)**:
+  - [x] Replaced the clunky "Scrolling for more videos" pill and manual click button with authentic YouTube circular loading spinner and silent sentinel pagination.
+9. [x] **Auto-Scroll to Top on Video Selection**:
+  - [x] Automatically and smoothly scroll the main stage container back to `top: 0` whenever a new video is played (via discovery grid, queue, or remote sync).
+10. [x] **Brand Button Leads to Recommended & Trending Feed**:
+  - [x] Replaced external homepage navigation on the `< NodeParty` header button with internal reset to the "Recommended & Trending" discovery feed (clearing active video and search query, smoothly scrolling to top).
+11. [x] **Subtle Search Bar Bottom Margin**:
+  - [x] Added `mb-2.5 sm:mb-3 pb-1.5` to the search bar container in `YoutubeWorkspaceView.tsx` to prevent it from sitting flush against the video grid or player cards below.
+12. [x] **Remove Noisy Related Videos Header Text**:
+  - [x] Removed the "Up Next / Related Videos", "29 of 29" pill counter, and explanatory subtitle from `YoutubeDiscoveryGrid.tsx` when watching a video, allowing related recommendations to flow seamlessly beneath the player like native YouTube.
 
 ---
 
