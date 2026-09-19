@@ -228,16 +228,7 @@ export function YoutubePlayer() {
     }
   };
 
-  const handleSkipToNext = () => {
-    const activeQueueItem = queue.find((q) => q.isPlaying);
-    if (activeQueueItem) {
-      removeFromQueue(activeQueueItem.id);
-    }
-    const unplayed = queue.filter((q) => !q.isPlaying);
-    if (unplayed.length > 0) {
-      playQueueItem(unplayed[0].id);
-    }
-  };
+
 
   const hasNext = queue.filter((q) => !q.isPlaying).length > 0;
 
