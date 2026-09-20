@@ -46,28 +46,52 @@ This document tracks our implementation progress. You can copy this summary to p
 - **Dependencies Prepared**:
   - `partykit` (`^0.0.115`), `partysocket` (`^1.3.0`), `react-youtube` (`^10.1.0`), and `framer-motion` (`^13.2.0`).
 
+### Phase 4: Real-Time Watch Party Sync
+- **PartyKit WebSocket Signaling Server ([`party/index.ts`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/party/index.ts))**:
+  - Initialized PartyKit server with client presence tracking (`sync_presence`).
+  - Wire `partysocket` in `useRoomStore.ts` with connection lifecycle handling.
+- **Authoritative Playback Synchronization**:
+  - Host designated as authoritative clock source emitting `sync_playback` packets.
+  * Guests run dual-tier drift correction: hard seek ($> 1.5$s drift) and rate throttling ($0.3$s–$1.5$s drift).
+- **Social & Media State Broadcast**:
+  - Chat messages (`chat_message`), floating reaction bursts (`reaction_burst`), and video switches (`change_video`).
+
+### Phase 5A: Discord-Style "Watch Together" (Native YouTube Experience)
+- **Dual Workspace Architecture**:
+  - Added `activeWorkspace: "general" | "youtube"` in [`useRoomStore.ts`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/store/useRoomStore.ts).
+  - Wired workspace switcher buttons in [`RoomSidebar.tsx`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/layout/RoomSidebar.tsx) and conditional stage rendering in [`RoomShell.tsx`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/RoomShell.tsx).
+- **Server-Side YouTube Engine (`youtube-sr`)**:
+  - `/api/youtube/video`: Fetches metadata (title, channel, views, subscribers, upload date, description) and related videos.
+  - `/api/youtube/search`: Dynamic live queries for videos, channels, and playlists.
+- **Player & Discovery Feed Integration**:
+  - Replaced mock background with real `<YouTube />` (`react-youtube`) player in [`YoutubePlayer.tsx`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/youtube/YoutubePlayer.tsx).
+  - Added [`YoutubePlayerPlaceholder.tsx`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/youtube/YoutubePlayerPlaceholder.tsx) for empty player states.
+  - Direct URL entry support in search bar (pasting video/shorts URL parses ID and syncs playback immediately).
+  - Concurrent browsing: discovery feed remains accessible while synchronized video plays.
+- **Collaborative Queue & Anti-AI Slop Redesign**:
+  - Real-time queue broadcast over PartyKit (`sync_queue`) with auto-play next upon video finish.
+  - Restyled queue using authentic YouTube typography (500-weight clamped titles, corner thumbnail timestamps).
+  - Progressive infinite scroll with `IntersectionObserver` sentinel (12 items at a time) and circular loading spinner.
+  - Auto-scroll stage back to top on video selection.
+  - Brand button ([`RoomBrandButton.tsx`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/RoomBrandButton.tsx)) resets stage to recommended & trending feed.
+
 ---
 
 ## 🟡 Up Next: Real-Time Sync & Control Roadmap
 
-### Phase 4: Watch Party Sync (Completed)
-- [x] Initialize PartyKit WebSocket signaling server.
-- [x] Connect `react-youtube` (`YT.Player`) inside `CinematicVideoPlayer`.
-- [x] Implement authoritative host clock drift correction (play, pause, seek, playbackRate).
-- [x] Sync live chat, floating reactions, and soundboard triggers over WebSocket channels.
-- [ ] Verify multi-client sync across two real browser windows.
+### Phase 5B: Meet-Style Video Conference & Screen Share Pinning (Next Step)
+- [ ] Dynamic Video Grid in [`GridStageView.tsx`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/GridStageView.tsx) adjusting (1x1, 1x2, 2x2) based on active participants.
+- [ ] Participant video feeds / avatars with nameplates and mic indicators.
+- [ ] UI control for maximum visible grid participants.
+- [ ] Manual pinning logic: pinned participant gets main stage focus; non-pinned move to sidebar Users tab.
 
-### Phase 5A: Screen Sharing (Visual Feed) (Next Step)
-- [ ] Implement `getDisplayMedia` tab capture.
-- [ ] WebRTC P2P video streaming to guests via PartyKit signaling.
-
-### Phase 5B: Remote Pointers (Coordinate Telemetry)
-- [ ] Normalize pointer coordinates over video bounding box.
+### Phase 5C: Collaborative Browser Mode — Telemetry & Remote Cursors
+- [ ] Coordinate normalization math ($0.00 \le X, Y \le 1.00$) accounting for aspect ratios and high-DPI scaling.
 - [ ] Transmit coordinates via WebRTC DataChannel.
-- [ ] Render remote cursors (`MultiplayerCursors.tsx`) with zero click injection.
+- [ ] Render remote cursors ([`MultiplayerCursors.tsx`](file:///c:/Users/Admin/OneDrive/Documents/GitHub/nodeparty/src/components/watch-party/MultiplayerCursors.tsx)) with zero click injection.
 
-### Phase 6: Remote Control (Host Page Bridge + Extension)
-- [ ] "Pass the Mouse" permission UI & `CONTROL SESSION` state machine.
+### Phase 6: Remote Control (Host Page Bridge + Companion Extension)
+- [ ] "Pass the Mouse" permission UI & `ControlSession` state machine.
 - [ ] Companion Chrome Extension (Manifest V3, `chrome.debugger`).
 - [ ] Bridge approved commands from Host web page to extension.
 - [ ] Inject mouse/keyboard events via Chrome DevTools Protocol (`Input` domain).
@@ -75,4 +99,4 @@ This document tracks our implementation progress. You can copy this summary to p
 
 ---
 
-*Last Updated: September 11, 2026*
+*Last Updated: September 20, 2026*
